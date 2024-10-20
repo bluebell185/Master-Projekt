@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Die Kamera wird benötigt, um Make-up-Looks empfehlen und anzeigen zu können</string>
 </dict>
 </plist>
