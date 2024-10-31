@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'face_painter.dart';
+import 'dart:ui' as ui;
+import 'package:image/image.dart' as img;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +25,12 @@ class CameraWidget extends StatefulWidget {
 
 class _CameraWidgetState extends State<CameraWidget> {
   late CameraController controller;
+  List<Face> faces = [];
+  double inputImageWidth = 1;
+  double inputImageHeight = 1;
+
+  // Set true to see the contour points found by ML Kit
+  bool isContourVisible = false;
 
   @override
   void initState() {
@@ -56,7 +66,15 @@ class _CameraWidgetState extends State<CameraWidget> {
         final visionImage =
             inputImageFromCameraImage(image, selfieCam, controller);
 
-        final List<Face> faces = await faceDetector.processImage(visionImage!);
+        // Bildgröße für spätere Punktanpassungen
+        inputImageHeight = visionImage!.metadata!.size.height;
+        inputImageWidth = visionImage.metadata!.size.width;
+
+        // Gesichter & Konturen finden
+        final detectedFaces = await faceDetector.processImage(visionImage);
+        setState(() {
+          faces = detectedFaces;
+        });
         getFaceData(faces);
       });
     }).catchError((Object e) {
@@ -101,15 +119,30 @@ class _CameraWidgetState extends State<CameraWidget> {
     // Lösung für ein verzerrtes Kamerabild von: https://stackoverflow.com/a/61487358
     var camera = controller.value;
     // Bildschirmgröße ermitteln
-    final size = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
 
-    var scale = size.aspectRatio * camera.aspectRatio;
+    var scale = screenSize.aspectRatio * camera.aspectRatio;
     if (scale < 1) scale = 1 / scale;
 
-    return Transform.scale(
-      scale: scale,
-      child: Center(
-        child: CameraPreview(controller),
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Kameravorschau
+          Transform.scale(
+            scale: scale,
+            child: Center(
+              child: controller.value.isInitialized
+                  ? CameraPreview(controller)
+                  : CircularProgressIndicator(),
+            ),
+          ),
+          // CustomPaint für das Malen auf das Bild
+          if (isContourVisible)
+            CustomPaint(
+              foregroundPainter: FacePainter(null, faces, scale,
+                  inputImageHeight, inputImageWidth, screenSize),
+            ),
+        ],
       ),
     );
   }
@@ -157,7 +190,7 @@ InputImage? inputImageFromCameraImage(
       (Platform.isAndroid && format != InputImageFormat.nv21) ||
       (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
 
-  // beide gültige Formate besitzen nur eine Dimension
+  // beide gültige Formate besitzen nur einen Bildkanal (Plane)
   if (image.planes.length != 1) return null;
   final plane = image.planes.first;
 
