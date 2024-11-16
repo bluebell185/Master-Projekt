@@ -30,7 +30,7 @@ class _CameraWidgetState extends State<CameraWidget> {
   double inputImageHeight = 1;
 
   // Set true to see the contour points found by ML Kit
-  bool isContourVisible = false;
+  bool isContourVisible = true;
 
   @override
   void initState() {
