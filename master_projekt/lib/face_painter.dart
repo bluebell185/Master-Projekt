@@ -70,10 +70,8 @@ class FacePainter extends CustomPainter {
 
     for (var point in points) {
       // Skalierung der einzelnen Konturpunkte
-      double adjustedX =
-          point.x.toDouble() * scale * 0.95; 
-      double adjustedY =
-          point.y.toDouble() * scale * 0.9; 
+      double adjustedX = point.x.toDouble() * scale * 0.95;
+      double adjustedY = point.y.toDouble() * scale * 0.9;
 
       // Da es sich um die Selfie-Kamera handelt, die X-Koordinaten spiegeln
       adjustedX = scaledImageWidth - adjustedX;

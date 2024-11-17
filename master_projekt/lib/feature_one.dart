@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/feature_one_results.dart';
+import 'package:master_projekt/toolbar.dart';
 
 // TO DO:
 // pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
@@ -40,31 +41,6 @@ class FeatureOne extends StatelessWidget {
                     letterSpacing: 0.48,
                   ),
                 ),
-
-/*
-                // Button "Start Analysis" unten
-                Container(
-                  width: 280,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFF342C32),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text(
-                    'Start Analysis',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Sans Serif Collection',
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 0.32,
-                    ),
-                  ),
-                ),*/
 
                 // CTA Button unten, führt zu FeatureOne_Results()
 
@@ -117,58 +93,7 @@ class FeatureOne extends StatelessWidget {
           // verschiedene States:
           // --- für "Flash" und "Eye" einbauen -> On/Off
           // --- "active" Icons state? -> default/active
-
-          Positioned(
-            top: 75, // 705x Padding top
-            right: 15, // 15px Padding right
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/user.png',
-                  ),
-                ),
-                SizedBox(height: 25), // 25px vertical gap
-
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/flash.png',
-                  ),
-                ),
-                SizedBox(height: 25), // 25px vertical gap
-
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/analysis.png',
-                  ),
-                ),
-                SizedBox(height: 25), // 25px vertical gap
-
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/create.png',
-                  ),
-                ),
-                SizedBox(height: 25), // 25px vertical gap
-
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/eye.png',
-                  ),
-                ),
-              ],
-            ),
-          ),
+          Toolbar(),
         ],
       ),
     );
