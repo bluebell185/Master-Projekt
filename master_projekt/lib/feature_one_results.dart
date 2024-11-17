@@ -14,6 +14,8 @@ class FeatureOneResults extends StatelessWidget {
 
 */
 
+// TO DO: replace pixel padding with rem einheit?
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,6 @@ class FeatureOneResults extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Title oben
-                // wie, damit es 100px padding oben hat?
                 const Text(
                   'Analysis',
                   textAlign: TextAlign.center,
@@ -48,8 +49,6 @@ class FeatureOneResults extends StatelessWidget {
               ],
             ),
           ),
-
-// TO DO: Positioned() ??? at the bottom???
 
           // erster ContentBox-Abschnitt
           Positioned(
@@ -129,162 +128,12 @@ class FeatureOneResults extends StatelessWidget {
 
                         // TABS
                         // TO DO:
-                        // - "overflowing" bzw. Swipe-Gesture einbauen
-                        // - Interaktion mit den Tabs
-                        Container(
-                          width: 371,
-                          height: 25,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // TAB 1
-                              Container(
-                                //width: 81,
-                                height: 25,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 5),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'eyes',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Sans Serif Collection',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.08,
-                                        letterSpacing: 0.28,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // WHITESPACE
-                              const SizedBox(width: 10),
-
-                              // TAB 2
-                              Container(
-                                width: 81,
-                                height: 25,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 5),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'lips',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Sans Serif Collection',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.08,
-                                        letterSpacing: 0.28,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // WHITESPACE
-                              const SizedBox(width: 10),
-
-                              // TAB 3
-                              Container(
-                                //width: 81,
-                                height: 25,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 5),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'brows',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Sans Serif Collection',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.08,
-                                        letterSpacing: 0.28,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // WHITESPACE
-                              const SizedBox(width: 10),
-
-                              // TAB 4
-                              Container(
-                                //width: 81,
-                                height: 25,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 25, vertical: 5),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'blush',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontFamily: 'Sans Serif Collection',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.08,
-                                        letterSpacing: 0.28,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                        // - "overflowing" bzw. Swipe-Gesture einbauen -> gewährt durch class ScrollableTabs()
+                        // - Interaktion mit den Tabs -> gewährt durch onTabSelected() und class Tab()
+                        SizedBox(
+                          width: 373,
+                          //height: 25,
+                          child: ScrollableTabs(),
                         ),
                         const SizedBox(height: 10),
                       ],
@@ -307,8 +156,7 @@ class FeatureOneResults extends StatelessWidget {
                     'assets/icons/user.png',
                   ),
                 ),
-                SizedBox(height: 25), // 25px vertical gap
-
+                SizedBox(height: 25),
                 SizedBox(
                   width: 24,
                   height: 24,
@@ -316,8 +164,7 @@ class FeatureOneResults extends StatelessWidget {
                     'assets/icons/flash.png',
                   ),
                 ),
-                SizedBox(height: 25), // 25px vertical gap
-
+                SizedBox(height: 25),
                 SizedBox(
                   width: 24,
                   height: 24,
@@ -325,8 +172,7 @@ class FeatureOneResults extends StatelessWidget {
                     'assets/icons/analysis.png',
                   ),
                 ),
-                SizedBox(height: 25), // 25px vertical gap
-
+                SizedBox(height: 25),
                 SizedBox(
                   width: 24,
                   height: 24,
@@ -334,8 +180,7 @@ class FeatureOneResults extends StatelessWidget {
                     'assets/icons/create.png',
                   ),
                 ),
-                SizedBox(height: 25), // 25px vertical gap
-
+                SizedBox(height: 25),
                 SizedBox(
                   width: 24,
                   height: 24,
@@ -347,6 +192,100 @@ class FeatureOneResults extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// INTERACTIVE TABS
+class ScrollableTabs extends StatefulWidget {
+  @override
+  State<ScrollableTabs> createState() => _ScrollableTabsState();
+}
+
+class _ScrollableTabsState extends State<ScrollableTabs> {
+  int selectedIndex = -1; // -1 = Initial ist kein Tab ausgewählt
+
+  void onTabSelected(int index) {
+    setState(() {
+      selectedIndex = index; // Ausgewählter Index wird geupdated
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          Tab(
+            label: 'eyes',
+            isSelected: selectedIndex == 0,
+            onTap: () => onTabSelected(0),
+          ),
+          SizedBox(width: 10),
+          Tab(
+            label: 'lips',
+            isSelected: selectedIndex == 1,
+            onTap: () => onTabSelected(1),
+          ),
+          SizedBox(width: 10),
+          Tab(
+            label: 'brows',
+            isSelected: selectedIndex == 2,
+            onTap: () => onTabSelected(2),
+          ),
+          SizedBox(width: 10),
+          Tab(
+            label: 'blush',
+            isSelected: selectedIndex == 3,
+            onTap: () => onTabSelected(3),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Tab extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const Tab({
+    super.key,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap, // Triggert den onTap-Callback, wenn getapped wird
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Color(0xFFFFDCE8)
+              : Colors.white, // Lightpink wenn ausgewählt, sonst weiß
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isSelected
+                  ? Colors.black
+                  : Colors.black, // schwarze Textfarbe
+              fontSize: 14,
+              fontFamily: 'Sans Serif Collection',
+              fontWeight: FontWeight.w400,
+              letterSpacing: 0.28,
+            ),
+          ),
+        ),
       ),
     );
   }
