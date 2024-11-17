@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-class FeatureOneResults extends StatelessWidget {
-  const FeatureOneResults({super.key, required this.title});
-
-  final String title;
-
 /* HIER: Gesichtsanalyse!
 
 - Loading Screen bzw. Scan-Effekt sollte laufen
@@ -16,12 +11,101 @@ class FeatureOneResults extends StatelessWidget {
 
 // TO DO: replace pixel padding with rem einheit?
 
+// Definition der verschiedenen Kategorien für "eyes"-Tab
+enum EyeColorCategory { blue, green, brown, hazel } // anpassen!
+
+// TO DO: Für jede ROI eine eigene File?
+// Definition der verschiedenen Kategorien für "lips"-Tab?
+// Definition der verschiedenen Kategorien für "brows"-Tab?
+// Definition der verschiedenen Kategorien für "blush"-Tab?
+
+class FeatureOneResults extends StatefulWidget {
+  const FeatureOneResults({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<FeatureOneResults> createState() => _FeatureOneResultsState();
+}
+
+class _FeatureOneResultsState extends State<FeatureOneResults> {
+  String? selectedTab; // Tracked den ausgewählten Tab ('eyes', 'lips', etc.)
+  EyeColorCategory?
+      eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
+  // TO DO: weitere Kategorien der anderen ROIs
+
+  // Liste mit den verfügbaren Tabs
+  final List<String> tabs = ['eyes', 'lips', 'brows', 'blush'];
+
+  // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
+  void setEyeColorCategory(String colorValue) {
+    // 'colorValue' bestimmt die Farbkategorie
+    // 'eyeColorCategory' -> TO DO: Range der Farbkategorien
+    if (colorValue == 'blue') {
+      eyeColorCategory = EyeColorCategory.blue;
+    } else if (colorValue == 'green') {
+      eyeColorCategory = EyeColorCategory.green;
+    } else if (colorValue == 'brown') {
+      eyeColorCategory = EyeColorCategory.brown;
+    } else if (colorValue == 'hazel') {
+      eyeColorCategory = EyeColorCategory.hazel;
+    }
+  }
+
+  // Content für die jeweilige Augenfarben-Kategorie
+  Widget _getEyeColorContent(EyeColorCategory category) {
+    switch (category) {
+      case EyeColorCategory.blue:
+        return const Text(
+          'Your eye color is blue. Here are some details about blue eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeColorCategory.green:
+        return const Text(
+          'Your eye color is green. Here are some details about green eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeColorCategory.brown:
+        return const Text(
+          'Your eye color is brown. Here are some details about brown eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeColorCategory.hazel:
+        return const Text(
+          'Your eye color is hazel. Here are some details about hazel eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      default:
+        return Container();
+    }
+  }
+
+  // Main Content für jeden ausgewählten Tab
+  Widget _getTabContent(String tab) {
+    if (tab == 'eyes' && eyeColorCategory != null) {
+      return _getEyeColorContent(
+          eyeColorCategory!); // Anzeige des Contents je nach Augenfarben-Kategorie
+    }
+    /* Placeholder Content für die anderen Tabs -> Umsetzen wie Widget _getEyeColorContent() für andere ROIs?
+      else if (tab == 'lips' && lipCategory != null) {
+      TO DO();
+    } else if (tab == 'brows' && browCategory != null) {
+      TO DO ();
+    } else if (tab == 'blush' && blushCategory != null) {
+      TO DO();
+    }*/
+    return Text(
+      'Content for $tab - Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      style: TextStyle(fontSize: 14),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background
+          // Hintergrund
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -41,7 +125,7 @@ class FeatureOneResults extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
-                    fontFamily: 'Chicle',
+                    fontFamily: 'Chicle', // TO DO: installieren
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.48,
                   ),
@@ -53,94 +137,175 @@ class FeatureOneResults extends StatelessWidget {
           // erster ContentBox-Abschnitt
           Positioned(
             bottom: 0,
-            child: Container(
-              width: 393,
-              //height: 175,
-              padding: const EdgeInsets.only(top: 10, bottom: 20),
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+            child: Column(
+              children: [
+                Container(
+                  width: 393,
+                  //height: 175,
+                  padding: const EdgeInsets.only(top: 10, bottom: 20),
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // light-beige Content-Box
+                      Container(
+                        width:
+                            373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
+                        //height: 145,
+                        padding: const EdgeInsets.all(10),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFF1EADD),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // HEADING
+                            Text(
+                              'your analysis results',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontFamily: 'Chicle',
+                                fontWeight: FontWeight.w400,
+                                height: 0,
+                                letterSpacing: 0.48,
+                              ),
+                            ),
+
+                            // WHITESPACE
+                            const SizedBox(height: 10),
+
+                            // TEXT
+                            SizedBox(
+                              width: double.infinity,
+                              child: Text(
+                                'Hier steht Text - um mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontFamily: 'Sans Serif Collection',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.5,
+                                  letterSpacing: 0.28,
+                                ),
+                              ),
+                            ),
+
+                            // WHITESPACE
+                            const SizedBox(height: 30),
+
+                            // TABS
+                            // - Swipe-Gesture -> gewährt durch class ScrollableTabs()
+                            // - Interaktion mit den Tabs -> gewährt durch onTabSelected() und class Tab()
+                            SingleChildScrollView(
+                              // A box in which a single widget can be scrolled.
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: tabs.map((tab) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Tab(
+                                      label: tab,
+                                      isSelected: selectedTab == tab,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTab =
+                                              (selectedTab == tab) ? null : tab;
+                                          if (selectedTab == 'eyes') {
+                                            setEyeColorCategory(
+                                                'blue'); // Set the eye color category here based on extracted color
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // light-beige Content-Box
-                  Container(
-                    width:
-                        373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
-                    //height: 145,
-                    padding: const EdgeInsets.all(10),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      color: Color(0xFFF1EADD),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
+                //),
 
+                // Zweiter ContentBox-Abschnitt je nach Tab & Kategorie
+                if (selectedTab != null) ...[
+                  const SizedBox(height: 10),
+
+                  // weiße Content-Box
+                  Container(
+                    width: 393,
+                    padding: const EdgeInsets.only(top: 10, bottom: 20),
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // HEADING
-                        Text(
-                          'your analysis results',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontFamily: 'Chicle',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                            letterSpacing: 0.48,
-                          ),
-                        ),
-
-                        // WHITESPACE
-                        const SizedBox(height: 10),
-
-                        // TEXT
-                        SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Hier steht Text - um  mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontFamily: 'Sans Serif Collection',
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              letterSpacing: 0.28,
+                        // light-beige Content-Box
+                        Container(
+                          width:
+                              373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
+                          //height: 145,
+                          padding: const EdgeInsets.all(10),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFF1EADD),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                        ),
 
-                        // WHITESPACE
-                        const SizedBox(height: 30),
-
-                        // TABS
-                        // TO DO:
-                        // - "overflowing" bzw. Swipe-Gesture einbauen -> gewährt durch class ScrollableTabs()
-                        // - Interaktion mit den Tabs -> gewährt durch onTabSelected() und class Tab()
-                        SizedBox(
-                          width: 373,
-                          //height: 25,
-                          child: ScrollableTabs(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  // hier: Icon?
+                                  // const SizedBox(width: 8),
+                                  Text(
+                                    selectedTab!,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              _getTabContent(
+                                  selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
                 ],
-              ),
+              ],
             ),
           ),
 
