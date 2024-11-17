@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:accordion/accordion.dart';
+import 'package:accordion/controllers.dart';
+import 'package:master_projekt/toolbar.dart';
 
 /* HIER: Gesichtsanalyse!
 
@@ -134,228 +137,197 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
             ),
           ),
 
-          // erster ContentBox-Abschnitt
-          Positioned(
-            bottom: 0,
-            child: Column(
-              children: [
-                Container(
-                  width: 393,
-                  //height: 175,
-                  padding: const EdgeInsets.only(top: 10, bottom: 20),
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // light-beige Content-Box
-                      Container(
-                        width:
-                            373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
-                        //height: 145,
-                        padding: const EdgeInsets.all(10),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: ShapeDecoration(
-                          color: Color(0xFFF1EADD),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+          // ContentBox-Abschnitte 1+2
+          // TO DO: Column Height + Verhalten (Scroll etc.), wenn zweiter Abschnitt kommt
+          Stack(
+            children: [
+              Positioned(
+                bottom: 0,
+                child: Column(
+                  children: [
+                    // erster ContentBox-Abschnitt
+                    Container(
+                      width: 393,
+                      //height: 175,
+                      padding: const EdgeInsets.only(top: 10, bottom: 20),
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
+                      ),
 
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // light-beige Content-Box
+                          Container(
+                            width:
+                                373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
+                            //height: 145,
+                            padding: const EdgeInsets.all(10),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFFF1EADD),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // HEADING
+                                Text(
+                                  'your analysis results',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 24,
+                                    fontFamily: 'Chicle',
+                                    fontWeight: FontWeight.w400,
+                                    height: 0,
+                                    letterSpacing: 0.48,
+                                  ),
+                                ),
+
+                                // WHITESPACE
+                                const SizedBox(height: 10),
+
+                                // TEXT
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    'Hier steht Text - um mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Sans Serif Collection',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.5,
+                                      letterSpacing: 0.28,
+                                    ),
+                                  ),
+                                ),
+
+                                // WHITESPACE
+                                const SizedBox(height: 30),
+
+                                // TABS
+                                // - Swipe-Gesture -> gewährt durch class ScrollableTabs()
+                                // - Interaktion mit den Tabs -> gewährt durch onTabSelected() und class Tab()
+                                SingleChildScrollView(
+                                  // A box in which a single widget can be scrolled.
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: tabs.map((tab) {
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Tab(
+                                          label: tab,
+                                          isSelected: selectedTab == tab,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedTab = (selectedTab == tab)
+                                                  ? null
+                                                  : tab;
+                                              if (selectedTab == 'eyes') {
+                                                setEyeColorCategory(
+                                                    'blue'); // Set the eye color category here based on extracted color
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Zweiter ContentBox-Abschnitt je nach Tab & Kategorie
+                    if (selectedTab != null) ...[
+                      const SizedBox(height: 10),
+
+                      // weiße Content-Box
+                      Container(
+                        width: 393,
+                        padding: const EdgeInsets.only(top: 10, bottom: 20),
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                        ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // HEADING
-                            Text(
-                              'your analysis results',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24,
-                                fontFamily: 'Chicle',
-                                fontWeight: FontWeight.w400,
-                                height: 0,
-                                letterSpacing: 0.48,
-                              ),
-                            ),
-
-                            // WHITESPACE
-                            const SizedBox(height: 10),
-
-                            // TEXT
-                            SizedBox(
-                              width: double.infinity,
-                              child: Text(
-                                'Hier steht Text - um mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontFamily: 'Sans Serif Collection',
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.5,
-                                  letterSpacing: 0.28,
+                            // light-beige Content-Box
+                            Container(
+                              width:
+                                  373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
+                              //height: 145,
+                              padding: const EdgeInsets.all(10),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: Color(0xFFF1EADD),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                            ),
 
-                            // WHITESPACE
-                            const SizedBox(height: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      // hier: Icon?
+                                      // const SizedBox(width: 8),
+                                      Text(
+                                        selectedTab!,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  _getTabContent(
+                                      selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
+                                  const SizedBox(height: 10),
 
-                            // TABS
-                            // - Swipe-Gesture -> gewährt durch class ScrollableTabs()
-                            // - Interaktion mit den Tabs -> gewährt durch onTabSelected() und class Tab()
-                            SingleChildScrollView(
-                              // A box in which a single widget can be scrolled.
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: tabs.map((tab) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Tab(
-                                      label: tab,
-                                      isSelected: selectedTab == tab,
-                                      onTap: () {
-                                        setState(() {
-                                          selectedTab =
-                                              (selectedTab == tab) ? null : tab;
-                                          if (selectedTab == 'eyes') {
-                                            setEyeColorCategory(
-                                                'blue'); // Set the eye color category here based on extracted color
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }).toList(),
+                                  Positioned(
+                                    left: 0,
+                                    child: AccordionWidget(),
+                                  ),
+
+                                  // TO DO: Navigation Arrows um von Text Recommendations zu Image Recommendations zu switchen
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 10),
                           ],
                         ),
                       ),
                     ],
-                  ),
+                  ],
                 ),
-                //),
-
-                // Zweiter ContentBox-Abschnitt je nach Tab & Kategorie
-                if (selectedTab != null) ...[
-                  const SizedBox(height: 10),
-
-                  // weiße Content-Box
-                  Container(
-                    width: 393,
-                    padding: const EdgeInsets.only(top: 10, bottom: 20),
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // light-beige Content-Box
-                        Container(
-                          width:
-                              373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
-                          //height: 145,
-                          padding: const EdgeInsets.all(10),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFF1EADD),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  // hier: Icon?
-                                  // const SizedBox(width: 8),
-                                  Text(
-                                    selectedTab!,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              _getTabContent(
-                                  selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
+              ),
+            ],
           ),
 
-          Positioned(
-            top: 75, // 75px Padding top
-            right: 15, // 15px Padding right
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/user.png',
-                  ),
-                ),
-                SizedBox(height: 25),
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/flash.png',
-                  ),
-                ),
-                SizedBox(height: 25),
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/analysis.png',
-                  ),
-                ),
-                SizedBox(height: 25),
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/create.png',
-                  ),
-                ),
-                SizedBox(height: 25),
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Image.asset(
-                    'assets/icons/eye.png',
-                  ),
-                ),
-              ],
-            ),
-          ),
+          Toolbar(),
         ],
       ),
     );
@@ -452,6 +424,106 @@ class Tab extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// ACCORDIONS
+
+/* ExpansionTile hat nicht das gewünschte Layout -> deswegen Accordion Package
+class ExpansionTileExample extends StatefulWidget {
+  const ExpansionTileExample({super.key});
+
+  @override
+  State<ExpansionTileExample> createState() => _ExpansionTileExampleState();
+}
+
+class _ExpansionTileExampleState extends State<ExpansionTileExample> {
+  bool _customTileExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        const ExpansionTile(
+          title: Text('Color shade'),
+          collapsedBackgroundColor:
+              Color(0xFF42A5F5), // hard coded für jede Farbe?
+          collapsedShape: RoundedRectangleBorder(), // Form des Accordions
+          collapsedTextColor: Color(0xFF000000), // Textfarbe collapsed
+          textColor: Color(0xFF000000), // Textfarbe expanded
+          controlAffinity:
+              ListTileControlAffinity.platform, // eig wo das Icon platziert ist
+          iconColor: Color(0xFF000000), // Farbe des Icons wenn expanded
+          children: <Widget>[
+            ListTile(
+                title: Text(
+                    'Hier ist ein Text, der erklärt, warum diese Farbe geeignet für diese Augenfarbe ist.'))
+          ],
+        ),
+      ],
+    );
+  }
+}*/
+
+class AccordionWidget extends StatelessWidget {
+  const AccordionWidget({super.key});
+
+  // hier statisch die Farben definieren?
+  static const headerStyle =
+      TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold);
+  //static const contentStyleHeader = TextStyle(
+  //color: Color(0xffffffff), fontSize: 14, fontWeight: FontWeight.w700);
+  static const contentStyle = TextStyle(
+      color: Colors.black, fontSize: 14, fontWeight: FontWeight.normal);
+
+  // hier statisch die Texte definieren?
+  static const colorshade1 =
+      'Hier ist ein Text, der erklärt, warum diese Farbe geeignet für diese Augenfarbe ist.';
+  static const colorshade2 =
+      'Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenfarbe ist.';
+
+  @override
+  Widget build(BuildContext context) {
+    return Accordion(
+      contentHorizontalPadding: 20,
+      scaleWhenAnimating: true,
+      openAndCloseAnimation: true,
+      headerPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+      sectionOpeningHapticFeedback: SectionHapticFeedback.light,
+      sectionClosingHapticFeedback: SectionHapticFeedback.light,
+      children: [
+        AccordionSection(
+          isOpen: false,
+          leftIcon: const Icon(Icons.circle,
+              color: Color.fromARGB(126, 251, 164, 193)), // anpassen
+          rightIcon:
+              Icon(Icons.keyboard_arrow_down, color: Colors.black, size: 20),
+          headerBorderRadius: 30,
+          headerBackgroundColor: Colors.white,
+          headerBackgroundColorOpened: Color(0x7FFEB9D0),
+          contentBackgroundColor: Colors.transparent,
+          contentBorderColor: Colors.white,
+          contentVerticalPadding: 30,
+          header: const Text('Color Shade 1', style: headerStyle),
+          content: const Text(colorshade1, style: contentStyle),
+        ),
+        AccordionSection(
+          isOpen: false,
+          leftIcon: const Icon(Icons.circle,
+              color: Color.fromARGB(126, 251, 164, 193)), // anpassen
+          rightIcon:
+              Icon(Icons.keyboard_arrow_down, color: Colors.black, size: 20),
+          headerBorderRadius: 30,
+          headerBackgroundColor: Colors.white,
+          headerBackgroundColorOpened: Color(0x7FFEB9D0),
+          contentBackgroundColor: Colors.transparent,
+          contentBorderColor: Colors.white,
+          contentVerticalPadding: 30,
+          header: const Text('Color Shade 2', style: headerStyle),
+          content: const Text(colorshade2, style: contentStyle),
+        ),
+      ],
     );
   }
 }
