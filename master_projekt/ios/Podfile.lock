@@ -55,6 +55,12 @@ PODS:
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+>>>>>>> Stashed changes
 =======
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -68,6 +74,10 @@ DEPENDENCIES:
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
   - google_mlkit_face_detection (from `.symlinks/plugins/google_mlkit_face_detection/ios`)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+>>>>>>> Stashed changes
 =======
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 >>>>>>> Stashed changes
@@ -96,6 +106,11 @@ EXTERNAL SOURCES:
   google_mlkit_face_detection:
     :path: ".symlinks/plugins/google_mlkit_face_detection/ios"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+>>>>>>> Stashed changes
 =======
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
@@ -117,6 +132,10 @@ SPEC CHECKSUMS:
   MLKitVision: 45e79d68845a2de77e2dd4d7f07947f0ed157b0e
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+>>>>>>> Stashed changes
 =======
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
 >>>>>>> Stashed changes
