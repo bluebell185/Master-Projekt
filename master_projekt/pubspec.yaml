@@ -41,6 +41,7 @@ dependencies:
   google_mlkit_face_detection: ^0.12.0
   image: ^4.3.0
   accordion: ^2.6.0
+  deepar_flutter: ^0.0.5
 
 dev_dependencies:
   flutter_test:

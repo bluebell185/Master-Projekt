@@ -10,6 +10,27 @@ class FeatureOne extends StatelessWidget {
 
   final String title;
 
+/*
+  // DeepAR Controller initialisieren
+
+  final  DeepArController _controller = DeepArController();
+  _controller.initialize(
+          androidLicenseKey:"1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
+          iosLicenseKey:"bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
+          resolution: Resolution.high);
+
+  // DeepArPreview widget um Vorschau zu displayen
+  @override
+
+Widget  build(BuildContext  context) {
+return  _controller.isInitialized
+                ? DeepArPreview(_controller)
+                : const  Center(
+                  child: Text("Loading Preview")
+                );
+}
+*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
