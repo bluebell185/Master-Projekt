@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+// Tool Bar rechts
+// muss noch für die Navigation mit den anderen Screens connected werden
+// verschiedene States:
+// --- für "Flash" und "Eye" einbauen -> On/Off
+// --- "active" Icons state? -> default/active
+
 class Toolbar extends StatelessWidget {
   const Toolbar({super.key});
 
