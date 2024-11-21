@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/feature_one_results.dart';
 import 'package:master_projekt/toolbar.dart';
 
@@ -36,14 +37,15 @@ return  _controller.isInitialized
     return Scaffold(
       body: Stack(
         children: [
+          const CameraWidget(title: 'Camera'),
           // Main content background container
           Container(
             width: double.infinity,
             height: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-            decoration: const BoxDecoration(
-                color: Color(
-                    0xFFA4ABB3)), // momentan noch einfarbiger Background; sollte dann durch Kamerabild ersetzt werden
+            // decoration: const BoxDecoration(
+            //     color: Color(
+            //         0xFFA4ABB3)), // momentan noch einfarbiger Background; sollte dann durch Kamerabild ersetzt werden
 
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
