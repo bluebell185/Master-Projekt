@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+
+// INTERACTIVE TABS
+class ScrollableTabs extends StatefulWidget {
+  @override
+  State<ScrollableTabs> createState() => _ScrollableTabsState();
+}
+
+class _ScrollableTabsState extends State<ScrollableTabs> {
+  int selectedIndex = -1; // -1 = Initial ist kein Tab ausgewählt
+
+  void onTabSelected(int index) {
+    setState(() {
+      selectedIndex = index; // Ausgewählter Index wird geupdated
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          TabElement(
+            label: 'eyes',
+            isSelected: selectedIndex == 0,
+            onTap: () => onTabSelected(0),
+          ),
+          SizedBox(width: 10),
+          TabElement(
+            label: 'lips',
+            isSelected: selectedIndex == 1,
+            onTap: () => onTabSelected(1),
+          ),
+          SizedBox(width: 10),
+          TabElement(
+            label: 'brows',
+            isSelected: selectedIndex == 2,
+            onTap: () => onTabSelected(2),
+          ),
+          SizedBox(width: 10),
+          TabElement(
+            label: 'blush',
+            isSelected: selectedIndex == 3,
+            onTap: () => onTabSelected(3),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TabElement extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const TabElement({
+    super.key,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap, // Triggert den onTap-Callback, wenn getapped wird
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Color(0xFFFFDCE8)
+              : Colors.white, // Lightpink wenn ausgewählt, sonst weiß
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isSelected
+                  ? Colors.black
+                  : Colors.black, // schwarze Textfarbe
+              fontSize: 14,
+              fontFamily: 'Sans Serif Collection',
+              fontWeight: FontWeight.w400,
+              letterSpacing: 0.28,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
