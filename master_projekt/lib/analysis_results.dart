@@ -1,41 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:accordion/accordion.dart';
-import 'package:accordion/controllers.dart';
-import 'package:master_projekt/toolbar.dart';
 
-/* HIER: Gesichtsanalyse!
-
-- Loading Screen bzw. Scan-Effekt sollte laufen
-- nach Analyse poppt Pop-Up auf, das die Analysis-Results anzeigt, die User modifizieren kann
-- erst nach Tap auf CTA_Button "save" -> erster ContentBox-Abschnitt erscheint mit ROIs
-- nach Auswahl einer ROI (Tab) -> zweiter ContentBox-Abschnitt mit Recommendations & Looks erscheint
-
-*/
+// UI-Elemente
+import 'package:master_projekt/ui/accordion.dart';
+import 'package:master_projekt/ui/tabs.dart';
+import 'package:master_projekt/ui/toolbar.dart';
 
 // TO DO: replace pixel padding with rem einheit?
+// TO DO: Für jede ROI eine eigene File?
 
 // Definition der verschiedenen Kategorien für "eyes"-Tab
 enum EyeColorCategory { blue, green, brown, hazel } // anpassen!
 
-// TO DO: Für jede ROI eine eigene File?
-// Definition der verschiedenen Kategorien für "lips"-Tab?
-// Definition der verschiedenen Kategorien für "brows"-Tab?
-// Definition der verschiedenen Kategorien für "blush"-Tab?
+enum LipCategory { red, pink, nude, plum }
 
-class FeatureOneResults extends StatefulWidget {
-  const FeatureOneResults({super.key, required this.title});
+enum BrowCategory { thin, thick, arched, straight }
+
+enum BlushCategory { coral, peach, rose, berry }
+
+class AnalysisResults extends StatefulWidget {
+  const AnalysisResults({super.key, required this.title});
 
   final String title;
 
   @override
-  State<FeatureOneResults> createState() => _FeatureOneResultsState();
+  State<AnalysisResults> createState() => _AnalysisResultsState();
 }
 
-class _FeatureOneResultsState extends State<FeatureOneResults> {
+class _AnalysisResultsState extends State<AnalysisResults> {
   String? selectedTab; // Tracked den ausgewählten Tab ('eyes', 'lips', etc.)
   EyeColorCategory?
       eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
-  // TO DO: weitere Kategorien der anderen ROIs
+  LipCategory? lipCategory;
+  BrowCategory? browCategory;
+  BlushCategory? blushCategory;
 
   // Liste mit den verfügbaren Tabs
   final List<String> tabs = ['eyes', 'lips', 'brows', 'blush'];
@@ -55,7 +52,7 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
     }
   }
 
-  // Content für die jeweilige Augenfarben-Kategorie
+  // Content für die jeweilige Augenfarben-Kategorie --> JSON?
   Widget _getEyeColorContent(EyeColorCategory category) {
     switch (category) {
       case EyeColorCategory.blue:
@@ -83,23 +80,111 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
     }
   }
 
+  // Beispielgerüst: Logik für die Lippen-Kategorie?
+  // Methode für Lippen -> if else?
+  void setLipCategory(String lipValue) {
+    switch (lipValue) {
+      case 'red':
+        lipCategory = LipCategory.red;
+      case 'pink':
+        lipCategory = LipCategory.pink;
+      case 'nude':
+        lipCategory = LipCategory.nude;
+      case 'plum':
+        lipCategory = LipCategory.plum;
+    }
+  }
+
+  // switch case? was ist besser für JSON?
+  Widget _getLipContent(LipCategory category) {
+    final textMap = {
+      LipCategory.red: 'Your lip color is red. Details about red lips...',
+      LipCategory.pink: 'Your lip color is pink. Details about pink lips...',
+      LipCategory.nude: 'Your lip color is nude. Details about nude lips...',
+      LipCategory.plum: 'Your lip color is plum. Details about plum lips...',
+    };
+    return Text(
+      textMap[category] ?? '',
+      style: const TextStyle(fontSize: 14),
+    );
+  }
+
+  // Beispielgerüst: Logik für die Augenbrauen-Kategorie?
+  void setBrowCategory(String browValue) {
+    switch (browValue) {
+      case 'thin':
+        browCategory = BrowCategory.thin;
+      case 'thick':
+        browCategory = BrowCategory.thick;
+      case 'arched':
+        browCategory = BrowCategory.arched;
+      case 'straight':
+        browCategory = BrowCategory.straight;
+    }
+  }
+
+  Widget _getBrowContent(BrowCategory category) {
+    final textMap = {
+      BrowCategory.thin: 'Your brow style is thin. Details about thin brows...',
+      BrowCategory.thick:
+          'Your brow style is thick. Details about thick brows...',
+      BrowCategory.arched:
+          'Your brow style is arched. Details about arched brows...',
+      BrowCategory.straight:
+          'Your brow style is straight. Details about straight brows...',
+    };
+    return Text(
+      textMap[category] ?? '',
+      style: const TextStyle(fontSize: 14),
+    );
+  }
+
+  // Beispielgerüst: Logik für die Blush-Kategorie?
+  void setBlushCategory(String blushValue) {
+    switch (blushValue) {
+      case 'coral':
+        blushCategory = BlushCategory.coral;
+      case 'peach':
+        blushCategory = BlushCategory.peach;
+      case 'rose':
+        blushCategory = BlushCategory.rose;
+      case 'berry':
+        blushCategory = BlushCategory.berry;
+    }
+  }
+
+  Widget _getBlushContent(BlushCategory category) {
+    final textMap = {
+      BlushCategory.coral:
+          'Your blush color is coral. Details about coral blush...',
+      BlushCategory.peach:
+          'Your blush color is peach. Details about peach blush...',
+      BlushCategory.rose:
+          'Your blush color is rose. Details about rose blush...',
+      BlushCategory.berry:
+          'Your blush color is berry. Details about berry blush...',
+    };
+    return Text(
+      textMap[category] ?? '',
+      style: const TextStyle(fontSize: 14),
+    );
+  }
+
   // Main Content für jeden ausgewählten Tab
   Widget _getTabContent(String tab) {
     if (tab == 'eyes' && eyeColorCategory != null) {
-      return _getEyeColorContent(
-          eyeColorCategory!); // Anzeige des Contents je nach Augenfarben-Kategorie
-    }
-    /* Placeholder Content für die anderen Tabs -> Umsetzen wie Widget _getEyeColorContent() für andere ROIs?
-      else if (tab == 'lips' && lipCategory != null) {
-      TO DO();
+      return _getEyeColorContent(eyeColorCategory!);
+    } else if (tab == 'lips' && lipCategory != null) {
+      return _getLipContent(lipCategory!);
     } else if (tab == 'brows' && browCategory != null) {
-      TO DO ();
+      return _getBrowContent(browCategory!);
     } else if (tab == 'blush' && blushCategory != null) {
-      TO DO();
-    }*/
+      return _getBlushContent(blushCategory!);
+    }
+
     return Text(
-      'Content for $tab - Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      style: TextStyle(fontSize: 14),
+      'Content for $tab - Placeholder text for this category.',
+      style: const TextStyle(fontSize: 14),
     );
   }
 
@@ -149,7 +234,8 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                     Container(
                       width: 393,
                       //height: 175,
-                      padding: const EdgeInsets.only(top: 10, bottom: 20),
+                      padding: const EdgeInsets.only(
+                          top: 10, left: 10, right: 10, bottom: 20),
                       decoration: ShapeDecoration(
                         color: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -164,9 +250,6 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                         children: [
                           // light-beige Content-Box
                           Container(
-                            width:
-                                373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
-                            //height: 145,
                             padding: const EdgeInsets.all(10),
                             clipBehavior: Clip.antiAlias,
                             decoration: ShapeDecoration(
@@ -175,7 +258,6 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -228,7 +310,7 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                                       return Padding(
                                         padding:
                                             const EdgeInsets.only(right: 10),
-                                        child: Tab(
+                                        child: TabElement(
                                           label: tab,
                                           isSelected: selectedTab == tab,
                                           onTap: () {
@@ -262,7 +344,8 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                       // weiße Content-Box
                       Container(
                         width: 393,
-                        padding: const EdgeInsets.only(top: 10, bottom: 20),
+                        padding: const EdgeInsets.only(
+                            top: 10, left: 10, right: 10, bottom: 20),
                         decoration: ShapeDecoration(
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
@@ -275,9 +358,6 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                           children: [
                             // light-beige Content-Box
                             Container(
-                              width:
-                                  373, // sollte das aber nicht bei Padding der weißen box schon festgelegt werden?
-                              //height: 145,
                               padding: const EdgeInsets.all(10),
                               clipBehavior: Clip.antiAlias,
                               decoration: ShapeDecoration(
@@ -286,7 +366,6 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -326,204 +405,10 @@ class _FeatureOneResultsState extends State<FeatureOneResults> {
               ),
             ],
           ),
-
+          // Toolbar rechts oben
           Toolbar(),
         ],
       ),
-    );
-  }
-}
-
-// INTERACTIVE TABS
-class ScrollableTabs extends StatefulWidget {
-  @override
-  State<ScrollableTabs> createState() => _ScrollableTabsState();
-}
-
-class _ScrollableTabsState extends State<ScrollableTabs> {
-  int selectedIndex = -1; // -1 = Initial ist kein Tab ausgewählt
-
-  void onTabSelected(int index) {
-    setState(() {
-      selectedIndex = index; // Ausgewählter Index wird geupdated
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          Tab(
-            label: 'eyes',
-            isSelected: selectedIndex == 0,
-            onTap: () => onTabSelected(0),
-          ),
-          SizedBox(width: 10),
-          Tab(
-            label: 'lips',
-            isSelected: selectedIndex == 1,
-            onTap: () => onTabSelected(1),
-          ),
-          SizedBox(width: 10),
-          Tab(
-            label: 'brows',
-            isSelected: selectedIndex == 2,
-            onTap: () => onTabSelected(2),
-          ),
-          SizedBox(width: 10),
-          Tab(
-            label: 'blush',
-            isSelected: selectedIndex == 3,
-            onTap: () => onTabSelected(3),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Tab extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const Tab({
-    super.key,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap, // Triggert den onTap-Callback, wenn getapped wird
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Color(0xFFFFDCE8)
-              : Colors.white, // Lightpink wenn ausgewählt, sonst weiß
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected
-                  ? Colors.black
-                  : Colors.black, // schwarze Textfarbe
-              fontSize: 14,
-              fontFamily: 'Sans Serif Collection',
-              fontWeight: FontWeight.w400,
-              letterSpacing: 0.28,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ACCORDIONS
-
-/* ExpansionTile hat nicht das gewünschte Layout -> deswegen Accordion Package
-class ExpansionTileExample extends StatefulWidget {
-  const ExpansionTileExample({super.key});
-
-  @override
-  State<ExpansionTileExample> createState() => _ExpansionTileExampleState();
-}
-
-class _ExpansionTileExampleState extends State<ExpansionTileExample> {
-  bool _customTileExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const ExpansionTile(
-          title: Text('Color shade'),
-          collapsedBackgroundColor:
-              Color(0xFF42A5F5), // hard coded für jede Farbe?
-          collapsedShape: RoundedRectangleBorder(), // Form des Accordions
-          collapsedTextColor: Color(0xFF000000), // Textfarbe collapsed
-          textColor: Color(0xFF000000), // Textfarbe expanded
-          controlAffinity:
-              ListTileControlAffinity.platform, // eig wo das Icon platziert ist
-          iconColor: Color(0xFF000000), // Farbe des Icons wenn expanded
-          children: <Widget>[
-            ListTile(
-                title: Text(
-                    'Hier ist ein Text, der erklärt, warum diese Farbe geeignet für diese Augenfarbe ist.'))
-          ],
-        ),
-      ],
-    );
-  }
-}*/
-
-class AccordionWidget extends StatelessWidget {
-  const AccordionWidget({super.key});
-
-  // hier statisch die Farben definieren?
-  static const headerStyle =
-      TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold);
-  //static const contentStyleHeader = TextStyle(
-  //color: Color(0xffffffff), fontSize: 14, fontWeight: FontWeight.w700);
-  static const contentStyle = TextStyle(
-      color: Colors.black, fontSize: 14, fontWeight: FontWeight.normal);
-
-  // hier statisch die Texte definieren?
-  static const colorshade1 =
-      'Hier ist ein Text, der erklärt, warum diese Farbe geeignet für diese Augenfarbe ist.';
-  static const colorshade2 =
-      'Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenfarbe ist.';
-
-  @override
-  Widget build(BuildContext context) {
-    return Accordion(
-      contentHorizontalPadding: 20,
-      scaleWhenAnimating: true,
-      openAndCloseAnimation: true,
-      headerPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
-      sectionOpeningHapticFeedback: SectionHapticFeedback.light,
-      sectionClosingHapticFeedback: SectionHapticFeedback.light,
-      children: [
-        AccordionSection(
-          isOpen: false,
-          leftIcon: const Icon(Icons.circle,
-              color: Color.fromARGB(126, 251, 164, 193)), // anpassen
-          rightIcon:
-              Icon(Icons.keyboard_arrow_down, color: Colors.black, size: 20),
-          headerBorderRadius: 30,
-          headerBackgroundColor: Colors.white,
-          headerBackgroundColorOpened: Color(0x7FFEB9D0),
-          contentBackgroundColor: Colors.transparent,
-          contentBorderColor: Colors.white,
-          contentVerticalPadding: 30,
-          header: const Text('Color Shade 1', style: headerStyle),
-          content: const Text(colorshade1, style: contentStyle),
-        ),
-        AccordionSection(
-          isOpen: false,
-          leftIcon: const Icon(Icons.circle,
-              color: Color.fromARGB(126, 251, 164, 193)), // anpassen
-          rightIcon:
-              Icon(Icons.keyboard_arrow_down, color: Colors.black, size: 20),
-          headerBorderRadius: 30,
-          headerBackgroundColor: Colors.white,
-          headerBackgroundColorOpened: Color(0x7FFEB9D0),
-          contentBackgroundColor: Colors.transparent,
-          contentBorderColor: Colors.white,
-          contentVerticalPadding: 30,
-          header: const Text('Color Shade 2', style: headerStyle),
-          content: const Text(colorshade2, style: contentStyle),
-        ),
-      ],
     );
   }
 }

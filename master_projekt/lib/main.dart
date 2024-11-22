@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:master_projekt/camera_widget.dart';
-import 'package:master_projekt/feature_one.dart';
+import 'package:master_projekt/start_analysis.dart';
+import 'package:master_projekt/ui/buttons.dart';
 
 late List<CameraDescription> camerasOfPhone;
 
@@ -31,9 +32,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// In eine eigene File moven?
 // Diese Klasse ruft den Homescreen auf, über den man durch den CTA-Button "continue" weitergeleitet wird
-// Kamera muss aber noch eingebaut werden -> in FeatureOne?
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -104,46 +103,17 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          // CTA Button unten, führt zu FeatureOne
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 70, // 70px Padding von bottom
-            child: Center(
-              child: SizedBox(
-                width: 300,
-                child: TextButton(
-                  onPressed: () {
-                    // Navigation zu FeatureOne
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FeatureOne(title: 'Feature One'),
-                      ),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF342C32), // Background color
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(20), // Rounded corners
-                    ),
-                  ),
-                  child: Text(
-                    'continue',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Sans Serif Collection',
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 0.32,
-                    ),
-                  ),
+          // CTA Button unten, führt zu StartAnalysis()
+          PrimaryButton(
+            buttonText: 'continue',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StartAnalysis(title: 'Analysis'),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ],
       ),
