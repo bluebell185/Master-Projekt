@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/base_screen_with_camera.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
@@ -190,7 +191,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BaseScreenWithCamera(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // Hintergrund
@@ -198,9 +201,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             width: double.infinity,
             height: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(
-                    255, 0, 119, 255)), // ersetzen durch Kamerabild
+            // decoration: const BoxDecoration(
+            //     color: Color.fromARGB(
+            //         255, 0, 119, 255)), // ersetzen durch Kamerabild
 
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -409,6 +412,6 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           Toolbar(),
         ],
       ),
-    );
+    ));
   }
 }
