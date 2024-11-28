@@ -6,7 +6,7 @@ import 'package:master_projekt/main.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
-import 'package:deepar_flutter_lib/deepar_flutter.dart';
+// import 'package:deepar_flutter_lib/deepar_flutter.dart';
 
 // TO DO:
 // pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
@@ -21,35 +21,36 @@ class StartAnalysis extends StatelessWidget {
     return BaseScreenWithCamera(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          //CameraWidget(title: 'Camera'),
-          // Main content background container
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-            // decoration: const BoxDecoration(
-            //     color: Color(
-            //         0xFFA4ABB3)), // momentan noch einfarbiger Background; sollte dann durch Kamerabild ersetzt werden
+        body: Stack(
+          children: [
+            //CameraWidget(title: 'Camera'),
+            // Main content background container
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Title oben
+                  ScreenTitle(
+                    titleText: 'Analysis',
+                    titleColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
 
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Title oben
-                ScreenTitle(
-                  titleText: 'Analysis',
-                  textColor: Colors.white,
-                ),
+            Toolbar(),
 
-                // CTA Button unten, führt zu AnalysisResults()
-                PrimaryButton(
-                  buttonText: 'start analysis',
-                  onPressed: () {
-                    // TO DO: Funktion aufrufen, die die Gesichtsanalyse startet
+            // CTA Button unten, führt zu AnalysisResults()
+            PrimaryButton(
+              buttonText: 'start analysis',
+              onPressed: () {
+                // TO DO: Funktion aufrufen, die die Gesichtsanalyse startet
 
-                    /* HIER: Gesichtsanalyse!
+                /* HIER: Gesichtsanalyse!
 
                       - Loading Screen bzw. Scan-Effekt sollte laufen
                       - nach Analyse poppt Pop-Up auf, das die Analysis-Results anzeigt, die User modifizieren kann -> results_check.dart - ResultsCheck()
@@ -58,22 +59,18 @@ class StartAnalysis extends StatelessWidget {
 
                       */
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AnalysisResults(title: 'AnalysisResults'),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AnalysisResults(title: 'AnalysisResults'),
+                  ),
+                );
+              },
             ),
-          ),
-          // Toolbar rechts oben
-          Toolbar(),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

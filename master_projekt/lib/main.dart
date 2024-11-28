@@ -1,4 +1,5 @@
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
+//import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:master_projekt/base_screen_with_camera.dart';
@@ -15,9 +16,11 @@ Future<void> main() async {
   camerasOfPhone = await availableCameras();
 
   deepArController.initialize(
-          androidLicenseKey:"1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
-          iosLicenseKey:"bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
-          resolution: Resolution.high);
+      androidLicenseKey:
+          "1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
+      iosLicenseKey:
+          "bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
+      resolution: Resolution.high);
 
   runApp(const MyApp());
 }
@@ -45,7 +48,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreenWithCamera(
-      child: Scaffold(
+        child: Scaffold(
       //appBar: AppBar(title: Text('Home')),
       body: Stack(
         children: [
@@ -119,14 +122,13 @@ class HomeScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StartAnalysis(title: 'Analysis' ),
+                  builder: (context) => StartAnalysis(title: 'Analysis'),
                 ),
               );
             },
           ),
         ],
       ),
-    )
-    );
+    ));
   }
 }

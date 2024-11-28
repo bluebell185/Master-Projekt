@@ -1,7 +1,7 @@
 PODS:
   - camera_avfoundation (0.0.1):
     - Flutter
-  - deepar_flutter (0.0.5):
+  - deepar_flutter_lib (0.0.1):
     - Flutter
   - Flutter (1.0.0)
   - google_mlkit_commons (0.9.0):
@@ -62,7 +62,7 @@ PODS:
 
 DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
-  - deepar_flutter (from `.symlinks/plugins/deepar_flutter/ios`)
+  - deepar_flutter_lib (from `.symlinks/plugins/deepar_flutter_lib/ios`)
   - Flutter (from `Flutter`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
   - google_mlkit_face_detection (from `.symlinks/plugins/google_mlkit_face_detection/ios`)
@@ -85,8 +85,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
-  deepar_flutter:
-    :path: ".symlinks/plugins/deepar_flutter/ios"
+  deepar_flutter_lib:
+    :path: ".symlinks/plugins/deepar_flutter_lib/ios"
   Flutter:
     :path: Flutter
   google_mlkit_commons:
@@ -98,7 +98,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
-  deepar_flutter: e89060abce0c460f36a0bf73802f8a5443f1fdb5
+  deepar_flutter_lib: cf4a01640555e140cf62b7ec8d0b0eb08d2d16c3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   google_mlkit_commons: 384e4e206e122b6dad430d3158205e0b2fac6789
   google_mlkit_face_detection: ff627695d8eba051db7e0f13f7b20d802df1f84c
@@ -115,6 +115,6 @@ SPEC CHECKSUMS:
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 6f6efb94c4bfc4a7eea562e031a631d1637770bc
+PODFILE CHECKSUM: 46177b9fbfb09eb8c3381b9f2470a9ca6fe593ee
 
 COCOAPODS: 1.15.2

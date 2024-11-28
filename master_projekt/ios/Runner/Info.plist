@@ -47,5 +47,7 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Die Kamera wird benötigt, um Make-up-Looks empfehlen und anzeigen zu können</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Reason</string>
 </dict>
 </plist>

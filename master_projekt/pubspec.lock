@@ -121,14 +121,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  deepar_flutter:
+  deepar_flutter_lib:
     dependency: "direct main"
     description:
-      name: deepar_flutter
-      sha256: "4d136ba26f6a09c56fc6a2a18ce53a883f4f912cf43de34326c822f7f6692b33"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.5"
+      path: "."
+      ref: main
+      resolved-ref: "5fc27166a1f2ae01ee07f59406a51273b10a165f"
+      url: "https://github.com/bluebell185/deepar_flutter_lib.git"
+    source: git
+    version: "0.0.1"
   fake_async:
     dependency: transitive
     description:
