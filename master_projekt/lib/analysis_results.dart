@@ -4,6 +4,7 @@ import 'package:master_projekt/base_screen_with_camera.dart';
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
 import 'package:master_projekt/ui/tabs.dart';
+import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 
 // TO DO: replace pixel padding with rem einheit?
@@ -29,6 +30,7 @@ class AnalysisResults extends StatefulWidget {
 
 class _AnalysisResultsState extends State<AnalysisResults> {
   String? selectedTab; // Tracked den ausgewählten Tab ('eyes', 'lips', etc.)
+  bool _isBoxThreeOpen = false; // Tracked welche Box gerade offen ist
   EyeColorCategory?
       eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
   LipCategory? lipCategory;
@@ -37,6 +39,19 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   // Liste mit den verfügbaren Tabs
   final List<String> tabs = ['eyes', 'lips', 'brows', 'blush'];
+
+// Navigation zwischen textlichen (Box2) und bildlichen (Box3) Recommendations
+  void _navigateToBoxThree() {
+    setState(() {
+      _isBoxThreeOpen = true;
+    });
+  }
+
+  void _navigateToBoxTwo() {
+    setState(() {
+      _isBoxThreeOpen = false;
+    });
+  }
 
   // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
   void setEyeColorCategory(String colorValue) {
@@ -194,224 +209,248 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     return BaseScreenWithCamera(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          // Hintergrund
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-            // decoration: const BoxDecoration(
-            //     color: Color.fromARGB(
-            //         255, 0, 119, 255)), // ersetzen durch Kamerabild
-
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Title oben
-                const Text(
-                  'Analysis',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontFamily: 'Chicle', // TO DO: installieren
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.48,
+        body: Stack(
+          children: [
+            // Hintergrund
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ScreenTitle(
+                    titleText: 'Analysis',
+                    titleColor: Colors.white,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          // ContentBox-Abschnitte 1+2
-          // TO DO: Column Height + Verhalten (Scroll etc.), wenn zweiter Abschnitt kommt
-          Stack(
-            children: [
-              Positioned(
-                bottom: 0,
-                child: Column(
-                  children: [
-                    // erster ContentBox-Abschnitt
-                    Container(
-                      width: 393,
-                      //height: 175,
-                      padding: const EdgeInsets.only(
-                          top: 10, left: 10, right: 10, bottom: 20),
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+            Toolbar(),
+            // Scrollable Frame A (Content Box Sections)
+            DraggableScrollableSheet(
+              initialChildSize: 0.25, // Box 1 in position 1
+              minChildSize: 0.25, // Minimum size
+              maxChildSize: 0.8, // Full screen
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return SingleChildScrollView(
+                  controller: scrollController,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
                       ),
-
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // light-beige Content-Box
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            clipBehavior: Clip.antiAlias,
-                            decoration: ShapeDecoration(
-                              color: Color(0xFFF1EADD),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                          // Content Box 1
+                          _buildBox1(),
+
+                          // Insert Box 2 after selecting a tab
+                          if (selectedTab != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child:
+                                  _isBoxThreeOpen ? _buildBox3() : _buildBox2(),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // HEADING
-                                Text(
-                                  'your analysis results',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 24,
-                                    fontFamily: 'Chicle',
-                                    fontWeight: FontWeight.w400,
-                                    height: 0,
-                                    letterSpacing: 0.48,
-                                  ),
-                                ),
-
-                                // WHITESPACE
-                                const SizedBox(height: 10),
-
-                                // TEXT
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    'Hier steht Text - um mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontFamily: 'Sans Serif Collection',
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.5,
-                                      letterSpacing: 0.28,
-                                    ),
-                                  ),
-                                ),
-
-                                // WHITESPACE
-                                const SizedBox(height: 30),
-
-                                // TABS
-                                // - Swipe-Gesture -> gewährt durch class ScrollableTabs()
-                                // - Interaktion mit den Tabs -> gewährt durch onTabSelected() und class Tab()
-                                SingleChildScrollView(
-                                  // A box in which a single widget can be scrolled.
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: tabs.map((tab) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: TabElement(
-                                          label: tab,
-                                          isSelected: selectedTab == tab,
-                                          onTap: () {
-                                            setState(() {
-                                              selectedTab = (selectedTab == tab)
-                                                  ? null
-                                                  : tab;
-                                              if (selectedTab == 'eyes') {
-                                                setEyeColorCategory(
-                                                    'blue'); // Set the eye color category here based on extracted color
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                    // Zweiter ContentBox-Abschnitt je nach Tab & Kategorie
-                    if (selectedTab != null) ...[
-                      const SizedBox(height: 10),
-
-                      // weiße Content-Box
-                      Container(
-                        width: 393,
-                        padding: const EdgeInsets.only(
-                            top: 10, left: 10, right: 10, bottom: 20),
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // light-beige Content-Box
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              clipBehavior: Clip.antiAlias,
-                              decoration: ShapeDecoration(
-                                color: Color(0xFFF1EADD),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      // hier: Icon?
-                                      // const SizedBox(width: 8),
-                                      Text(
-                                        selectedTab!,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  _getTabContent(
-                                      selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
-                                  const SizedBox(height: 10),
-
-                                  Positioned(
-                                    left: 0,
-                                    child: AccordionWidget(),
-                                  ),
-
-                                  // TO DO: Navigation Arrows um von Text Recommendations zu Image Recommendations zu switchen
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
+  // Content Box 1
+  Widget _buildBox1() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1EADD),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Heading(
+            headingText: 'your analysis results',
+            headingColor: Colors.black,
           ),
-          // Toolbar rechts oben
-          Toolbar(),
+          const SizedBox(height: 10),
+          const BodyText(
+            bodyText:
+                'Hier steht Text - um mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
+            bodyTextColor: Colors.black,
+          ),
+          const SizedBox(height: 20),
+          // Tab buttons
+          SingleChildScrollView(
+            // A box in which a single widget can be scrolled.
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: tabs.map((tab) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: TabElement(
+                    label: tab,
+                    isSelected: selectedTab == tab,
+                    onTap: () {
+                      setState(() {
+                        selectedTab = (selectedTab == tab) ? null : tab;
+                        if (selectedTab == 'eyes') {
+                          setEyeColorCategory(
+                              'blue'); // Set the eye color category here based on extracted color
+                        }
+                      });
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ],
       ),
-    ));
+    );
   }
+
+  // Content Box 2
+  Widget _buildBox2() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1EADD),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$selectedTab',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _getTabContent(
+              selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
+          const SizedBox(height: 10),
+          const AccordionWidget(),
+          const SizedBox(height: 10),
+
+          // Navigation zu Box 3
+          Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward, color: Colors.black),
+              onPressed: _navigateToBoxThree,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBox3() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1EADD),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'recommendations',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const BodyText(
+            bodyText:
+                'Here is the content for Box 3...Tap on the look you desire to see it applied on your face.',
+          ),
+
+          imageRecommendations(),
+
+          // Navigation zu Box 2
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: _navigateToBoxTwo,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget imageRecommendations() {
+  return GridView.builder(
+    // Grid aus Kacheln
+    shrinkWrap:
+        true, // shrinkt den Content, damit er in die Spalte passt -> anpassen mit Seitenverhältnis -- ???
+    physics:
+        NeverScrollableScrollPhysics(), // damit man in der GridView nicht scrollen kann
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2, // zwei Kacheln pro Zeile
+      mainAxisSpacing: 10, // Vertikaler Abstand zwischen Kacheln
+      crossAxisSpacing: 10, // Horizontaler Abstand zwischen Kacheln
+      childAspectRatio: 4 / 3, // Seitenverhältnis der Kacheln -- ???
+    ),
+    itemCount: 6, // Anzahl Looks
+    itemBuilder: (context, index) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8)),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/look1.png'), // austauschen
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 2.0, bottom: 5.0),
+              child: Text(
+                'Look ${index + 1}',
+                style: TextStyle(fontSize: 14, color: Colors.black),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
