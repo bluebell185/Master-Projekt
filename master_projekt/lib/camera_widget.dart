@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:deepar_flutter_lib/deepar_flutter.dart';
+
 import 'face_painter.dart';
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as img;
@@ -15,25 +17,31 @@ import 'package:master_projekt/main.dart';
 In diesem Widget wird die Kamera eingerichtet und geöffnet
 */
 class CameraWidget extends StatefulWidget {
-  const CameraWidget({super.key, required this.title});
+  const CameraWidget({super.key, required this.title, required this.child});
 
   final String title;
+  final Widget child;
 
   @override
   State<CameraWidget> createState() => _CameraWidgetState();
 }
 
+double scale = 0;
+
 class _CameraWidgetState extends State<CameraWidget> {
   late CameraController controller;
+  late ValueNotifier<List<Face>> facesNotifier;
   List<Face> faces = [];
   double inputImageWidth = 1;
   double inputImageHeight = 1;
+  InputImageRotation inputImageRotation = InputImageRotation.rotation270deg;
 
   // Set true to see the contour points found by ML Kit
-  bool isContourVisible = true;
+  bool isContourVisible = false;
 
   @override
   void initState() {
+    facesNotifier = ValueNotifier([]);
     super.initState();
     final detectorOptions = FaceDetectorOptions(
         enableClassification: false,
@@ -48,7 +56,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     final CameraDescription selfieCam = chooseSelfieCamera();
 
     // Kamera initialisieren - Hier Audio auf false, da sonst auch nach Mikrofonberechtigung gefragt wird
-    controller = CameraController(selfieCam, ResolutionPreset.medium,
+    controller = CameraController(selfieCam, ResolutionPreset.low,
         enableAudio: false,
         fps: 2,
         imageFormatGroup: (Platform.isAndroid
@@ -60,23 +68,24 @@ class _CameraWidgetState extends State<CameraWidget> {
       }
       setState(() {});
 
-      await controller.startImageStream((CameraImage image) async {
-        // Das aktuelle Kamerabild muss nun in ein InputImage umgewandelt werden
-        // CameraDescription description = controller.description;
-        final visionImage =
-            inputImageFromCameraImage(image, selfieCam, controller);
+      // await controller.startImageStream((CameraImage image) async {
+      //   // Das aktuelle Kamerabild muss nun in ein InputImage umgewandelt werden
+      //   // CameraDescription description = controller.description;
+      //   final visionImage =
+      //       inputImageFromCameraImage(image, selfieCam, controller);
 
-        // Bildgröße für spätere Punktanpassungen
-        inputImageHeight = visionImage!.metadata!.size.height;
-        inputImageWidth = visionImage.metadata!.size.width;
+      //   // Bildgröße für spätere Punktanpassungen
+      //   inputImageHeight = visionImage!.metadata!.size.height;
+      //   inputImageWidth = visionImage.metadata!.size.width;
+      //   inputImageRotation = visionImage.metadata!.rotation;
 
-        // Gesichter & Konturen finden
-        final detectedFaces = await faceDetector.processImage(visionImage);
-        setState(() {
-          faces = detectedFaces;
-        });
-        getFaceData(faces);
-      });
+      //   // Gesichter & Konturen finden
+      //   final detectedFaces = await faceDetector.processImage(visionImage);
+      //   // setState(() {
+      //   //   faces = detectedFaces;
+      //   // });
+      //   facesNotifier.value = detectedFaces;
+      // });
     }).catchError((Object e) {
       if (e is CameraException) {
         switch (e.code) {
@@ -107,6 +116,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     // TODO:
     // faceDetector.close();
     controller.dispose();
+    facesNotifier.dispose();
     super.dispose();
   }
 
@@ -121,27 +131,74 @@ class _CameraWidgetState extends State<CameraWidget> {
     // Bildschirmgröße ermitteln
     final screenSize = MediaQuery.of(context).size;
 
-    var scale = screenSize.aspectRatio * camera.aspectRatio;
+    scale = screenSize.aspectRatio * camera.aspectRatio;
     if (scale < 1) scale = 1 / scale;
 
+    // return Scaffold(
+    //   body: Stack(
+    //     children: [
+    //       // Kameravorschau
+    //       Transform.scale(
+    //         scale: scale,
+    //         child: Center(
+    //           child: controller.value.isInitialized
+    //               ? CameraPreview(controller)
+    //               : CircularProgressIndicator(),
+    //         ),
+    //       ),
+    //       // CustomPaint für das Malen auf das Bild
+    //       if (isContourVisible)
+    //         CustomPaint(
+    //           foregroundPainter: FacePainter(null, faces, scale,
+    //               inputImageHeight, inputImageWidth, screenSize, inputImageRotation),
+    //         ),
+    //     ],
+    //   ),
+    // );
+
+      // return isContourVisible ?
+      //       CustomPaint(
+      //         foregroundPainter: FacePainter(null, faces, scale,
+      //             inputImageHeight, inputImageWidth, screenSize, inputImageRotation),
+      //       )
+      //     :
+      //  CircularProgressIndicator();
+
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Kameravorschau
+          // Hintergrund: CameraWidget
           Transform.scale(
-            scale: scale,
+            scale: 1.3, //scale,
             child: Center(
-              child: controller.value.isInitialized
-                  ? CameraPreview(controller)
-                  : CircularProgressIndicator(),
-            ),
+                child: deepArController.isInitialized
+                    ? DeepArPreview(deepArController)
+                    : //deepArController.hasPermission ?
+                    CircularProgressIndicator()
+                //: TODO Error Widget wegen Kamera/Mikrofon-Berechtigung
+                ),
           ),
-          // CustomPaint für das Malen auf das Bild
+          //CustomPaint für das Malen auf das Bild
           if (isContourVisible)
-            CustomPaint(
-              foregroundPainter: FacePainter(null, faces, scale,
-                  inputImageHeight, inputImageWidth, screenSize),
-            ),
+            ValueListenableBuilder<List<Face>>(
+            valueListenable: facesNotifier,
+            builder: (context, faces, child) {
+              return CustomPaint(
+                foregroundPainter: FacePainter(
+                  null,
+                  faces,
+                  scale,
+                  inputImageHeight,
+                  inputImageWidth,
+                  screenSize,
+                  inputImageRotation,
+                ),
+              );
+            },
+          ),
+          // Vordergrund-Inhalt: UI-Features
+          widget.child,
         ],
       ),
     );

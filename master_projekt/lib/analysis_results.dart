@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/base_screen_with_camera.dart';
+import 'package:master_projekt/camera_widget.dart';
+
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
