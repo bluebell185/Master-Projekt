@@ -3,6 +3,8 @@ import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:master_projekt/base_screen_with_camera.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
