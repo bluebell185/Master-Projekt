@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/base_screen_with_camera.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/camera_widget.dart';
 
 
@@ -297,6 +297,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   @override
   Widget build(BuildContext context) {
+// LISA: <<<<<<< HEAD
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -313,6 +314,29 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             children: [
               // Content Box 1
               _buildBox1(),
+// MEINS: =======
+    return ScreenWithDeeparCamera(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            // Hintergrund
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ScreenTitle(
+                    titleText: 'Analysis',
+                    titleColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+// >>>>>>> 6f16cf8 (Kästchen-Koordinaten anpassen und Code aufräumen)
 
               // Einfügen von Box 2 nach Tab-Auswahl
               if (widget.selectedTab != null)

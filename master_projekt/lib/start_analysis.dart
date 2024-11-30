@@ -3,6 +3,10 @@ import 'package:master_projekt/base_screen_with_camera.dart';
 import 'package:master_projekt/feature_one.dart';
 
 // UI-Elemente
+import 'package:master_projekt/analysis_results.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/camera_widget.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
@@ -17,7 +21,7 @@ class StartAnalysis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreenWithCamera(
+    return ScreenWithDeeparCamera(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(

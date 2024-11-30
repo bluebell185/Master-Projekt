@@ -187,12 +187,7 @@ class _CameraWidgetState extends State<CameraWidget> {
               return CustomPaint(
                 foregroundPainter: FacePainter(
                   null,
-                  faces,
-                  scale,
-                  inputImageHeight,
-                  inputImageWidth,
-                  screenSize,
-                  inputImageRotation,
+                  faces
                 ),
               );
             },

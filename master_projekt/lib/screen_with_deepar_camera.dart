@@ -23,15 +23,15 @@ import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
 import 'package:path_provider/path_provider.dart';
 
-class BaseScreenWithCamera extends StatefulWidget {
-  const BaseScreenWithCamera({super.key, required this.child});
+class ScreenWithDeeparCamera extends StatefulWidget {
+  const ScreenWithDeeparCamera({super.key, required this.child});
   final Widget child;
 
   @override
-  State<BaseScreenWithCamera> createState() => _BaseScreenWithCamera();
+  State<ScreenWithDeeparCamera> createState() => _ScreenWithDeeparCamera();
 }
 
-class _BaseScreenWithCamera extends State<BaseScreenWithCamera> {
+class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
   int i = 0;
   List<Face> faces = [];
   late FaceDetector faceDetector;
@@ -93,8 +93,7 @@ class _BaseScreenWithCamera extends State<BaseScreenWithCamera> {
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild
               if (isContourVisible)
                 CustomPaint(
-                  foregroundPainter: FacePainter(null, faces, scale, 0.0, 0.0,
-                      screenSize, InputImageRotation.rotation270deg),
+                  foregroundPainter: FacePainter(null, faces),
                 ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
