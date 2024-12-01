@@ -3,7 +3,6 @@ import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:master_projekt/base_screen_with_camera.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
@@ -116,16 +115,23 @@ class HomeScreen extends StatelessWidget {
           ),
 
           // CTA Button unten, führt zu StartAnalysis()
-          PrimaryButton(
-            buttonText: 'continue',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StartAnalysis(title: 'Analysis'),
-                ),
-              );
-            },
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 70,
+            child: Center(
+              child: PrimaryButton(
+                buttonText: 'continue',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StartAnalysis(title: 'Analysis'),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),

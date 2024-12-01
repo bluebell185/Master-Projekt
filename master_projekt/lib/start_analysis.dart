@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/base_screen_with_camera.dart';
-import 'package:master_projekt/camera_widget.dart';
-import 'package:master_projekt/main.dart';
+import 'package:master_projekt/results_check.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
@@ -45,12 +43,17 @@ class StartAnalysis extends StatelessWidget {
             Toolbar(),
 
             // CTA Button unten, führt zu AnalysisResults()
-            PrimaryButton(
-              buttonText: 'start analysis',
-              onPressed: () {
-                // TO DO: Funktion aufrufen, die die Gesichtsanalyse startet
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 70,
+              child: Center(
+                child: PrimaryButton(
+                  buttonText: 'start analysis',
+                  onPressed: () {
+                    // TO DO: Funktion aufrufen, die die Gesichtsanalyse startet
 
-                /* HIER: Gesichtsanalyse!
+                    /* HIER: Gesichtsanalyse!
 
                       - Loading Screen bzw. Scan-Effekt sollte laufen
                       - nach Analyse poppt Pop-Up auf, das die Analysis-Results anzeigt, die User modifizieren kann -> results_check.dart - ResultsCheck()
@@ -59,14 +62,15 @@ class StartAnalysis extends StatelessWidget {
 
                       */
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AnalysisResults(title: 'AnalysisResults'),
-                  ),
-                );
-              },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ResultsCheck(),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),

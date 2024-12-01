@@ -2,17 +2,30 @@ import 'package:flutter/material.dart';
 
 // INTERACTIVE TABS
 class ScrollableTabs extends StatefulWidget {
+  final List<String> labels; // Liste der Tab Labels
+  final ValueChanged<int?>
+      onTabSelected; // Callback um ausgewählten Index zurückzugeben
+
+  const ScrollableTabs({
+    super.key,
+    required this.labels,
+    required this.onTabSelected,
+  });
+
   @override
   State<ScrollableTabs> createState() => _ScrollableTabsState();
 }
 
 class _ScrollableTabsState extends State<ScrollableTabs> {
-  int selectedIndex = -1; // -1 = Initial ist kein Tab ausgewählt
+  int? selectedIndex;
 
   void onTabSelected(int index) {
     setState(() {
-      selectedIndex = index; // Ausgewählter Index wird geupdated
+      // Auswahl und De-Selection
+      selectedIndex = (selectedIndex == index) ? null : index;
+      ; // Ausgewählter Index wird geupdated oder auf null gesetzt
     });
+    widget.onTabSelected(selectedIndex); // Parent ausgewählten Tab melden
   }
 
   @override
@@ -20,31 +33,17 @@ class _ScrollableTabsState extends State<ScrollableTabs> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: [
-          TabElement(
-            label: 'eyes',
-            isSelected: selectedIndex == 0,
-            onTap: () => onTabSelected(0),
+        children: List.generate(
+          widget.labels.length,
+          (index) => Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: TabElement(
+              label: widget.labels[index],
+              isSelected: selectedIndex == index,
+              onTap: () => onTabSelected(index),
+            ),
           ),
-          SizedBox(width: 10),
-          TabElement(
-            label: 'lips',
-            isSelected: selectedIndex == 1,
-            onTap: () => onTabSelected(1),
-          ),
-          SizedBox(width: 10),
-          TabElement(
-            label: 'brows',
-            isSelected: selectedIndex == 2,
-            onTap: () => onTabSelected(2),
-          ),
-          SizedBox(width: 10),
-          TabElement(
-            label: 'blush',
-            isSelected: selectedIndex == 3,
-            onTap: () => onTabSelected(3),
-          ),
-        ],
+        ),
       ),
     );
   }
