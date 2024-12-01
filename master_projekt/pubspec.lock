@@ -126,7 +126,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "5fc27166a1f2ae01ee07f59406a51273b10a165f"
+      resolved-ref: ccfb75f13b1013987e7b6d8b41d892fa12b99895
       url: "https://github.com/bluebell185/deepar_flutter_lib.git"
     source: git
     version: "0.0.1"

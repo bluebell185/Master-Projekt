@@ -3,6 +3,7 @@ import 'package:master_projekt/base_screen_with_camera.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
+import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/toolbar.dart';
@@ -11,13 +12,17 @@ import 'package:master_projekt/ui/toolbar.dart';
 // TO DO: Für jede ROI eine eigene File?
 
 // Definition der verschiedenen Kategorien für "eyes"-Tab
-enum EyeColorCategory { blue, green, brown, hazel } // anpassen!
+enum EyeColorCategory { blue, green, brown, grey } // anpassen!
+
+enum EyeShapeCategory { almond, round, upturned, downturned, monolid }
+
+enum BlushCategory { coral, peach, rose, berry }
+
+enum BlushShapeCategory { oval, round, square }
 
 enum LipCategory { red, pink, nude, plum }
 
 enum BrowCategory { thin, thick, arched, straight }
-
-enum BlushCategory { coral, peach, rose, berry }
 
 class AnalysisResults extends StatefulWidget {
   const AnalysisResults({super.key, required this.title});
@@ -29,18 +34,22 @@ class AnalysisResults extends StatefulWidget {
 }
 
 class _AnalysisResultsState extends State<AnalysisResults> {
-  String? selectedTab; // Tracked den ausgewählten Tab ('eyes', 'lips', etc.)
-  bool _isBoxThreeOpen = false; // Tracked welche Box gerade offen ist
-  EyeColorCategory?
-      eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
+  String? selectedTab; // Tracked den ausgewählten Tab ('eyes', 'blush', etc.)
+
+  // Tracked die Augenfarben-Kategorie für "eyes"
+  EyeColorCategory? eyeColorCategory;
+  EyeShapeCategory? eyeShapeCategory;
+  BlushCategory? blushCategory;
+  BlushShapeCategory? blushShapeCategory;
   LipCategory? lipCategory;
   BrowCategory? browCategory;
-  BlushCategory? blushCategory;
 
   // Liste mit den verfügbaren Tabs
-  final List<String> tabs = ['eyes', 'lips', 'brows', 'blush'];
+  final List<String> tabs = ['eyes', 'blush', 'lips', 'brows'];
 
-// Navigation zwischen textlichen (Box2) und bildlichen (Box3) Recommendations
+  // Navigation zwischen textlichen (Box2) und bildlichen (Box3) Recommendations
+  bool _isBoxThreeOpen = false; // Tracked, welche Box gerade offen ist
+
   void _navigateToBoxThree() {
     setState(() {
       _isBoxThreeOpen = true;
@@ -51,6 +60,11 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     setState(() {
       _isBoxThreeOpen = false;
     });
+  }
+
+  // Box 2b ist angezeigt für ROIs 'eyes' und 'blush'
+  bool _shouldShowShape(String tab) {
+    return tab == 'eyes' || tab == 'blush';
   }
 
   // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
@@ -64,7 +78,21 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     } else if (colorValue == 'brown') {
       eyeColorCategory = EyeColorCategory.brown;
     } else if (colorValue == 'hazel') {
-      eyeColorCategory = EyeColorCategory.hazel;
+      eyeColorCategory = EyeColorCategory.grey;
+    }
+  }
+
+  void setEyeShapeCategory(String shapeValue) {
+    if (shapeValue == 'almond') {
+      eyeShapeCategory = EyeShapeCategory.almond;
+    } else if (shapeValue == 'round') {
+      eyeShapeCategory = EyeShapeCategory.round;
+    } else if (shapeValue == 'upturned') {
+      eyeShapeCategory = EyeShapeCategory.upturned;
+    } else if (shapeValue == 'downturned') {
+      eyeShapeCategory = EyeShapeCategory.downturned;
+    } else if (shapeValue == 'monolid') {
+      eyeShapeCategory = EyeShapeCategory.monolid;
     }
   }
 
@@ -86,9 +114,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           'Your eye color is brown. Here are some details about brown eyes...',
           style: TextStyle(fontSize: 14),
         );
-      case EyeColorCategory.hazel:
+      case EyeColorCategory.grey:
         return const Text(
-          'Your eye color is hazel. Here are some details about hazel eyes...',
+          'Your eye color is grey. Here are some details about hazel eyes...',
           style: TextStyle(fontSize: 14),
         );
       default:
@@ -96,8 +124,97 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     }
   }
 
+  Widget _getEyeShapeContent(EyeShapeCategory category) {
+    switch (category) {
+      case EyeShapeCategory.almond:
+        return const Text(
+          'Your eye shape is almond. Here are some details about almond shaped eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeShapeCategory.round:
+        return const Text(
+          'Your eye color is round. Here are some details about round eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeShapeCategory.upturned:
+        return const Text(
+          'Your eye color is upturned. Here are some details about upturned eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeShapeCategory.downturned:
+        return const Text(
+          'Your eye color is downturned. Here are some details about downturned eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      case EyeShapeCategory.monolid:
+        return const Text(
+          'Your eye color is monolid. Here are some details about monolid eyes...',
+          style: TextStyle(fontSize: 14),
+        );
+      default:
+        return Container();
+    }
+  }
+
+  // Beispielgerüst: Logik für die Blush-Kategorie?
+  // Methode für Blush -> if else?
+  void setBlushCategory(String blushValue) {
+    switch (blushValue) {
+      case 'coral':
+        blushCategory = BlushCategory.coral;
+      case 'peach':
+        blushCategory = BlushCategory.peach;
+      case 'rose':
+        blushCategory = BlushCategory.rose;
+      case 'berry':
+        blushCategory = BlushCategory.berry;
+    }
+  }
+
+  void setBlushShapeCategory(String blushShapeValue) {
+    switch (blushShapeValue) {
+      case 'oval':
+        blushShapeCategory = BlushShapeCategory.oval;
+      case 'round':
+        blushShapeCategory = BlushShapeCategory.round;
+      case 'square':
+        blushShapeCategory = BlushShapeCategory.square;
+    }
+  }
+
+  Widget _getBlushContent(BlushCategory category) {
+    final textMap = {
+      BlushCategory.coral:
+          'Your blush color is coral. Details about coral blush...',
+      BlushCategory.peach:
+          'Your blush color is peach. Details about peach blush...',
+      BlushCategory.rose:
+          'Your blush color is rose. Details about rose blush...',
+      BlushCategory.berry:
+          'Your blush color is berry. Details about berry blush...',
+    };
+    return Text(
+      textMap[category] ?? '',
+      style: const TextStyle(fontSize: 14),
+    );
+  }
+
+  Widget _getBlushShapeContent(BlushShapeCategory category) {
+    final textMap = {
+      BlushShapeCategory.oval:
+          'Oval Face. Details about blush for oval faces...',
+      BlushShapeCategory.round:
+          'Round Face. Details about blush for round faces...',
+      BlushShapeCategory.square:
+          'Square Face. Details about blush for square faces...',
+    };
+    return Text(
+      textMap[category] ?? '',
+      style: const TextStyle(fontSize: 14),
+    );
+  }
+
   // Beispielgerüst: Logik für die Lippen-Kategorie?
-  // Methode für Lippen -> if else?
   void setLipCategory(String lipValue) {
     switch (lipValue) {
       case 'red':
@@ -155,51 +272,34 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Beispielgerüst: Logik für die Blush-Kategorie?
-  void setBlushCategory(String blushValue) {
-    switch (blushValue) {
-      case 'coral':
-        blushCategory = BlushCategory.coral;
-      case 'peach':
-        blushCategory = BlushCategory.peach;
-      case 'rose':
-        blushCategory = BlushCategory.rose;
-      case 'berry':
-        blushCategory = BlushCategory.berry;
-    }
-  }
-
-  Widget _getBlushContent(BlushCategory category) {
-    final textMap = {
-      BlushCategory.coral:
-          'Your blush color is coral. Details about coral blush...',
-      BlushCategory.peach:
-          'Your blush color is peach. Details about peach blush...',
-      BlushCategory.rose:
-          'Your blush color is rose. Details about rose blush...',
-      BlushCategory.berry:
-          'Your blush color is berry. Details about berry blush...',
-    };
-    return Text(
-      textMap[category] ?? '',
-      style: const TextStyle(fontSize: 14),
-    );
-  }
-
-  // Main Content für jeden ausgewählten Tab
-  Widget _getTabContent(String tab) {
+  // Main Content für jeden ausgewählten Tab - COLOR
+  Widget _getTabContentColor(String tab) {
     if (tab == 'eyes' && eyeColorCategory != null) {
       return _getEyeColorContent(eyeColorCategory!);
+    } else if (tab == 'blush' && blushCategory != null) {
+      return _getBlushContent(blushCategory!);
     } else if (tab == 'lips' && lipCategory != null) {
       return _getLipContent(lipCategory!);
     } else if (tab == 'brows' && browCategory != null) {
       return _getBrowContent(browCategory!);
-    } else if (tab == 'blush' && blushCategory != null) {
-      return _getBlushContent(blushCategory!);
     }
 
     return Text(
-      'Content for $tab - Placeholder text for this category.',
+      'Content for $tab COLOR - Placeholder text for this category.',
+      style: const TextStyle(fontSize: 14),
+    );
+  }
+
+  // Main Content für jeden ausgewählten Tab - SHAPE
+  Widget _getTabContentShape(String tab) {
+    if (tab == 'eyes' && eyeShapeCategory != null) {
+      return _getEyeShapeContent(eyeShapeCategory!);
+    } else if (tab == 'blush' && blushShapeCategory != null) {
+      return _getBlushShapeContent(blushShapeCategory!);
+    }
+    // oder einfach: return Container();
+    return Text(
+      'Content for $tab SHAPE - Placeholder text for this category.',
       style: const TextStyle(fontSize: 14),
     );
   }
@@ -229,9 +329,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             ),
 
             Toolbar(),
-            // Scrollable Frame A (Content Box Sections)
+            // Scrollable Frame
             DraggableScrollableSheet(
-              initialChildSize: 0.25, // Box 1 in position 1
+              initialChildSize: 0.25, // Box 1 in Ausgangsposition
               minChildSize: 0.25, // Minimum size
               maxChildSize: 0.8, // Full screen
               builder:
@@ -253,7 +353,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
                           // Content Box 1
                           _buildBox1(),
 
-                          // Insert Box 2 after selecting a tab
+                          // Einfügen von Box 2 nach Tab-Auswahl
                           if (selectedTab != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 20),
@@ -295,37 +395,26 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             bodyTextColor: Colors.black,
           ),
           const SizedBox(height: 20),
-          // Tab buttons
-          SingleChildScrollView(
-            // A box in which a single widget can be scrolled.
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: tabs.map((tab) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: TabElement(
-                    label: tab,
-                    isSelected: selectedTab == tab,
-                    onTap: () {
-                      setState(() {
-                        selectedTab = (selectedTab == tab) ? null : tab;
-                        if (selectedTab == 'eyes') {
-                          setEyeColorCategory(
-                              'blue'); // Set the eye color category here based on extracted color
-                        }
-                      });
-                    },
-                  ),
-                );
-              }).toList(),
-            ),
+          // Tab Buttons
+          ScrollableTabs(
+            labels: ['eyes', 'blush', 'lips', 'brows'], // Tab Labels
+            onTabSelected: (index) {
+              setState(() {
+                selectedTab = index == null
+                    ? null
+                    : ['eyes', 'blush', 'lips', 'brows'][index];
+                if (selectedTab == 'eyes') {
+                  setEyeColorCategory('blue'); // anpassen
+                }
+              });
+            },
           ),
         ],
       ),
     );
   }
 
-  // Content Box 2
+  // Content Box 2 - enthält Box 2a) COLOR und Box 2b) SHAPE
   Widget _buildBox2() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -336,8 +425,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Box 2a - COLOR
           Text(
-            '$selectedTab',
+            '$selectedTab - your color',
             style: const TextStyle(
               color: Colors.black,
               fontSize: 18,
@@ -345,11 +435,31 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             ),
           ),
           const SizedBox(height: 10),
-          _getTabContent(
-              selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
+          _getTabContentColor(selectedTab!), // Content für Box 2a - COLOR
           const SizedBox(height: 10),
           const AccordionWidget(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
+
+          // Box 2b - SHAPE
+          if (_shouldShowShape(selectedTab!))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$selectedTab - your shape',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _getTabContentShape(selectedTab!), // Content for Box 2b - SHAPE
+                const SizedBox(height: 10),
+                const AccordionWidget(),
+                const SizedBox(height: 20),
+              ],
+            ),
 
           // Navigation zu Box 3
           Align(
@@ -364,6 +474,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
+  // Content Box 3 - enthält die bildlichen Recommendations
   Widget _buildBox3() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -388,7 +499,17 @@ class _AnalysisResultsState extends State<AnalysisResults> {
                 'Here is the content for Box 3...Tap on the look you desire to see it applied on your face.',
           ),
 
-          imageRecommendations(),
+          ImageRecommendationsGrid(
+            images: [
+              // Kategorien-based Grids/Listen anlegen?
+              'assets/images/look1.png',
+              'assets/images/look2.png',
+              'assets/images/look3.png',
+              'assets/images/look4.png',
+              'assets/images/look5.png',
+              'assets/images/look6.png',
+            ], // Liste der Bild-Pfade
+          ),
 
           // Navigation zu Box 2
           Align(
@@ -404,53 +525,82 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 }
 
-Widget imageRecommendations() {
-  return GridView.builder(
-    // Grid aus Kacheln
-    shrinkWrap:
-        true, // shrinkt den Content, damit er in die Spalte passt -> anpassen mit Seitenverhältnis -- ???
-    physics:
-        NeverScrollableScrollPhysics(), // damit man in der GridView nicht scrollen kann
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2, // zwei Kacheln pro Zeile
-      mainAxisSpacing: 10, // Vertikaler Abstand zwischen Kacheln
-      crossAxisSpacing: 10, // Horizontaler Abstand zwischen Kacheln
-      childAspectRatio: 4 / 3, // Seitenverhältnis der Kacheln -- ???
-    ),
-    itemCount: 6, // Anzahl Looks
-    itemBuilder: (context, index) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8)),
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/look1.png'), // austauschen
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+/*
+  // Content Box 2a)- COLOR
+  Widget _buildBox2a() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1EADD),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$selectedTab color',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 2.0, bottom: 5.0),
-              child: Text(
-                'Look ${index + 1}',
-                style: TextStyle(fontSize: 14, color: Colors.black),
-              ),
+          ),
+          const SizedBox(height: 10),
+          _getTabContentColor(
+              selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
+          const SizedBox(height: 10),
+          const AccordionWidget(),
+          const SizedBox(height: 10),
+
+          // Navigation zu Box 3
+          Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward, color: Colors.black),
+              onPressed: _navigateToBoxThree,
             ),
-          ],
-        ),
-      );
-    },
-  );
-}
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Content Box 2b) - SHAPE
+  Widget _buildBox2b() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1EADD),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$selectedTab shape',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _getTabContentShape(
+              selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
+          const SizedBox(height: 10),
+          const AccordionWidget(),
+          const SizedBox(height: 10),
+
+          // Navigation zu Box 3
+          Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward, color: Colors.black),
+              onPressed: _navigateToBoxThree,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  */
