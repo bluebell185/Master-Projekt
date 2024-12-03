@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/base_screen_with_camera.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
 import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
 import 'package:master_projekt/ui/text.dart';
-import 'package:master_projekt/ui/toolbar.dart';
-
-// TO DO: replace pixel padding with rem einheit?
-// TO DO: Für jede ROI eine eigene File?
 
 // Definition der verschiedenen Kategorien für "eyes"-Tab
 enum EyeColorCategory { blue, green, brown, grey } // anpassen!
@@ -25,42 +20,35 @@ enum LipCategory { red, pink, nude, plum }
 enum BrowCategory { thin, thick, arched, straight }
 
 class AnalysisResults extends StatefulWidget {
-  const AnalysisResults({super.key, required this.title});
+  final String? selectedTab;
+  final bool isBoxThreeOpen;
+  final VoidCallback onNavigateToBoxThree;
+  final VoidCallback onNavigateToBoxTwo;
+  final ValueChanged<String?> onTabSelected;
+  final ScrollController scrollController;
 
-  final String title;
+  const AnalysisResults({
+    super.key,
+    required this.selectedTab,
+    required this.isBoxThreeOpen,
+    required this.onNavigateToBoxThree,
+    required this.onNavigateToBoxTwo,
+    required this.onTabSelected,
+    required this.scrollController,
+  });
 
   @override
   State<AnalysisResults> createState() => _AnalysisResultsState();
 }
 
 class _AnalysisResultsState extends State<AnalysisResults> {
-  String? selectedTab; // Tracked den ausgewählten Tab ('eyes', 'blush', etc.)
-
-  // Tracked die Augenfarben-Kategorie für "eyes"
-  EyeColorCategory? eyeColorCategory;
+  EyeColorCategory?
+      eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
   EyeShapeCategory? eyeShapeCategory;
   BlushCategory? blushCategory;
   BlushShapeCategory? blushShapeCategory;
   LipCategory? lipCategory;
   BrowCategory? browCategory;
-
-  // Liste mit den verfügbaren Tabs
-  final List<String> tabs = ['eyes', 'blush', 'lips', 'brows'];
-
-  // Navigation zwischen textlichen (Box2) und bildlichen (Box3) Recommendations
-  bool _isBoxThreeOpen = false; // Tracked, welche Box gerade offen ist
-
-  void _navigateToBoxThree() {
-    setState(() {
-      _isBoxThreeOpen = true;
-    });
-  }
-
-  void _navigateToBoxTwo() {
-    setState(() {
-      _isBoxThreeOpen = false;
-    });
-  }
 
   // Box 2b ist angezeigt für ROIs 'eyes' und 'blush'
   bool _shouldShowShape(String tab) {
@@ -68,9 +56,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
   // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
+  // 'colorValue' bestimmt die Farbkategorie
+  // 'eyeColorCategory' -> TO DO: Range der Farbkategorien
   void setEyeColorCategory(String colorValue) {
-    // 'colorValue' bestimmt die Farbkategorie
-    // 'eyeColorCategory' -> TO DO: Range der Farbkategorien
     if (colorValue == 'blue') {
       eyeColorCategory = EyeColorCategory.blue;
     } else if (colorValue == 'green') {
@@ -306,68 +294,31 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreenWithCamera(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            // Hintergrund
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ScreenTitle(
-                    titleText: 'Analysis',
-                    titleColor: Colors.white,
-                  ),
-                ],
-              ),
-            ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          controller: widget.scrollController,
+          child: Column(
+            children: [
+              // Content Box 1
+              _buildBox1(),
 
-            Toolbar(),
-            // Scrollable Frame
-            DraggableScrollableSheet(
-              initialChildSize: 0.25, // Box 1 in Ausgangsposition
-              minChildSize: 0.25, // Minimum size
-              maxChildSize: 0.8, // Full screen
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  controller: scrollController,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          // Content Box 1
-                          _buildBox1(),
-
-                          // Einfügen von Box 2 nach Tab-Auswahl
-                          if (selectedTab != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child:
-                                  _isBoxThreeOpen ? _buildBox3() : _buildBox2(),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+              // Einfügen von Box 2 nach Tab-Auswahl
+              if (widget.selectedTab != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: widget.isBoxThreeOpen ? _buildBox3() : _buildBox2(),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -398,17 +349,10 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           // Tab Buttons
           ScrollableTabs(
             labels: ['eyes', 'blush', 'lips', 'brows'], // Tab Labels
-            onTabSelected: (index) {
-              setState(() {
-                selectedTab = index == null
-                    ? null
-                    : ['eyes', 'blush', 'lips', 'brows'][index];
-                if (selectedTab == 'eyes') {
-                  setEyeColorCategory('blue'); // anpassen
-                }
-              });
+            onTabSelected: (tab) {
+              widget.onTabSelected(tab);
             },
-          ),
+          )
         ],
       ),
     );
@@ -416,6 +360,13 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   // Content Box 2 - enthält Box 2a) COLOR und Box 2b) SHAPE
   Widget _buildBox2() {
+    // Schauen, dass ein Tab ausgewählt ist bevor Box 2 gebuilded wird
+    if (widget.selectedTab == null) {
+      return const SizedBox(); // Returne leeres Widget, wenn kein Tab ausgewählt ist
+    }
+
+    print('Building Box 2 with Tab: ${widget.selectedTab}');
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -427,46 +378,41 @@ class _AnalysisResultsState extends State<AnalysisResults> {
         children: [
           // Box 2a - COLOR
           Text(
-            '$selectedTab - your color',
+            '${widget.selectedTab} - your color',
             style: const TextStyle(
               color: Colors.black,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
-          _getTabContentColor(selectedTab!), // Content für Box 2a - COLOR
+          const SizedBox(height: 10), _getTabContentColor(widget.selectedTab!),
           const SizedBox(height: 10),
           const AccordionWidget(),
           const SizedBox(height: 20),
 
           // Box 2b - SHAPE
-          if (_shouldShowShape(selectedTab!))
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$selectedTab - your shape',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _getTabContentShape(selectedTab!), // Content for Box 2b - SHAPE
-                const SizedBox(height: 10),
-                const AccordionWidget(),
-                const SizedBox(height: 20),
-              ],
+          if (_shouldShowShape(widget.selectedTab!)) ...[
+            Text(
+              '${widget.selectedTab} - your shape',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 10),
+            _getTabContentShape(widget.selectedTab!),
+            const SizedBox(height: 10),
+            const AccordionWidget(),
+          ],
+          const SizedBox(height: 20),
 
           // Navigation zu Box 3
           Align(
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon: const Icon(Icons.arrow_forward, color: Colors.black),
-              onPressed: _navigateToBoxThree,
+              onPressed: widget.onNavigateToBoxThree,
             ),
           ),
         ],
@@ -503,11 +449,11 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             images: [
               // Kategorien-based Grids/Listen anlegen?
               'assets/images/look1.png',
-              'assets/images/look2.png',
-              'assets/images/look3.png',
-              'assets/images/look4.png',
-              'assets/images/look5.png',
-              'assets/images/look6.png',
+              'assets/images/look1.png',
+              'assets/images/look1.png',
+              'assets/images/look1.png',
+              'assets/images/look1.png',
+              'assets/images/look1.png',
             ], // Liste der Bild-Pfade
           ),
 
@@ -516,7 +462,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             alignment: Alignment.bottomLeft,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: _navigateToBoxTwo,
+              onPressed: widget.onNavigateToBoxTwo,
             ),
           ),
         ],
@@ -524,83 +470,3 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 }
-
-/*
-  // Content Box 2a)- COLOR
-  Widget _buildBox2a() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1EADD),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$selectedTab color',
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          _getTabContentColor(
-              selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
-          const SizedBox(height: 10),
-          const AccordionWidget(),
-          const SizedBox(height: 10),
-
-          // Navigation zu Box 3
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward, color: Colors.black),
-              onPressed: _navigateToBoxThree,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Content Box 2b) - SHAPE
-  Widget _buildBox2b() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1EADD),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$selectedTab shape',
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          _getTabContentShape(
-              selectedTab!), // Anzeigen des Contents je nach Tab & Kategorie
-          const SizedBox(height: 10),
-          const AccordionWidget(),
-          const SizedBox(height: 10),
-
-          // Navigation zu Box 3
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward, color: Colors.black),
-              onPressed: _navigateToBoxThree,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  */
