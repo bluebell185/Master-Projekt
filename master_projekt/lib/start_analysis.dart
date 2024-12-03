@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/base_screen_with_camera.dart';
-import 'package:master_projekt/results_check.dart';
+import 'package:master_projekt/feature_one.dart';
+
+// UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
-// import 'package:deepar_flutter_lib/deepar_flutter.dart';
 
 // TO DO:
 // pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
@@ -65,7 +66,7 @@ class StartAnalysis extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ResultsCheck(),
+                        builder: (context) => FeatureOne(),
                       ),
                     );
                   },

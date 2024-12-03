@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 // INTERACTIVE TABS
 class ScrollableTabs extends StatefulWidget {
   final List<String> labels; // Liste der Tab Labels
-  final ValueChanged<int?>
-      onTabSelected; // Callback um ausgewählten Index zurückzugeben
+  final ValueChanged<String?>
+      onTabSelected; // Callback um ausgewählten Tab zurückzugeben
 
   const ScrollableTabs({
     super.key,
@@ -25,7 +25,9 @@ class _ScrollableTabsState extends State<ScrollableTabs> {
       selectedIndex = (selectedIndex == index) ? null : index;
       ; // Ausgewählter Index wird geupdated oder auf null gesetzt
     });
-    widget.onTabSelected(selectedIndex); // Parent ausgewählten Tab melden
+    widget.onTabSelected(
+      selectedIndex != null ? widget.labels[selectedIndex!] : null,
+    ); // Parent ausgewählten Tab melden oder null
   }
 
   @override
