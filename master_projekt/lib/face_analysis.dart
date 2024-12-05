@@ -24,7 +24,93 @@ class FaceAnalysis {
     getAverageLipColor(decodedImage, face);
     getAverageEyebrowColor(decodedImage, face);
     getAverageFaceColor(decodedImage, face);
+
+    getEyeShape(face);
+    getFaceShape(face);
   }
+
+  static void getEyeShape(Face face) {
+    List<Point> eyeContour = face.contours[FaceContourType.leftEye]!.points;
+
+    // Wichtige Punkte holen
+    final innerCorner = eyeContour[0]; // Innerer Augenwinkel
+    final outerCorner = eyeContour[8]; // Äußerer Augenwinkel
+    final maxPoint = eyeContour[4]; // oberster Punkt des Auges
+    final minPoint = eyeContour[12]; // niedrigster Punkt des Auges
+
+    // Berechnung Höhe und Breite Auge
+    final width = (outerCorner.x - innerCorner.x).abs();
+    final height = minPoint.y - maxPoint.y;
+
+    final angleCorners =
+        (outerCorner.y - innerCorner.y) / (outerCorner.x - innerCorner.x).abs();
+
+    // Klassifikation
+    if (height / width > 0.5) setEyeShapeCategory("round");
+
+    if (angleCorners < -0.05) setEyeShapeCategory("downturned");
+
+    if (angleCorners > 0.05) setEyeShapeCategory("upturned");
+
+    // TODO setEyeShapeCategory("monolid";
+
+    setEyeShapeCategory(
+        "almond"); // häufigste Augenform zurückgeben -> Quelle Lashadora (s. Ausarbeitung)
+  }
+
+    static void getFaceShape(Face face) {
+  List<Point> faceContour = face.contours[FaceContourType.face]!.points;
+
+  // Wichtige Punkte holen
+  final top = faceContour[0]; // Punkt ganz oben (Stirnmitte)
+  final bottom = faceContour[18]; // Punkt ganz unten (Kinnspitze)
+  final left = faceContour[9]; // Linke Kieferkante
+  final right = faceContour[27]; // Rechte Kieferkante
+
+  // Berechnung Gesichtslänge und -breite
+  double faceHeight = bottom.y.toDouble() - top.y.toDouble();
+  double faceWidth = left.x.toDouble() - right.x.toDouble();
+
+  double lengthToWidthRatio = faceHeight / faceWidth;
+
+  // Krümmung der Kieferlinie
+  double jawCurve = calculateJawCurve(faceContour);
+
+  // Klassifikation basierend auf Kriterien
+  if (lengthToWidthRatio > 1.4 && jawCurve < 0.1) {
+    setBlushShapeCategory("oval");
+  } else if (lengthToWidthRatio <= 1.4 && lengthToWidthRatio >= 1.0 && jawCurve >= 0.1) {
+    setBlushShapeCategory("round");
+  } else {
+    setBlushShapeCategory("square");
+  }
+}
+
+static double calculateJawCurve(List<Point> faceContour) {
+  // Berechnet die Krümmung der Kieferlinie (unterer Teil der Gesichtskontur)
+  List<Point> jawPoints = faceContour.sublist(7,29);
+
+  double totalCurve = 0.0;
+  for (int i = 1; i < jawPoints.length - 1; i++) {
+    Point previous = jawPoints[i - 1];
+    Point current = jawPoints[i];
+    Point next = jawPoints[i + 1];
+
+    // Winkel zwischen aufeinanderfolgenden Segmenten
+    double angle = _angleBetween(previous, current, next);
+    totalCurve += angle;
+  }
+
+  return totalCurve / jawPoints.length;
+}
+
+static double _angleBetween(Point a, Point b, Point c) {
+  // Berechne den Winkel zwischen drei Punkten
+  double ab = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
+  double bc = sqrt(pow(c.x - b.x, 2) + pow(c.y - b.y, 2));
+  double ac = sqrt(pow(c.x - a.x, 2) + pow(c.y - a.y, 2));
+  return acos((pow(ab, 2) + pow(bc, 2) - pow(ac, 2)) / (2 * ab * bc));
+}
 
   static void getAverageEyeColor(img.Image? image, Face face) {
     Point<int> leftEyeMiddlePoint =
@@ -186,8 +272,6 @@ class FaceAnalysis {
     }
     return "Farbe nicht eindeutig erkennbar";
   }
-
-  
 }
 
   
