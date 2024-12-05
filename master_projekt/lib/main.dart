@@ -2,9 +2,6 @@ import 'package:deepar_flutter_lib/deepar_flutter.dart';
 //import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:master_projekt/base_screen_with_camera.dart';
-import 'package:master_projekt/screen_with_deepar_camera.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
@@ -29,9 +26,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // TODO 
-  // deepArController.dispose();
-
   // Basis-Widget
   @override
   Widget build(BuildContext context) {
@@ -42,7 +36,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: HomeScreen(),
-      //const CameraWidget(title: 'Home Page'),
     );
   }
 }

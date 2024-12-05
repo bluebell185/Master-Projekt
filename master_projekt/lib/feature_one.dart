@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/camera_widget.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'results_check.dart';
 import 'analysis_results.dart';
-import 'package:master_projekt/base_screen_with_camera.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/text.dart';
@@ -14,9 +15,10 @@ class FeatureOne extends StatefulWidget {
   State<FeatureOne> createState() => _FeatureOneState();
 }
 
-class _FeatureOneState extends State<FeatureOne> {
   bool showRecommendations =
       false; // boolean zum Anzeigen von Frame mit Box 2 und 3
+
+class _FeatureOneState extends State<FeatureOne> {
   String? newSelectedTab;
   bool isBoxThreeOpen = false; // zur Navigation zwischen Box 2 und 3
 
@@ -41,8 +43,11 @@ class _FeatureOneState extends State<FeatureOne> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreenWithCamera(
+    return ScreenWithDeeparCamera(
+      deepArPreviewKey: GlobalKey(),
+      isAfterAnalysis: true,
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
             Container(
