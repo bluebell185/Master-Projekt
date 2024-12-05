@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/base_screen_with_camera.dart';
+import 'package:master_projekt/camera_widget.dart';
+import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
+import 'package:master_projekt/main.dart';
 
 // UI-Elemente
-import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
-import 'package:master_projekt/camera_widget.dart';
-import 'package:master_projekt/main.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
 // TO DO:
 // pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
+
+bool isAnalysisStarted = false;
 
 class StartAnalysis extends StatelessWidget {
   StartAnalysis({super.key, required this.title});
@@ -21,12 +22,12 @@ class StartAnalysis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenWithDeeparCamera(
+    return CameraWidget(
+      title: 'Kamerabild 1',
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            //CameraWidget(title: 'Camera'),
             // Main content background container
             Container(
               width: double.infinity,
@@ -66,6 +67,13 @@ class StartAnalysis extends StatelessWidget {
                       - nach Auswahl einer ROI (Tab) -> zweiter ContentBox-Abschnitt mit Recommendations & Looks erscheint -> analysis_results.dart - AnalysisResults()
 
                       */
+
+                    if (cameraController.value.isInitialized){
+                      cameraController.stopImageStream();
+                      cameraController.dispose();
+                    }
+
+                    FaceAnalysis.analyseColorsInFace(faceForAnalysis);
 
                     Navigator.push(
                       context,

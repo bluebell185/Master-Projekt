@@ -45,10 +45,10 @@ packages:
     dependency: transitive
     description:
       name: camera_android
-      sha256: d8b17e36353cca3fd37e92f3fce28e7249730e078c72e9b43ee7c7ad2e2f7082
+      sha256: "19b7226387218864cb2388e1ad5db7db50d065222f5511254b03fc397dd21a5e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.9+16"
+    version: "0.10.9+17"
   camera_avfoundation:
     dependency: transitive
     description:
@@ -126,7 +126,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: ccfb75f13b1013987e7b6d8b41d892fa12b99895
+      resolved-ref: "5fc27166a1f2ae01ee07f59406a51273b10a165f"
       url: "https://github.com/bluebell185/deepar_flutter_lib.git"
     source: git
     version: "0.0.1"

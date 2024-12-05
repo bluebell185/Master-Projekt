@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/camera_widget.dart';
 
-
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
 import 'package:master_projekt/ui/recomm_tiles.dart';
@@ -10,15 +9,17 @@ import 'package:master_projekt/ui/tabs.dart';
 import 'package:master_projekt/ui/text.dart';
 
 // Definition der verschiedenen Kategorien für "eyes"-Tab
+enum RoiColorTypes { eye, eyebrow, lip, face }
+
 enum EyeColorCategory { blue, green, brown, grey } // anpassen!
 
 enum EyeShapeCategory { almond, round, upturned, downturned, monolid }
 
-enum BlushCategory { coral, peach, rose, berry }
+enum BlushCategory { light, beige, olive, tanned, dark }
 
 enum BlushShapeCategory { oval, round, square }
 
-enum LipCategory { red, pink, nude, plum }
+enum LipCategory { red, pink, nude, coral }
 
 enum BrowCategory { thin, thick, arched, straight }
 
@@ -44,47 +45,103 @@ class AnalysisResults extends StatefulWidget {
   State<AnalysisResults> createState() => _AnalysisResultsState();
 }
 
-class _AnalysisResultsState extends State<AnalysisResults> {
-  EyeColorCategory?
-      eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
-  EyeShapeCategory? eyeShapeCategory;
-  BlushCategory? blushCategory;
-  BlushShapeCategory? blushShapeCategory;
-  LipCategory? lipCategory;
-  BrowCategory? browCategory;
+EyeColorCategory?
+    eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
+EyeShapeCategory? eyeShapeCategory;
+BlushCategory? blushCategory;
+BlushShapeCategory? blushShapeCategory;
+LipCategory? lipCategory;
+BrowCategory? browCategory;
 
+// Beispielgerüst: Logik für die Augenfarbe-Kategorien?
+// 'colorValue' bestimmt die Farbkategorie
+// 'eyeColorCategory' -> TO DO: Range der Farbkategorien
+void setEyeColorCategory(String colorValue) {
+  if (colorValue == 'blue') {
+    eyeColorCategory = EyeColorCategory.blue;
+  } else if (colorValue == 'green') {
+    eyeColorCategory = EyeColorCategory.green;
+  } else if (colorValue == 'brown') {
+    eyeColorCategory = EyeColorCategory.brown;
+  } else if (colorValue == 'grey') {
+    eyeColorCategory = EyeColorCategory.grey;
+  }
+}
+
+void setEyeShapeCategory(String shapeValue) {
+  if (shapeValue == 'almond') {
+    eyeShapeCategory = EyeShapeCategory.almond;
+  } else if (shapeValue == 'round') {
+    eyeShapeCategory = EyeShapeCategory.round;
+  } else if (shapeValue == 'upturned') {
+    eyeShapeCategory = EyeShapeCategory.upturned;
+  } else if (shapeValue == 'downturned') {
+    eyeShapeCategory = EyeShapeCategory.downturned;
+  } else if (shapeValue == 'monolid') {
+    eyeShapeCategory = EyeShapeCategory.monolid;
+  }
+}
+
+// Beispielgerüst: Logik für die Blush-Kategorie?
+// Methode für Blush -> if else?
+void setBlushCategory(String blushValue) {
+  switch (blushValue) {
+    case 'beige':
+      blushCategory = BlushCategory.beige;
+    case 'dark':
+      blushCategory = BlushCategory.dark;
+    case 'light':
+      blushCategory = BlushCategory.light;
+    case 'olive':
+      blushCategory = BlushCategory.olive;
+    case 'tanned':
+      blushCategory = BlushCategory.tanned;
+  }
+}
+
+void setBlushShapeCategory(String blushShapeValue) {
+  switch (blushShapeValue) {
+    case 'oval':
+      blushShapeCategory = BlushShapeCategory.oval;
+    case 'round':
+      blushShapeCategory = BlushShapeCategory.round;
+    case 'square':
+      blushShapeCategory = BlushShapeCategory.square;
+  }
+}
+
+// Beispielgerüst: Logik für die Lippen-Kategorie?
+void setLipCategory(String lipValue) {
+  switch (lipValue) {
+    case 'red':
+      lipCategory = LipCategory.red;
+    case 'pink':
+      lipCategory = LipCategory.pink;
+    case 'nude':
+      lipCategory = LipCategory.nude;
+    case 'coral':
+      lipCategory = LipCategory.coral;
+  }
+}
+
+// Beispielgerüst: Logik für die Augenbrauen-Kategorie?
+void setBrowCategory(String browValue) {
+  switch (browValue) {
+    case 'thin':
+      browCategory = BrowCategory.thin;
+    case 'thick':
+      browCategory = BrowCategory.thick;
+    case 'arched':
+      browCategory = BrowCategory.arched;
+    case 'straight':
+      browCategory = BrowCategory.straight;
+  }
+}
+
+class _AnalysisResultsState extends State<AnalysisResults> {
   // Box 2b ist angezeigt für ROIs 'eyes' und 'blush'
   bool _shouldShowShape(String tab) {
     return tab == 'eyes' || tab == 'blush';
-  }
-
-  // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
-  // 'colorValue' bestimmt die Farbkategorie
-  // 'eyeColorCategory' -> TO DO: Range der Farbkategorien
-  void setEyeColorCategory(String colorValue) {
-    if (colorValue == 'blue') {
-      eyeColorCategory = EyeColorCategory.blue;
-    } else if (colorValue == 'green') {
-      eyeColorCategory = EyeColorCategory.green;
-    } else if (colorValue == 'brown') {
-      eyeColorCategory = EyeColorCategory.brown;
-    } else if (colorValue == 'hazel') {
-      eyeColorCategory = EyeColorCategory.grey;
-    }
-  }
-
-  void setEyeShapeCategory(String shapeValue) {
-    if (shapeValue == 'almond') {
-      eyeShapeCategory = EyeShapeCategory.almond;
-    } else if (shapeValue == 'round') {
-      eyeShapeCategory = EyeShapeCategory.round;
-    } else if (shapeValue == 'upturned') {
-      eyeShapeCategory = EyeShapeCategory.upturned;
-    } else if (shapeValue == 'downturned') {
-      eyeShapeCategory = EyeShapeCategory.downturned;
-    } else if (shapeValue == 'monolid') {
-      eyeShapeCategory = EyeShapeCategory.monolid;
-    }
   }
 
   // Content für die jeweilige Augenfarben-Kategorie --> JSON?
@@ -147,42 +204,19 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     }
   }
 
-  // Beispielgerüst: Logik für die Blush-Kategorie?
-  // Methode für Blush -> if else?
-  void setBlushCategory(String blushValue) {
-    switch (blushValue) {
-      case 'coral':
-        blushCategory = BlushCategory.coral;
-      case 'peach':
-        blushCategory = BlushCategory.peach;
-      case 'rose':
-        blushCategory = BlushCategory.rose;
-      case 'berry':
-        blushCategory = BlushCategory.berry;
-    }
-  }
-
-  void setBlushShapeCategory(String blushShapeValue) {
-    switch (blushShapeValue) {
-      case 'oval':
-        blushShapeCategory = BlushShapeCategory.oval;
-      case 'round':
-        blushShapeCategory = BlushShapeCategory.round;
-      case 'square':
-        blushShapeCategory = BlushShapeCategory.square;
-    }
-  }
-
   Widget _getBlushContent(BlushCategory category) {
+    // TODO durch JSON-Inhalt ersetzen
     final textMap = {
-      BlushCategory.coral:
-          'Your blush color is coral. Details about coral blush...',
-      BlushCategory.peach:
-          'Your blush color is peach. Details about peach blush...',
-      BlushCategory.rose:
-          'Your blush color is rose. Details about rose blush...',
-      BlushCategory.berry:
-          'Your blush color is berry. Details about berry blush...',
+      // BlushCategory.coral:
+      //     'Your blush color is coral. Details about coral blush...',
+      // BlushCategory.peach:
+      //     'Your blush color is peach. Details about peach blush...',
+      // BlushCategory.rose:
+      //     'Your blush color is rose. Details about rose blush...',
+      // BlushCategory.berry:
+      //     'Your blush color is berry. Details about berry blush...',
+      // BlushCategory.berry:
+      //     'Your blush color is berry. Details about berry blush...',
     };
     return Text(
       textMap[category] ?? '',
@@ -191,6 +225,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
   Widget _getBlushShapeContent(BlushShapeCategory category) {
+    // TODO durch JSON-Inhalt ersetzen
     final textMap = {
       BlushShapeCategory.oval:
           'Oval Face. Details about blush for oval faces...',
@@ -205,27 +240,14 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Beispielgerüst: Logik für die Lippen-Kategorie?
-  void setLipCategory(String lipValue) {
-    switch (lipValue) {
-      case 'red':
-        lipCategory = LipCategory.red;
-      case 'pink':
-        lipCategory = LipCategory.pink;
-      case 'nude':
-        lipCategory = LipCategory.nude;
-      case 'plum':
-        lipCategory = LipCategory.plum;
-    }
-  }
-
   // switch case? was ist besser für JSON?
   Widget _getLipContent(LipCategory category) {
+    // TODO durch JSON-Inhalt ersetzen
     final textMap = {
       LipCategory.red: 'Your lip color is red. Details about red lips...',
       LipCategory.pink: 'Your lip color is pink. Details about pink lips...',
       LipCategory.nude: 'Your lip color is nude. Details about nude lips...',
-      LipCategory.plum: 'Your lip color is plum. Details about plum lips...',
+      //LipCategory.plum: 'Your lip color is plum. Details about plum lips...',
     };
     return Text(
       textMap[category] ?? '',
@@ -233,21 +255,8 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Beispielgerüst: Logik für die Augenbrauen-Kategorie?
-  void setBrowCategory(String browValue) {
-    switch (browValue) {
-      case 'thin':
-        browCategory = BrowCategory.thin;
-      case 'thick':
-        browCategory = BrowCategory.thick;
-      case 'arched':
-        browCategory = BrowCategory.arched;
-      case 'straight':
-        browCategory = BrowCategory.straight;
-    }
-  }
-
   Widget _getBrowContent(BrowCategory category) {
+    // TODO durch JSON-Inhalt ersetzen
     final textMap = {
       BrowCategory.thin: 'Your brow style is thin. Details about thin brows...',
       BrowCategory.thick:
@@ -297,7 +306,6 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   @override
   Widget build(BuildContext context) {
-// LISA: <<<<<<< HEAD
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -314,30 +322,6 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             children: [
               // Content Box 1
               _buildBox1(),
-// MEINS: =======
-    return ScreenWithDeeparCamera(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            // Hintergrund
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ScreenTitle(
-                    titleText: 'Analysis',
-                    titleColor: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-// >>>>>>> 6f16cf8 (Kästchen-Koordinaten anpassen und Code aufräumen)
-
               // Einfügen von Box 2 nach Tab-Auswahl
               if (widget.selectedTab != null)
                 Padding(

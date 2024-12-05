@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
 //import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/feature_one.dart';
 //import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/main.dart';
 //=======
@@ -24,8 +25,13 @@ import 'dart:ui' as ui;
 import 'package:path_provider/path_provider.dart';
 
 class ScreenWithDeeparCamera extends StatefulWidget {
-  const ScreenWithDeeparCamera({super.key, required this.child});
+  const ScreenWithDeeparCamera(
+      {required this.child,
+      required this.deepArPreviewKey,
+      required this.isAfterAnalysis});
   final Widget child;
+  final GlobalKey deepArPreviewKey;
+  final bool isAfterAnalysis;
 
   @override
   State<ScreenWithDeeparCamera> createState() => _ScreenWithDeeparCamera();
@@ -35,11 +41,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
   int i = 0;
   List<Face> faces = [];
   late FaceDetector faceDetector;
-  static GlobalKey deepArPreviewKey = GlobalKey();
   Timer? _screenshotTimer;
-
-  // Auf true setzen, um Landmarks etc angezeigt zu bekommen
-  bool isContourVisible = true;
 
   @override
   void initState() {
@@ -54,8 +56,10 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
         performanceMode: FaceDetectorMode.accurate);
     faceDetector = FaceDetector(options: detectorOptions);
 
+    if (widget.isAfterAnalysis) {
 // Starte regelmäßige Screenshots
-    startScreenshotTimer();
+      //startScreenshotTimer();
+    }
   }
 
   @override
@@ -75,14 +79,16 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
     if (scale < 1) scale = 1 / scale;
 
     return RepaintBoundary(
-        key: deepArPreviewKey,
+        key: widget.deepArPreviewKey,
         child: Scaffold(
+          backgroundColor: Colors.green,
           body: Stack(
             children: [
               // Hintergrund: CameraWidget
               Transform.scale(
                 scale: scale, //scale,
                 child: Center(
+                    // TODO: iOS-Sonderfall einfügen!
                     child: deepArController.isInitialized
                         ? DeepArPreview(deepArController)
                         : //deepArController.hasPermission ?
@@ -91,7 +97,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
                     ),
               ),
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild
-              if (isContourVisible)
+              if (showRecommendations)
                 CustomPaint(
                   foregroundPainter: FacePainter(null, faces),
                 ),
@@ -121,8 +127,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
 
   Future<void> takeScreenshot() async {
     try {
-      final boundary = deepArPreviewKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
+      final boundary = widget.deepArPreviewKey.currentContext
+          ?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) {
         print("RepaintBoundary nicht gefunden");
         return;
@@ -138,8 +144,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
 
       final Uint8List pngBytes = byteData.buffer.asUint8List();
 
-      final nv21Bytes = convertPngToNv21(
-          pngBytes, image.width.toInt(), image.height.toInt());
+      final nv21Bytes =
+          convertPngToNv21(pngBytes, image.width.toInt(), image.height.toInt());
 
       // TODO iOS -> convertPngToBgra8888
 
