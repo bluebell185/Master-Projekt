@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/camera_widget.dart';
-import 'package:master_projekt/main.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FaceAnalysis {
@@ -234,9 +232,9 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "green";
         } else if (hue >= 180 && hue < 300) {
           return "blue";
-        } else if (hue >= 5 && hue < 60) {
-          return "brown";
-        }
+        }  // else if (hue >= 5 && hue < 60) {
+          return "brown"; // Im Zweifelsfall die häufigste Augenfarbe zurückgeben
+        
       case RoiColorTypes.eyebrow:
         if (value < 0.2) {
           return "Schwarz"; // Sehr dunkle Augenbrauen
@@ -244,9 +242,9 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "Blond"; // Helle Augenbrauen
         } else if (hue >= 20 && hue < 40 && saturation > 0.5) {
           return "Braun"; // Brauntöne
-        } else if (hue >= 10 && hue < 20 && value < 0.6) {
-          return "Dunkelbraun"; // Dunklere Brauntöne
-        }
+        } // else if (hue >= 10 && hue < 20 && value < 0.6) {
+          return "Dunkelbraun"; // Dunklere Brauntöne // Im Zweifelsfall die häufigste Augenbrauenfarbe zurückgeben
+        
       case RoiColorTypes.lip:
         if (saturation < 0.3 && value > 0.7) {
           return "pink"; // Dezente, blasse Lippen
@@ -256,7 +254,9 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "coral"; // Warme Korall- und Orangetöne
         } else if (hue >= 60 && hue < 100 && saturation > 0.5) {
           return "nude"; // Dunklere Brauntöne
-        }
+        } 
+          return "red"; // Im Zweifelsfall zurückgeben
+        
       case RoiColorTypes.face:
         if (saturation < 0.3 && value > 0.8) {
           return "light"; // Sehr helle Haut
@@ -268,9 +268,8 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "tanned"; // Dunklere Haut
         } else if (saturation < 0.2 && value < 0.5) {
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit
-        }
+        } return "beige";  // Im Zweifelsfall zurückgeben
     }
-    return "Farbe nicht eindeutig erkennbar";
   }
 }
 

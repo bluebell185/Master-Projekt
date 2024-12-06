@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
+import 'package:master_projekt/analysis_results.dart';
+import 'package:master_projekt/json_parse.dart';
+import 'package:master_projekt/start_analysis.dart';
 
 // Accordion Widget, das die verschiedenen textlichen Recommendations in Analysis-Results darstellt.
 
@@ -36,20 +40,20 @@ class AccordionElement extends AccordionSection {
 }
 
 class AccordionWidget extends StatelessWidget {
-  const AccordionWidget({super.key});
+  static String roi = "";
+  static List<String> category = [];
 
-  // Statische Texte für die Inhalte -> in JSON speichern?
-  static const colorshade1 =
-      'Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenfarbe ist.';
-  static const colorshade2 =
-      'Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenfarbe ist.';
-  static const colorshade3 =
-      'Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenfarbe ist.';
-  static const colorshade4 =
-      'Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenfarbe ist.';
+  AccordionWidget(String? selectedTab, String accordionCategory, {super.key}) {
+    roi = selectedTab!;
+    category.add(accordionCategory);
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> colorShades = getColorShadesForRoi();
+
     return Accordion(
       contentHorizontalPadding: 20,
       scaleWhenAnimating: true,
@@ -65,35 +69,125 @@ class AccordionWidget extends StatelessWidget {
                   193)), // Der Kreis, der die Farbe in Vollfarbe 100% anzeigt
           headerBackgroundColorOpened:
               const Color(0x7FFEB9D0), // Der Hintergrund in der Farbe in 50%
-          headerText: 'Color Shade 1', // Name der Recommendation
-          contentText: colorshade1,
+          headerText:
+              colorShades.entries.elementAt(0).key, // Name der Recommendation
+          contentText: colorShades.entries.elementAt(0).value,
         ),
         AccordionElement(
           leftIcon:
               Icon(Icons.circle, color: Color.fromARGB(124, 255, 223, 116)),
           headerBackgroundColorOpened: Color.fromARGB(123, 255, 235, 171),
-          headerText: 'Color Shade 2',
-          contentText: colorshade2,
+          headerText: colorShades.entries.elementAt(1).key,
+          contentText: colorShades.entries.elementAt(1).value,
         ),
         AccordionElement(
           leftIcon:
               Icon(Icons.circle, color: Color.fromARGB(124, 251, 189, 164)),
           headerBackgroundColorOpened: Color.fromARGB(123, 250, 207, 190),
-          headerText: 'Color Shade 3',
-          contentText: colorshade3,
+          headerText: colorShades.entries.elementAt(2).key,
+          contentText: colorShades.entries.elementAt(2).value,
         ),
         AccordionElement(
           leftIcon:
               Icon(Icons.circle, color: Color.fromARGB(124, 249, 164, 251)),
           headerBackgroundColorOpened: Color.fromARGB(123, 251, 191, 252),
-          headerText: 'Color Shade 4',
-          contentText: colorshade4,
+          headerText: colorShades.entries.elementAt(3).key,
+          contentText: colorShades.entries.elementAt(3).value,
         ),
       ],
     );
   }
-}
 
+  static Map<String, String> getColorShadesForRoi() {
+    String colorOrShape = category[0];
+    if (colorOrShape == "color") {
+      category.removeAt(0);
+      return getColorShadesForRoiColor();
+    } else {
+      category.removeAt(0);
+      return getColorShadesForRoiShape();
+    }
+  }
+
+  static Map<String, String> getColorShadesForRoiColor() {
+    Map<String, String> colorText = {};
+    
+    if (roi == 'eyes') {
+      EyeColor colorForContent = EyeColor(color: "Oops", eyeColorContent: "Something went wrong!", goal: "", recommendedColors: [], techniques: [], imageLinks: []);
+      if (eyeColorCategory == EyeColorCategory.brown) {
+        colorForContent = eyeColorData.eyeColors[0];
+      } else if (eyeColorCategory == EyeColorCategory.blue) {
+        colorForContent = eyeColorData.eyeColors[1];
+      } else if (eyeColorCategory == EyeColorCategory.green) {
+        colorForContent = eyeColorData.eyeColors[2];
+      } else if (eyeColorCategory == EyeColorCategory.grey) {
+        colorForContent = eyeColorData.eyeColors[3];
+      }
+    
+      colorText.putIfAbsent(
+          colorForContent.recommendedColors[0].color,
+          () =>
+              colorForContent.recommendedColors[0].description);
+      colorText.putIfAbsent(
+          colorForContent.recommendedColors[1].color,
+          () =>
+              colorForContent.recommendedColors[1].description);
+      colorText.putIfAbsent(
+          colorForContent.recommendedColors[2].color,
+          () =>
+              colorForContent.recommendedColors[2].description);
+      colorText.putIfAbsent(
+          colorForContent.recommendedColors[3].color,
+          () =>
+              colorForContent.recommendedColors[3].description);
+    } else {
+      colorText.putIfAbsent(
+          "Color Shade 1",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenfarbe ist.");
+      colorText.putIfAbsent(
+          "Color Shade 2",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenfarbe ist.");
+      colorText.putIfAbsent(
+          "Color Shade 3",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenfarbe ist.");
+      colorText.putIfAbsent(
+          "Color Shade 4",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenfarbe ist.");
+    }
+    
+    return colorText;
+  }
+
+
+ static Map<String, String> getColorShadesForRoiShape() {
+    Map<String, String> colorText = {};
+    
+      colorText.putIfAbsent(
+          "Color Shape 1",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenform ist.");
+      colorText.putIfAbsent(
+          "Color Shape 2",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenform ist.");
+      colorText.putIfAbsent(
+          "Color Shape 3",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenform ist.");
+      colorText.putIfAbsent(
+          "Color Shape 4",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenform ist.");
+    
+    
+    return colorText;
+  }
+
+}
 /* ExpansionTile hat nicht das gewünschte Layout -> deswegen Accordion Package
 
 class ExpansionTileExample extends StatefulWidget {
