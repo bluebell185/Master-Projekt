@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/camera_widget.dart';
+import 'package:master_projekt/start_analysis.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
@@ -148,23 +149,23 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   Widget _getEyeColorContent(EyeColorCategory category) {
     switch (category) {
       case EyeColorCategory.blue:
-        return const Text(
-          'Your eye color is blue. Here are some details about blue eyes...',
+        return Text( eyeColorData.eyeColors[1].eyeColorContent, 
+          //'Your eye color is blue. Here are some details about blue eyes...',
           style: TextStyle(fontSize: 14),
         );
       case EyeColorCategory.green:
-        return const Text(
-          'Your eye color is green. Here are some details about green eyes...',
+        return Text( eyeColorData.eyeColors[2].eyeColorContent, 
+          //'Your eye color is green. Here are some details about green eyes...',
           style: TextStyle(fontSize: 14),
         );
       case EyeColorCategory.brown:
-        return const Text(
-          'Your eye color is brown. Here are some details about brown eyes...',
+        return Text( eyeColorData.eyeColors[0].eyeColorContent, 
+          //'Your eye color is brown. Here are some details about brown eyes...',
           style: TextStyle(fontSize: 14),
         );
       case EyeColorCategory.grey:
-        return const Text(
-          'Your eye color is grey. Here are some details about hazel eyes...',
+        return Text( eyeColorData.eyeColors[3].eyeColorContent, 
+          //'Your eye color is grey. Here are some details about hazel eyes...',
           style: TextStyle(fontSize: 14),
         );
       default:
@@ -398,7 +399,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           ),
           const SizedBox(height: 10), _getTabContentColor(widget.selectedTab!),
           const SizedBox(height: 10),
-          const AccordionWidget(),
+          AccordionWidget(widget.selectedTab, "color"),
           const SizedBox(height: 20),
 
           // Box 2b - SHAPE
@@ -414,7 +415,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
             const SizedBox(height: 10),
             _getTabContentShape(widget.selectedTab!),
             const SizedBox(height: 10),
-            const AccordionWidget(),
+            AccordionWidget(widget.selectedTab, "shape"),
           ],
           const SizedBox(height: 20),
 

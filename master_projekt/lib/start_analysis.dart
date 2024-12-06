@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
+import 'package:master_projekt/json_parse.dart';
 import 'package:master_projekt/main.dart';
 
 // UI-Elemente
@@ -14,6 +15,7 @@ import 'package:master_projekt/ui/buttons.dart';
 // pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
 
 bool isAnalysisStarted = false;
+late EyeColorData eyeColorData;
 
 class StartAnalysis extends StatelessWidget {
   StartAnalysis({super.key, required this.title});
@@ -56,7 +58,7 @@ class StartAnalysis extends StatelessWidget {
               child: Center(
                 child: PrimaryButton(
                   buttonText: 'start analysis',
-                  onPressed: () {
+                  onPressed: () async {
                     // TO DO: Funktion aufrufen, die die Gesichtsanalyse startet
 
                     /* HIER: Gesichtsanalyse!
@@ -69,11 +71,12 @@ class StartAnalysis extends StatelessWidget {
                       */
 
                     if (cameraController.value.isInitialized){
-                      cameraController.stopImageStream();
                       cameraController.dispose();
                     }
 
                     FaceAnalysis.analyseColorsInFace(faceForAnalysis);
+
+                    eyeColorData = await loadEyeColorData();
 
                     Navigator.push(
                       context,
