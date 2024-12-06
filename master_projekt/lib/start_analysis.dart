@@ -15,7 +15,7 @@ import 'package:master_projekt/ui/buttons.dart';
 // pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
 
 bool isAnalysisStarted = false;
-late EyeColorData eyeColorData;
+late RoisData roiData;
 
 class StartAnalysis extends StatelessWidget {
   StartAnalysis({super.key, required this.title});
@@ -76,7 +76,7 @@ class StartAnalysis extends StatelessWidget {
 
                     FaceAnalysis.analyseColorsInFace(faceForAnalysis);
 
-                    eyeColorData = await loadEyeColorData();
+                    roiData = await loadRoisData();
 
                     Navigator.push(
                       context,

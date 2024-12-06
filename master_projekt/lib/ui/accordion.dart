@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
@@ -47,8 +46,6 @@ class AccordionWidget extends StatelessWidget {
     roi = selectedTab!;
     category.add(accordionCategory);
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -111,35 +108,44 @@ class AccordionWidget extends StatelessWidget {
 
   static Map<String, String> getColorShadesForRoiColor() {
     Map<String, String> colorText = {};
-    
+    ColorDetail colorForContent = ColorDetail(
+        color: "Oops",
+        eyeColorContent: "Something went wrong!",
+        goal: "",
+        recommendedColors: [],
+        techniques: [],
+        imageLinks: []);
+
     if (roi == 'eyes') {
-      EyeColor colorForContent = EyeColor(color: "Oops", eyeColorContent: "Something went wrong!", goal: "", recommendedColors: [], techniques: [], imageLinks: []);
-      if (eyeColorCategory == EyeColorCategory.brown) {
-        colorForContent = eyeColorData.eyeColors[0];
-      } else if (eyeColorCategory == EyeColorCategory.blue) {
-        colorForContent = eyeColorData.eyeColors[1];
-      } else if (eyeColorCategory == EyeColorCategory.green) {
-        colorForContent = eyeColorData.eyeColors[2];
-      } else if (eyeColorCategory == EyeColorCategory.grey) {
-        colorForContent = eyeColorData.eyeColors[3];
+      for (ColorDetail colorDetail in roiData.rois[0].eyeColors) {
+        if (colorDetail.color == eyeColorCategory!.name) {
+          colorForContent = colorDetail;
+          break;
+        }
       }
-    
-      colorText.putIfAbsent(
-          colorForContent.recommendedColors[0].color,
-          () =>
-              colorForContent.recommendedColors[0].description);
-      colorText.putIfAbsent(
-          colorForContent.recommendedColors[1].color,
-          () =>
-              colorForContent.recommendedColors[1].description);
-      colorText.putIfAbsent(
-          colorForContent.recommendedColors[2].color,
-          () =>
-              colorForContent.recommendedColors[2].description);
-      colorText.putIfAbsent(
-          colorForContent.recommendedColors[3].color,
-          () =>
-              colorForContent.recommendedColors[3].description);
+
+      // TODO
+      // }  else if (roi == 'brows') {
+      //   for (ColorDetail colorDetail in roiData.rois[0].browColors) {
+      //     if (colorDetail.color == browColorCategory!.name) {
+      //       colorForContent = colorDetail;
+      //       break;
+      //     }
+      //   }
+    } else if (roi == 'lips') {
+      for (ColorDetail colorDetail in roiData.rois[0].lipColors) {
+        if (colorDetail.color == lipCategory!.name) {
+          colorForContent = colorDetail;
+          break;
+        }
+      }
+    } else if (roi == 'blush') {
+      for (ColorDetail colorDetail in roiData.rois[0].faceColors) {
+        if (colorDetail.color == blushCategory!.name) {
+          colorForContent = colorDetail;
+          break;
+        }
+      }
     } else {
       colorText.putIfAbsent(
           "Color Shade 1",
@@ -158,35 +164,39 @@ class AccordionWidget extends StatelessWidget {
           () =>
               "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenfarbe ist.");
     }
-    
+
+    if (colorForContent.color != "Oops") {
+      for (int i = 0; i < 4; i++) {
+        colorText.putIfAbsent(colorForContent.recommendedColors[i].color,
+            () => colorForContent.recommendedColors[i].description);
+      }
+    }
+
     return colorText;
   }
 
-
- static Map<String, String> getColorShadesForRoiShape() {
+  static Map<String, String> getColorShadesForRoiShape() {
     Map<String, String> colorText = {};
-    
-      colorText.putIfAbsent(
-          "Color Shape 1",
-          () =>
-              "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenform ist.");
-      colorText.putIfAbsent(
-          "Color Shape 2",
-          () =>
-              "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenform ist.");
-      colorText.putIfAbsent(
-          "Color Shape 3",
-          () =>
-              "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenform ist.");
-      colorText.putIfAbsent(
-          "Color Shape 4",
-          () =>
-              "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenform ist.");
-    
-    
+
+    colorText.putIfAbsent(
+        "Color Shape 1",
+        () =>
+            "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenform ist.");
+    colorText.putIfAbsent(
+        "Color Shape 2",
+        () =>
+            "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenform ist.");
+    colorText.putIfAbsent(
+        "Color Shape 3",
+        () =>
+            "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenform ist.");
+    colorText.putIfAbsent(
+        "Color Shape 4",
+        () =>
+            "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenform ist.");
+
     return colorText;
   }
-
 }
 /* ExpansionTile hat nicht das gewünschte Layout -> deswegen Accordion Package
 
