@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/json_parse.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
@@ -56,7 +57,7 @@ BrowCategory? browCategory;
 
 // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
 // 'colorValue' bestimmt die Farbkategorie
-// 'eyeColorCategory' -> TO DO: Range der Farbkategorien
+// 'eyeColorCategory'
 void setEyeColorCategory(String colorValue) {
   if (colorValue == 'blue') {
     eyeColorCategory = EyeColorCategory.blue;
@@ -145,32 +146,19 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     return tab == 'eyes' || tab == 'blush';
   }
 
-  // Content für die jeweilige Augenfarben-Kategorie --> JSON?
   Widget _getEyeColorContent(EyeColorCategory category) {
-    switch (category) {
-      case EyeColorCategory.blue:
-        return Text( eyeColorData.eyeColors[1].eyeColorContent, 
-          //'Your eye color is blue. Here are some details about blue eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeColorCategory.green:
-        return Text( eyeColorData.eyeColors[2].eyeColorContent, 
-          //'Your eye color is green. Here are some details about green eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeColorCategory.brown:
-        return Text( eyeColorData.eyeColors[0].eyeColorContent, 
-          //'Your eye color is brown. Here are some details about brown eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeColorCategory.grey:
-        return Text( eyeColorData.eyeColors[3].eyeColorContent, 
-          //'Your eye color is grey. Here are some details about hazel eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      default:
-        return Container();
+    String textToDisplay = "Content missing!";
+    for (ColorDetail colorDetail in roiData.rois[0].eyeColors) {
+      if (colorDetail.color == category.name) {
+        textToDisplay = colorDetail.eyeColorContent;
+        break;
+      }
     }
+
+    return Text(
+      textToDisplay,
+      style: const TextStyle(fontSize: 14),
+    );
   }
 
   Widget _getEyeShapeContent(EyeShapeCategory category) {
@@ -206,23 +194,20 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
   Widget _getBlushContent(BlushCategory category) {
-    // TODO durch JSON-Inhalt ersetzen
-    final textMap = {
-      // BlushCategory.coral:
-      //     'Your blush color is coral. Details about coral blush...',
-      // BlushCategory.peach:
-      //     'Your blush color is peach. Details about peach blush...',
-      // BlushCategory.rose:
-      //     'Your blush color is rose. Details about rose blush...',
-      // BlushCategory.berry:
-      //     'Your blush color is berry. Details about berry blush...',
-      // BlushCategory.berry:
-      //     'Your blush color is berry. Details about berry blush...',
-    };
+    String textToDisplay = "Content missing!";
+    for (ColorDetail colorDetail in roiData.rois[0].faceColors) {
+      if (colorDetail.color == category.name) {
+        textToDisplay = colorDetail.eyeColorContent;
+        break;
+      }
+    }
+
     return Text(
-      textMap[category] ?? '',
+      textToDisplay,
       style: const TextStyle(fontSize: 14),
     );
+
+    // TODO was ist mit default: return Container(); überall?
   }
 
   Widget _getBlushShapeContent(BlushShapeCategory category) {
@@ -241,34 +226,32 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // switch case? was ist besser für JSON?
   Widget _getLipContent(LipCategory category) {
-    // TODO durch JSON-Inhalt ersetzen
-    final textMap = {
-      LipCategory.red: 'Your lip color is red. Details about red lips...',
-      LipCategory.pink: 'Your lip color is pink. Details about pink lips...',
-      LipCategory.nude: 'Your lip color is nude. Details about nude lips...',
-      //LipCategory.plum: 'Your lip color is plum. Details about plum lips...',
-    };
+    String textToDisplay = "Content missing!";
+    for (ColorDetail colorDetail in roiData.rois[0].lipColors) {
+      if (colorDetail.color == category.name) {
+        textToDisplay = colorDetail.eyeColorContent;
+        break;
+      }
+    }
+
     return Text(
-      textMap[category] ?? '',
+      textToDisplay,
       style: const TextStyle(fontSize: 14),
     );
   }
 
   Widget _getBrowContent(BrowCategory category) {
-    // TODO durch JSON-Inhalt ersetzen
-    final textMap = {
-      BrowCategory.thin: 'Your brow style is thin. Details about thin brows...',
-      BrowCategory.thick:
-          'Your brow style is thick. Details about thick brows...',
-      BrowCategory.arched:
-          'Your brow style is arched. Details about arched brows...',
-      BrowCategory.straight:
-          'Your brow style is straight. Details about straight brows...',
-    };
+    String textToDisplay = "Content missing!";
+    for (ColorDetail colorDetail in roiData.rois[0].browColors) {
+      if (colorDetail.color == category.name) {
+        textToDisplay = colorDetail.eyeColorContent;
+        break;
+      }
+    }
+
     return Text(
-      textMap[category] ?? '',
+      textToDisplay,
       style: const TextStyle(fontSize: 14),
     );
   }

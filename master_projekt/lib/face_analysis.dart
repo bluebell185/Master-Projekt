@@ -237,13 +237,13 @@ static double _angleBetween(Point a, Point b, Point c) {
         
       case RoiColorTypes.eyebrow:
         if (value < 0.2) {
-          return "Schwarz"; // Sehr dunkle Augenbrauen
+          return "black"; // Sehr dunkle Augenbrauen
         } else if (hue >= 30 && hue < 60 && saturation < 0.5) {
-          return "Blond"; // Helle Augenbrauen
+          return "blonde"; // Helle Augenbrauen
         } else if (hue >= 20 && hue < 40 && saturation > 0.5) {
-          return "Braun"; // Brauntöne
+          return "brown"; // Brauntöne
         } // else if (hue >= 10 && hue < 20 && value < 0.6) {
-          return "Dunkelbraun"; // Dunklere Brauntöne // Im Zweifelsfall die häufigste Augenbrauenfarbe zurückgeben
+          return "brown"; // Dunklere Brauntöne // Im Zweifelsfall die häufigste Augenbrauenfarbe zurückgeben
         
       case RoiColorTypes.lip:
         if (saturation < 0.3 && value > 0.7) {

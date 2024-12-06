@@ -1,47 +1,81 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// Future<List<RoiInformation>> fetchPhotos(http.Client client) async {
-//   final response = await client
-//       .get(Uri.parse('https://jsonplaceholder.typicode.com/photos'));
-
-//   // Use the compute function to run parsePhotos in a separate isolate.
-//   return compute(parsePhotos, response.body);
-// }
-
-// // A function that converts a response body into a List<Photo>.
-// List<RoiInformation> parsePhotos(String responseBody) {
-//   final parsed =
-//       (jsonDecode(responseBody) as List).cast<Map<String, dynamic>>();
-
-//   return parsed.map<RoiInformation>((json) => RoiInformation.fromJson(json)).toList();
-// }
-
-Future<EyeColorData> loadEyeColorData() async {
-  final String response = await rootBundle.loadString('assets/data/roi_eyes.json');
-  final Map<String, dynamic> data = json.decode(response);
-  return EyeColorData.fromJson(data);
+Future<RoisData> loadRoisData() async {
+  final String response = await rootBundle.loadString('assets/data/rois.json');
+  final Map<String, dynamic> jsonData = json.decode(response);
+  return RoisData.fromJson(jsonData);
 }
 
-class EyeColorData {
-  final List<EyeColor> eyeColors;
+class RoisData {
+  final List<Roi> rois;
 
-  EyeColorData({required this.eyeColors});
+  RoisData({required this.rois});
 
-  factory EyeColorData.fromJson(Map<String, dynamic> json) {
-    return EyeColorData(
-      eyeColors: (json['eyeColors'] as List)
-          .map((item) => EyeColor.fromJson(item))
-          .toList(),
+  factory RoisData.fromJson(Map<String, dynamic> json) {
+    return RoisData(
+      rois: (json['rois'] as List).map((roi) => Roi.fromJson(roi)).toList(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'rois': rois.map((roi) => roi.toJson()).toList(),
+    };
   }
 }
 
-class EyeColor {
+class Roi {
+  final List<ColorDetail> eyeColors;
+  final List<ColorDetail> faceColors;
+  final List<ColorDetail> lipColors;
+  final List<ColorDetail> browColors;
+  final List<dynamic>
+      eyeShapes; // Assuming `eyeShapes` and `faceShapes` have no specific structure
+  final List<dynamic> faceShapes;
+
+  Roi({
+    required this.eyeColors,
+    required this.faceColors,
+    required this.lipColors,
+    required this.browColors,
+    required this.eyeShapes,
+    required this.faceShapes,
+  });
+
+  factory Roi.fromJson(Map<String, dynamic> json) {
+    return Roi(
+      eyeColors: (json['eyeColors'] as List)
+          .map((item) => ColorDetail.fromJson(item))
+          .toList(),
+      faceColors: (json['faceColors'] as List)
+          .map((item) => ColorDetail.fromJson(item))
+          .toList(),
+      lipColors: (json['lipColors'] as List)
+          .map((item) => ColorDetail.fromJson(item))
+          .toList(),
+      browColors: (json['browColors'] as List)
+          .map((item) => ColorDetail.fromJson(item))
+          .toList(),
+      eyeShapes: List<dynamic>.from(json['eyeShapes']),
+      faceShapes: List<dynamic>.from(json['faceShapes']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'eyeColors': eyeColors.map((color) => color.toJson()).toList(),
+      'faceColors': faceColors.map((color) => color.toJson()).toList(),
+      'lipColors': lipColors.map((color) => color.toJson()).toList(),
+      'browColors': browColors.map((color) => color.toJson()).toList(),
+      'eyeShapes': eyeShapes,
+      'faceShapes': faceShapes,
+    };
+  }
+}
+
+class ColorDetail {
   final String color;
   final String eyeColorContent;
   final String goal;
@@ -49,7 +83,7 @@ class EyeColor {
   final List<String> techniques;
   final List<String> imageLinks;
 
-  EyeColor({
+  ColorDetail({
     required this.color,
     required this.eyeColorContent,
     required this.goal,
@@ -58,8 +92,8 @@ class EyeColor {
     required this.imageLinks,
   });
 
-  factory EyeColor.fromJson(Map<String, dynamic> json) {
-    return EyeColor(
+  factory ColorDetail.fromJson(Map<String, dynamic> json) {
+    return ColorDetail(
       color: json['color'] as String,
       eyeColorContent: json['eyeColorContent'] as String,
       goal: json['goal'] as String,
@@ -69,6 +103,18 @@ class EyeColor {
       techniques: List<String>.from(json['techniques']),
       imageLinks: List<String>.from(json['imageLinks']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'color': color,
+      'eyeColorContent': eyeColorContent,
+      'goal': goal,
+      'recommendedColors':
+          recommendedColors.map((color) => color.toJson()).toList(),
+      'techniques': techniques,
+      'imageLinks': imageLinks,
+    };
   }
 }
 
@@ -84,133 +130,11 @@ class RecommendedColor {
       description: json['description'] as String,
     );
   }
-}
 
-
-// TODO
-class ROIs {
-  final List<EyeColor> eyes;
-  final List<dynamic> lips;
-  final List<dynamic> brows;
-  final List<dynamic> blush;
-
-  ROIs({
-    required this.eyes,
-    required this.lips,
-    required this.brows,
-    required this.blush,
-  });
-
-  factory ROIs.fromJson(Map<String, dynamic> json) {
-    return ROIs(
-      eyes: (json['eyes']['colors'] as List<dynamic>)
-          .map((e) => EyeColor.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      lips: json['lips'] as List<dynamic>,
-      brows: json['brows'] as List<dynamic>,
-      blush: json['blush'] as List<dynamic>,
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'color': color,
+      'description': description,
+    };
   }
 }
-
-// class EyeColor {
-//   final String color;
-//   final String description;
-//   final Map<String, String> imagePaths;
-
-//   EyeColor({
-//     required this.color,
-//     required this.description,
-//     required this.imagePaths,
-//   });
-
-//   factory EyeColor.fromJson(Map<String, dynamic> json) {
-//     return EyeColor(
-//       color: json['color'] as String,
-//       description: json['description'] as String,
-//       imagePaths: Map<String, String>.from(json['image_paths'] as Map),
-//     );
-//   }
-// }
-
-
-// void main() => runApp(const MyApp());
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     const appTitle = 'Isolate Demo';
-
-//     return const MaterialApp(
-//       title: appTitle,
-//       home: MyHomePage(title: appTitle),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-
-//   final String title;
-
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   late Future<List<Photo>> futurePhotos;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     futurePhotos = fetchPhotos(http.Client());
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.title),
-//       ),
-//       body: FutureBuilder<List<Photo>>(
-//         future: futurePhotos,
-//         builder: (context, snapshot) {
-//           if (snapshot.hasError) {
-//             return const Center(
-//               child: Text('An error has occurred!'),
-//             );
-//           } else if (snapshot.hasData) {
-//             return const Center(
-//               child: Text('Test!'),
-//             );
-//           } else {
-//             return const Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
-
-// class PhotosList extends StatelessWidget {
-//   const PhotosList({super.key, required this.photos});
-
-//   final List<Photo> photos;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GridView.builder(
-//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 2,
-//       ),
-//       itemCount: photos.length,
-//       itemBuilder: (context, index) {
-//         return Image.network(photos[index].thumbnailUrl);
-//       },
-//     );
-//   }
-// }
