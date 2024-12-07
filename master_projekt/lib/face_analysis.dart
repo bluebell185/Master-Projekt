@@ -155,8 +155,8 @@ static double _angleBetween(Point a, Point b, Point c) {
         (((eyebrowLowerRightCorner.x - eyebrowUpperRightCorner.x) / 2) +
             ((eyebrowLowerLeftCorner.x - eyebrowUpperLeftCorner.x) / 2) / 4);
 
-    eyebrowColor = calculateAverageColor(
-        image, Offset(middleXValue, middleYValue), 3, RoiColorTypes.eyebrow);
+    setBrowCategory(calculateAverageColor(
+        image, Offset(middleXValue, middleYValue), 3, RoiColorTypes.eyebrow));
   }
 
   static void getAverageFaceColor(img.Image? image, Face face) {

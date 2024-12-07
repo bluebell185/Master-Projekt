@@ -3,10 +3,8 @@ import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
 import 'package:master_projekt/json_parse.dart';
-import 'package:master_projekt/main.dart';
 
 // UI-Elemente
-import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'results_check.dart';
 import 'analysis_results.dart';
