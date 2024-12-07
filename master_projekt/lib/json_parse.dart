@@ -27,13 +27,13 @@ class RoisData {
 }
 
 class Roi {
-  final List<ColorDetail> eyeColors;
-  final List<ColorDetail> faceColors;
-  final List<ColorDetail> lipColors;
-  final List<ColorDetail> browColors;
-  final List<dynamic>
-      eyeShapes; // Assuming `eyeShapes` and `faceShapes` have no specific structure
-  final List<dynamic> faceShapes;
+  final List<ColorOrShapeDetail> eyeColors;
+  final List<ColorOrShapeDetail> faceColors;
+  final List<ColorOrShapeDetail> lipColors;
+  final List<ColorOrShapeDetail> browColors;
+  final List<ColorOrShapeDetail>
+      eyeShapes; 
+  final List<ColorOrShapeDetail> faceShapes;
 
   Roi({
     required this.eyeColors,
@@ -47,19 +47,23 @@ class Roi {
   factory Roi.fromJson(Map<String, dynamic> json) {
     return Roi(
       eyeColors: (json['eyeColors'] as List)
-          .map((item) => ColorDetail.fromJson(item))
+          .map((item) => ColorOrShapeDetail.fromJson(item))
           .toList(),
       faceColors: (json['faceColors'] as List)
-          .map((item) => ColorDetail.fromJson(item))
+          .map((item) => ColorOrShapeDetail.fromJson(item))
           .toList(),
       lipColors: (json['lipColors'] as List)
-          .map((item) => ColorDetail.fromJson(item))
+          .map((item) => ColorOrShapeDetail.fromJson(item))
           .toList(),
       browColors: (json['browColors'] as List)
-          .map((item) => ColorDetail.fromJson(item))
+          .map((item) => ColorOrShapeDetail.fromJson(item))
           .toList(),
-      eyeShapes: List<dynamic>.from(json['eyeShapes']),
-      faceShapes: List<dynamic>.from(json['faceShapes']),
+      eyeShapes: (json['eyeShapes'] as List)
+          .map((item) => ColorOrShapeDetail.fromJson(item))
+          .toList(),
+      faceShapes: (json['faceShapes'] as List)
+          .map((item) => ColorOrShapeDetail.fromJson(item))
+          .toList(),
     );
   }
 
@@ -69,35 +73,35 @@ class Roi {
       'faceColors': faceColors.map((color) => color.toJson()).toList(),
       'lipColors': lipColors.map((color) => color.toJson()).toList(),
       'browColors': browColors.map((color) => color.toJson()).toList(),
-      'eyeShapes': eyeShapes,
-      'faceShapes': faceShapes,
+      'eyeShapes': eyeShapes.map((shape) => shape.toJson()).toList(),
+      'faceShapes': faceShapes.map((shape) => shape.toJson()).toList(),
     };
   }
 }
 
-class ColorDetail {
-  final String color;
-  final String eyeColorContent;
+class ColorOrShapeDetail {
+  final String colorOrShape;
+  final String contentDescription;
   final String goal;
-  final List<RecommendedColor> recommendedColors;
+  final List<RecommendedColor> recommendations;
   final List<String> techniques;
   final List<String> imageLinks;
 
-  ColorDetail({
-    required this.color,
-    required this.eyeColorContent,
+  ColorOrShapeDetail({
+    required this.colorOrShape,
+    required this.contentDescription,
     required this.goal,
-    required this.recommendedColors,
+    required this.recommendations,
     required this.techniques,
     required this.imageLinks,
   });
 
-  factory ColorDetail.fromJson(Map<String, dynamic> json) {
-    return ColorDetail(
-      color: json['color'] as String,
-      eyeColorContent: json['eyeColorContent'] as String,
+  factory ColorOrShapeDetail.fromJson(Map<String, dynamic> json) {
+    return ColorOrShapeDetail(
+      colorOrShape: json['colorOrShape'] as String,
+      contentDescription: json['contentDescription'] as String,
       goal: json['goal'] as String,
-      recommendedColors: (json['recommendedColors'] as List)
+      recommendations: (json['recommendations'] as List)
           .map((item) => RecommendedColor.fromJson(item))
           .toList(),
       techniques: List<String>.from(json['techniques']),
@@ -107,11 +111,11 @@ class ColorDetail {
 
   Map<String, dynamic> toJson() {
     return {
-      'color': color,
-      'eyeColorContent': eyeColorContent,
+      'colorOrShape': colorOrShape,
+      'contentDescription': contentDescription,
       'goal': goal,
-      'recommendedColors':
-          recommendedColors.map((color) => color.toJson()).toList(),
+      'recommendations':
+          recommendations.map((color) => color.toJson()).toList(),
       'techniques': techniques,
       'imageLinks': imageLinks,
     };
@@ -119,21 +123,21 @@ class ColorDetail {
 }
 
 class RecommendedColor {
-  final String color;
+  final String title;
   final String description;
 
-  RecommendedColor({required this.color, required this.description});
+  RecommendedColor({required this.title, required this.description});
 
   factory RecommendedColor.fromJson(Map<String, dynamic> json) {
     return RecommendedColor(
-      color: json['color'] as String,
+      title: json['title'] as String,
       description: json['description'] as String,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'color': color,
+      'title': title,
       'description': description,
     };
   }

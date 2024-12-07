@@ -108,40 +108,38 @@ class AccordionWidget extends StatelessWidget {
 
   static Map<String, String> getColorShadesForRoiColor() {
     Map<String, String> colorText = {};
-    ColorDetail colorForContent = ColorDetail(
-        color: "Oops",
-        eyeColorContent: "Something went wrong!",
+    ColorOrShapeDetail colorForContent = ColorOrShapeDetail(
+        colorOrShape: "Oops",
+        contentDescription: "Something went wrong!",
         goal: "",
-        recommendedColors: [],
+        recommendations: [],
         techniques: [],
         imageLinks: []);
 
     if (roi == 'eyes') {
-      for (ColorDetail colorDetail in roiData.rois[0].eyeColors) {
-        if (colorDetail.color == eyeColorCategory!.name) {
+      for (ColorOrShapeDetail colorDetail in roiData.rois[0].eyeColors) {
+        if (colorDetail.colorOrShape == eyeColorCategory!.name) {
           colorForContent = colorDetail;
           break;
         }
       }
-
-      // TODO
-      // }  else if (roi == 'brows') {
-      //   for (ColorDetail colorDetail in roiData.rois[0].browColors) {
-      //     if (colorDetail.color == browColorCategory!.name) {
-      //       colorForContent = colorDetail;
-      //       break;
-      //     }
-      //   }
+    } else if (roi == 'brows') {
+      for (ColorOrShapeDetail colorDetail in roiData.rois[0].browColors) {
+        if (colorDetail.colorOrShape == browCategory!.name) {
+          colorForContent = colorDetail;
+          break;
+        }
+      }
     } else if (roi == 'lips') {
-      for (ColorDetail colorDetail in roiData.rois[0].lipColors) {
-        if (colorDetail.color == lipCategory!.name) {
+      for (ColorOrShapeDetail colorDetail in roiData.rois[0].lipColors) {
+        if (colorDetail.colorOrShape == lipCategory!.name) {
           colorForContent = colorDetail;
           break;
         }
       }
     } else if (roi == 'blush') {
-      for (ColorDetail colorDetail in roiData.rois[0].faceColors) {
-        if (colorDetail.color == blushCategory!.name) {
+      for (ColorOrShapeDetail colorDetail in roiData.rois[0].faceColors) {
+        if (colorDetail.colorOrShape == blushCategory!.name) {
           colorForContent = colorDetail;
           break;
         }
@@ -165,10 +163,10 @@ class AccordionWidget extends StatelessWidget {
               "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenfarbe ist.");
     }
 
-    if (colorForContent.color != "Oops") {
+    if (colorForContent.colorOrShape != "Oops") {
       for (int i = 0; i < 4; i++) {
-        colorText.putIfAbsent(colorForContent.recommendedColors[i].color,
-            () => colorForContent.recommendedColors[i].description);
+        colorText.putIfAbsent(colorForContent.recommendations[i].title,
+            () => colorForContent.recommendations[i].description);
       }
     }
 
@@ -177,23 +175,53 @@ class AccordionWidget extends StatelessWidget {
 
   static Map<String, String> getColorShadesForRoiShape() {
     Map<String, String> colorText = {};
+    ColorOrShapeDetail colorForContent = ColorOrShapeDetail(
+        colorOrShape: "Oops",
+        contentDescription: "Something went wrong!",
+        goal: "",
+        recommendations: [],
+        techniques: [],
+        imageLinks: []);
 
-    colorText.putIfAbsent(
-        "Color Shape 1",
-        () =>
-            "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenform ist.");
-    colorText.putIfAbsent(
-        "Color Shape 2",
-        () =>
-            "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenform ist.");
-    colorText.putIfAbsent(
-        "Color Shape 3",
-        () =>
-            "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenform ist.");
-    colorText.putIfAbsent(
-        "Color Shape 4",
-        () =>
-            "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenform ist.");
+    if (roi == 'eyes') {
+      for (ColorOrShapeDetail colorDetail in roiData.rois[0].eyeShapes) {
+        if (colorDetail.colorOrShape == eyeShapeCategory!.name) {
+          colorForContent = colorDetail;
+          break;
+        }
+      }
+    } else if (roi == 'blush') {
+      for (ColorOrShapeDetail colorDetail in roiData.rois[0].faceShapes) {
+        if (colorDetail.colorOrShape == blushShapeCategory!.name) {
+          colorForContent = colorDetail;
+          break;
+        }
+      }
+    } else {
+      colorText.putIfAbsent(
+          "Color Shade 1",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Augenform ist.");
+      colorText.putIfAbsent(
+          "Color Shade 2",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Augenform ist.");
+      colorText.putIfAbsent(
+          "Color Shade 3",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Augenform ist.");
+      colorText.putIfAbsent(
+          "Color Shade 4",
+          () =>
+              "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Augenform ist.");
+    }
+
+    if (colorForContent.colorOrShape != "Oops") {
+      for (int i = 0; i < 4; i++) {
+        colorText.putIfAbsent(colorForContent.recommendations[i].title,
+            () => colorForContent.recommendations[i].description);
+      }
+    }
 
     return colorText;
   }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/json_parse.dart';
-import 'package:master_projekt/screen_with_deepar_camera.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 
 // UI-Elemente
@@ -23,7 +21,9 @@ enum BlushShapeCategory { oval, round, square }
 
 enum LipCategory { red, pink, nude, coral }
 
-enum BrowCategory { thin, thick, arched, straight }
+enum BrowCategory { black, blonde, brown }
+
+enum BrowShapeCategory { thin, thick, arched, straight }
 
 class AnalysisResults extends StatefulWidget {
   final String? selectedTab;
@@ -54,6 +54,7 @@ BlushCategory? blushCategory;
 BlushShapeCategory? blushShapeCategory;
 LipCategory? lipCategory;
 BrowCategory? browCategory;
+BrowShapeCategory? browShapeCategory;
 
 // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
 // 'colorValue' bestimmt die Farbkategorie
@@ -129,14 +130,25 @@ void setLipCategory(String lipValue) {
 // Beispielgerüst: Logik für die Augenbrauen-Kategorie?
 void setBrowCategory(String browValue) {
   switch (browValue) {
+    case 'black':
+      browCategory = BrowCategory.black;
+    case 'blonde':
+      browCategory = BrowCategory.blonde;
+    case 'brown':
+      browCategory = BrowCategory.brown;
+  }
+}
+
+void setBrowShapeCategory(String browValue) {
+  switch (browValue) {
     case 'thin':
-      browCategory = BrowCategory.thin;
+      browShapeCategory = BrowShapeCategory.thin;
     case 'thick':
-      browCategory = BrowCategory.thick;
+      browShapeCategory = BrowShapeCategory.thick;
     case 'arched':
-      browCategory = BrowCategory.arched;
+      browShapeCategory = BrowShapeCategory.arched;
     case 'straight':
-      browCategory = BrowCategory.straight;
+      browShapeCategory = BrowShapeCategory.straight;
   }
 }
 
@@ -148,9 +160,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   Widget _getEyeColorContent(EyeColorCategory category) {
     String textToDisplay = "Content missing!";
-    for (ColorDetail colorDetail in roiData.rois[0].eyeColors) {
-      if (colorDetail.color == category.name) {
-        textToDisplay = colorDetail.eyeColorContent;
+    for (ColorOrShapeDetail colorDetail in roiData.rois[0].eyeColors) {
+      if (colorDetail.colorOrShape == category.name) {
+        textToDisplay = colorDetail.contentDescription;
         break;
       }
     }
@@ -162,42 +174,25 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
   Widget _getEyeShapeContent(EyeShapeCategory category) {
-    switch (category) {
-      case EyeShapeCategory.almond:
-        return const Text(
-          'Your eye shape is almond. Here are some details about almond shaped eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeShapeCategory.round:
-        return const Text(
-          'Your eye color is round. Here are some details about round eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeShapeCategory.upturned:
-        return const Text(
-          'Your eye color is upturned. Here are some details about upturned eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeShapeCategory.downturned:
-        return const Text(
-          'Your eye color is downturned. Here are some details about downturned eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      case EyeShapeCategory.monolid:
-        return const Text(
-          'Your eye color is monolid. Here are some details about monolid eyes...',
-          style: TextStyle(fontSize: 14),
-        );
-      default:
-        return Container();
+    String textToDisplay = "Content missing!";
+    for (ColorOrShapeDetail shapeDetail in roiData.rois[0].eyeShapes) {
+      if (shapeDetail.colorOrShape == category.name) {
+        textToDisplay = shapeDetail.contentDescription;
+        break;
+      }
     }
+
+    return Text(
+      textToDisplay,
+      style: const TextStyle(fontSize: 14),
+    );
   }
 
   Widget _getBlushContent(BlushCategory category) {
     String textToDisplay = "Content missing!";
-    for (ColorDetail colorDetail in roiData.rois[0].faceColors) {
-      if (colorDetail.color == category.name) {
-        textToDisplay = colorDetail.eyeColorContent;
+    for (ColorOrShapeDetail colorDetail in roiData.rois[0].faceColors) {
+      if (colorDetail.colorOrShape == category.name) {
+        textToDisplay = colorDetail.contentDescription;
         break;
       }
     }
@@ -211,26 +206,25 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
   Widget _getBlushShapeContent(BlushShapeCategory category) {
-    // TODO durch JSON-Inhalt ersetzen
-    final textMap = {
-      BlushShapeCategory.oval:
-          'Oval Face. Details about blush for oval faces...',
-      BlushShapeCategory.round:
-          'Round Face. Details about blush for round faces...',
-      BlushShapeCategory.square:
-          'Square Face. Details about blush for square faces...',
-    };
+    String textToDisplay = "Content missing!";
+    for (ColorOrShapeDetail shapeDetail in roiData.rois[0].faceShapes) {
+      if (shapeDetail.colorOrShape == category.name) {
+        textToDisplay = shapeDetail.contentDescription;
+        break;
+      }
+    }
+
     return Text(
-      textMap[category] ?? '',
+      textToDisplay,
       style: const TextStyle(fontSize: 14),
     );
   }
 
   Widget _getLipContent(LipCategory category) {
     String textToDisplay = "Content missing!";
-    for (ColorDetail colorDetail in roiData.rois[0].lipColors) {
-      if (colorDetail.color == category.name) {
-        textToDisplay = colorDetail.eyeColorContent;
+    for (ColorOrShapeDetail colorDetail in roiData.rois[0].lipColors) {
+      if (colorDetail.colorOrShape == category.name) {
+        textToDisplay = colorDetail.contentDescription;
         break;
       }
     }
@@ -243,9 +237,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
 
   Widget _getBrowContent(BrowCategory category) {
     String textToDisplay = "Content missing!";
-    for (ColorDetail colorDetail in roiData.rois[0].browColors) {
-      if (colorDetail.color == category.name) {
-        textToDisplay = colorDetail.eyeColorContent;
+    for (ColorOrShapeDetail colorDetail in roiData.rois[0].browColors) {
+      if (colorDetail.colorOrShape == category.name) {
+        textToDisplay = colorDetail.contentDescription;
         break;
       }
     }

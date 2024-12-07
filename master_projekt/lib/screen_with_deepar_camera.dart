@@ -1,28 +1,18 @@
 import 'dart:io';
 
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
-//import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/feature_one.dart';
-//import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/main.dart';
-//=======
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
-//import 'dart:ui/painting.dart' as ui;
 
 import 'package:camera/camera.dart';
-import 'package:deepar_flutter_lib/deepar_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/face_painter.dart';
-import 'package:master_projekt/main.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
-import 'package:path_provider/path_provider.dart';
 
 class ScreenWithDeeparCamera extends StatefulWidget {
   const ScreenWithDeeparCamera(
@@ -57,8 +47,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
     faceDetector = FaceDetector(options: detectorOptions);
 
     if (widget.isAfterAnalysis) {
-// Starte regelmäßige Screenshots
-      //startScreenshotTimer();
+      // Starte regelmäßige Screenshots zur Erkennung der Features
+      startScreenshotTimer();
     }
   }
 
@@ -89,7 +79,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
                 scale: scale, //scale,
                 child: Center(
                     // TODO: iOS-Sonderfall einfügen!
-                    child: deepArController.isInitialized
+                    child: deepArController.isInitialized || Platform.isIOS
                         ? DeepArPreview(deepArController)
                         : //deepArController.hasPermission ?
                         CircularProgressIndicator()
@@ -114,7 +104,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
         return camera;
       }
     }
-    // TODO Error-Screen weil keine Front-Kamera erlaubt ist
+    // TODO Error-Screen weil nur Front-Kamera erlaubt ist
     return camerasOfPhone[0];
   }
 

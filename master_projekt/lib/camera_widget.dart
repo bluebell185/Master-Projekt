@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:math';
-import 'package:master_projekt/start_analysis.dart';
 
 import 'package:image/image.dart' as img;
 

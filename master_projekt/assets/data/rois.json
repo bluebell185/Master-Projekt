@@ -3,24 +3,24 @@
         {
             "eyeColors": [
                 {
-                    "color": "brown",
-                    "eyeColorContent": "Your eye color is brown. Brown eyes are cool! Here are some details about brown eyes...",
+                    "colorOrShape": "brown",
+                    "contentDescription": "Your eye color is brown. Brown eyes are cool! Here are some details about brown eyes...",
                     "goal": "Bring out the richness and versatility of brown eyes.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Gold, bronze, and rich burgundy add warmth and dimension."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Purples like plum and violet create a striking contrast."
                         },
                         {
-                            "color": "Metallic Tones",
+                            "title": "Metallic Tones",
                             "description": "Copper, bronze, and emerald green for bold looks."
                         },
                         {
-                            "color": "Avoid: Muted browns",
+                            "title": "Avoid: Muted browns",
                             "description": "They may blend too much with the natural eye color."
                         }
                     ],
@@ -39,24 +39,24 @@
                     ]
                 },
                 {
-                    "color": "blue",
-                    "eyeColorContent": "Your eye color is blue. Here are some details about blue eyes...",
+                    "colorOrShape": "blue",
+                    "contentDescription": "Your eye color is blue. Here are some details about blue eyes...",
                     "goal": "Enhance the vividness and contrast of blue tones.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Copper, bronze, peach, and terracotta create contrast and make blue eyes pop."
                         },
                         {
-                            "color": "Neutral Tones",
+                            "title": "Neutral Tones",
                             "description": "Soft taupe or beige for a subtle look."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Navy blue or slate grey for a dramatic effect"
                         },
                         {
-                            "color": "Avoid: Bright blues",
+                            "title": "Avoid: Bright blues",
                             "description": "They may clash with the natural eye color"
                         }
                     ],
@@ -75,24 +75,24 @@
                     ]
                 },
                 {
-                    "color": "green",
-                    "eyeColorContent": "Your eye color is green. Here are some details about green eyes...",
+                    "colorOrShape": "green",
+                    "contentDescription": "Your eye color is green. Here are some details about green eyes...",
                     "goal": "Enhance the rare green hue with complementary shades.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Copper, rust, and warm browns emphasize the green."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Lavender, plum, and mauve add depth and contrast."
                         },
                         {
-                            "color": "Metallic Tones",
+                            "title": "Metallic Tones",
                             "description": "Gold and bronze for an elegant look."
                         },
                         {
-                            "color": "Avoid",
+                            "title": "Avoid",
                             "description": "Greens that closely match your eye color, as they may reduce contrast"
                         }
                     ],
@@ -111,24 +111,24 @@
                     ]
                 },
                 {
-                    "color": "grey",
-                    "eyeColorContent": "Your eye color is grey. Here are some details about grey eyes...",
+                    "colorOrShape": "grey",
+                    "contentDescription": "Your eye color is grey. Here are some details about grey eyes...",
                     "goal": "Amplify the soft, mysterious quality of grey eyes.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Peach, pink, and rose gold add warmth and contrast."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Charcoal, navy, and silver for a dramatic effect."
                         },
                         {
-                            "color": "Metallic Tones",
+                            "title": "Metallic Tones",
                             "description": "Silver and gunmetal accentuate the natural coolness of grey."
                         },
                         {
-                            "color": "Avoid: Overly muted greys",
+                            "title": "Avoid: Overly muted greys",
                             "description": "They may dull the eye color."
                         }
                     ],
@@ -149,24 +149,24 @@
             ],
             "faceColors": [
                 {
-                    "color": "light",
-                    "eyeColorContent": "Your skin color is light nude. Fair skin tones often have cool or neutral undertones that can easily show too much color, so subtlety is key.",
+                    "colorOrShape": "light",
+                    "contentDescription": "Your skin color is light nude. Fair skin tones often have cool or neutral undertones that can easily show too much color, so subtlety is key.",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Soft pinks, baby pinks, and pastel peach for a delicate flush."
                         },
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Light coral or soft apricot for a sun-kissed glow."
                         },
                         {
-                            "color": "Finish",
+                            "title": "Finish",
                             "description": "Opt for sheer or satin finishes for a natural look. Avoid overly pigmented or dark shades, as they can appear harsh."
                         },
                         {
-                            "color": "TBD",
+                            "title": "TBD",
                             "description": "TBD"
                         }
                     ],
@@ -181,24 +181,24 @@
                     ]
                 },
                 {
-                    "color": "beige",
-                    "eyeColorContent": "Your skin color is beige. Beige skin tones often have neutral or slightly warm undertones.",
+                    "colorOrShape": "beige",
+                    "contentDescription": "Your skin color is beige. Beige skin tones often have neutral or slightly warm undertones.",
                     "goal": "Enhance the vividness and contrast of blue tones.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Rosy pinks and mauves add a touch of color without overpowering."
                         },
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Soft coral, peach, or light terracotta enhance warmth."
                         },
                         {
-                            "color": "Finish",
+                            "title": "Finish",
                             "description": "Satin or shimmer finishes add dimension to the skin. Avoid overly bright shades that can clash with the neutral undertone."
                         },
                         {
-                            "color": "TBD",
+                            "title": "TBD",
                             "description": "TBD"
                         }
                     ],
@@ -213,24 +213,24 @@
                     ]
                 },
                 {
-                    "color": "olive",
-                    "eyeColorContent": "Your skin color is olive. Olive skin tones have greenish or golden undertones, making earthy shades particularly flattering.",
+                    "colorOrShape": "olive",
+                    "contentDescription": "Your skin color is olive. Olive skin tones have greenish or golden undertones, making earthy shades particularly flattering.",
                     "goal": "Enhance the rare green hue with complementary shades.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Coral, warm peach, or amber add warmth without clashing."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Rosy pinks and berry tones provide a natural flush."
                         },
                         {
-                            "color": "Finish",
+                            "title": "Finish",
                             "description": "Opt for creamy or luminous finishes for a healthy glow. Bronzy blushes can double as a contour for olive tones."
                         },
                         {
-                            "color": "Avoid",
+                            "title": "Avoid",
                             "description": "Avoid very light or pastel shades, which may appear ashy."
                         }
                     ],
@@ -245,24 +245,24 @@
                     ]
                 },
                 {
-                    "color": "tanned",
-                    "eyeColorContent": "Your skin color is tanned. Tanned and brown skin tones often have warm or golden undertones that suit vibrant and bold shades.",
+                    "colorOrShape": "tanned",
+                    "contentDescription": "Your skin color is tanned. Tanned and brown skin tones often have warm or golden undertones that suit vibrant and bold shades.",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Bright coral, deep peach, and orange-toned blushes enhance the golden undertones."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Rich berry and plum shades provide a dramatic flush."
                         },
                         {
-                            "color": "Finish",
+                            "title": "Finish",
                             "description": "Luminous and shimmer finishes complement the warmth of the skin tone. Buildable formulas allow control over intensity."
                         },
                         {
-                            "color": "Avoid",
+                            "title": "Avoid",
                             "description": "Avoid overly light or muted shades, as they may appear chalky."
                         }
                     ],
@@ -277,24 +277,24 @@
                     ]
                 },
                 {
-                    "color": "dark",
-                    "eyeColorContent": "Your skin color is dark. Dark skin tones can carry bold and rich colors beautifully",
+                    "colorOrShape": "dark",
+                    "contentDescription": "Your skin color is dark. Dark skin tones can carry bold and rich colors beautifully",
                     "goal": "Amplify the soft, mysterious quality of grey eyes.",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Warm Tones",
+                            "title": "Warm Tones",
                             "description": "Deep orange, terracotta, and brick red for a natural warmth."
                         },
                         {
-                            "color": "Cool Tones",
+                            "title": "Cool Tones",
                             "description": "Rich plum, fuchsia, and wine add a dramatic flush."
                         },
                         {
-                            "color": "Finish",
+                            "title": "Finish",
                             "description": "Opt for creamy or satin finishes to add dimension. Shimmer blushes enhance the glow on darker skin tones."
                         },
                         {
-                            "color": "Avoid",
+                            "title": "Avoid",
                             "description": "Avoid pastel or very light shades, which can appear ashy."
                         }
                     ],
@@ -311,24 +311,24 @@
             ],
             "lipColors": [
                 {
-                    "color": "red",
-                    "eyeColorContent": "Your lip color is red. Here are some details about red lips...",
+                    "colorOrShape": "red",
+                    "contentDescription": "Your lip color is red. Here are some details about red lips...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -343,24 +343,24 @@
                     ]
                 },
                 {
-                    "color": "pink",
-                    "eyeColorContent": "Your lip color is pink. Here are some details about pink lips...",
+                    "colorOrShape": "pink",
+                    "contentDescription": "Your lip color is pink. Here are some details about pink lips...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -375,24 +375,24 @@
                     ]
                 },
                 {
-                    "color": "nude",
-                    "eyeColorContent": "Your lip color is nude. Here are some details about nude lips...",
+                    "colorOrShape": "nude",
+                    "contentDescription": "Your lip color is nude. Here are some details about nude lips...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -407,24 +407,24 @@
                     ]
                 },
                 {
-                    "color": "coral",
-                    "eyeColorContent": "Your lip color is coral. Here are some details about coral lips...",
+                    "colorOrShape": "coral",
+                    "contentDescription": "Your lip color is coral. Here are some details about coral lips...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -441,24 +441,24 @@
             ],
             "browColors": [
                 {
-                    "color": "black",
-                    "eyeColorContent": "Your brow color is black. Here are some details about black eyebrows...",
+                    "colorOrShape": "black",
+                    "contentDescription": "Your brow color is black. Here are some details about black eyebrows...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -473,24 +473,24 @@
                     ]
                 },
                 {
-                    "color": "blonde",
-                    "eyeColorContent": "Your brow color is blonde. Here are some details about blonde eyebrows...",
+                    "colorOrShape": "blonde",
+                    "contentDescription": "Your brow color is blonde. Here are some details about blonde eyebrows...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -505,24 +505,24 @@
                     ]
                 },
                 {
-                    "color": "brown",
-                    "eyeColorContent": "Your brow color is brown. Here are some details about brown eyebrows...",
+                    "colorOrShape": "brown",
+                    "contentDescription": "Your brow color is brown. Here are some details about brown eyebrows...",
                     "goal": "",
-                    "recommendedColors": [
+                    "recommendations": [
                         {
-                            "color": "Color Shade 1",
+                            "title": "Color Shade 1",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 1 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 2",
+                            "title": "Color Shade 2",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 2 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 3",
+                            "title": "Color Shade 3",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 3 geeignet für diese Lippenfarbe ist."
                         },
                         {
-                            "color": "Color Shade 4",
+                            "title": "Color Shade 4",
                             "description": "Hier ist ein Text, der erklärt, warum diese Farbe 4 geeignet für diese Lippenfarbe ist."
                         }
                     ],
@@ -537,8 +537,234 @@
                     ]
                 }
             ],
-            "eyeShapes": [],
-            "faceShapes": []
+            "eyeShapes": [
+                {
+                    "colorOrShape": "almond",
+                    "contentDescription": "Your eye shape is almond. Almond eyes are oval-shaped with a slight upward lift at the outer corners, often considered the most balanced shape.",
+                    "goal": "",
+                    "recommendations": [
+                        {
+                            "title": "Eyeshadow",
+                            "description": "Apply a medium-tone shade across the lid and a darker shade in the outer corner and crease to define the natural shape.\nBlend upward and outward to emphasize the elongated shape."
+                        },
+                        {
+                            "title": "Eyeliner",
+                            "description": "Use a winged liner to accentuate the natural lift at the outer corner.\nTightline the upper lash line for added definition without closing off the eye."
+                        },
+                        {
+                            "title": "Mascara",
+                            "description": "Focus on the outer lashes to emphasize the elongated shape."
+                        },
+                        {
+                            "title": "Pro Tip",
+                            "description": "Experiment with cat-eye styles, as almond eyes carry them beautifully."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                },
+                {
+                    "colorOrShape": "round",
+                    "contentDescription": "Your eye shape is round. Round eyes are large and often have a more prominent curve, with a visible crease.",
+                    "goal": "",
+                    "recommendations": [
+                        {
+                            "title": "Eyeshadow",
+                            "description": "Use darker shades on the outer corners to elongate the eyes and create a more almond-like appearance.\nAvoid placing too much shimmer or light color on the center of the lid, which can emphasize roundness."
+                        },
+                        {
+                            "title": "Eyeliner",
+                            "description": "Apply liner along the upper lash line and extend it outward slightly for a subtle wing.\nAvoid heavy liner on the lower lash line, as it can make the eyes appear smaller."
+                        },
+                        {
+                            "title": "Mascara",
+                            "description": "Focus on the outer lashes and consider using corner false lashes for added elongation."
+                        },
+                        {
+                            "title": "Pro Tip",
+                            "description": "Use matte shades in the crease to add depth and minimize roundness."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                },
+                {
+                    "colorOrShape": "upturned",
+                    "contentDescription": "Your eye shape is upturned. The outer corners of upturned eyes are higher than the inner corners, creating a lifted appearance.",
+                    "goal": "",
+                    "recommendations": [
+                        {
+                            "title": "Eyeshadow",
+                            "description": "Apply a medium or dark shade to the outer third of the lower lash line to balance the upward tilt.\nUse lighter shades on the lid and blend outward."
+                        },
+                        {
+                            "title": "Eyeliner",
+                            "description": "Line the upper lash line with a soft wing.\nApply a thin line on the lower lash line, focusing on the outer half to ground the shape."
+                        },
+                        {
+                            "title": "Mascara",
+                            "description": "Emphasize both the upper and lower lashes to highlight symmetry."
+                        },
+                        {
+                            "title": "Pro Tip",
+                            "description": "Create a balanced look by softening the upward tilt with darker shadows on the lower lash line."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                },
+                {
+                    "colorOrShape": "downturned",
+                    "contentDescription": "Your eye shape is downturned. The outer corners of downturned eyes are lower than the inner corners, giving a gentle, droopy effect.",
+                    "goal": "",
+                    "recommendations": [
+                        {
+                            "title": "Eyeshadow",
+                            "description": "Focus darker shades on the upper outer corner to lift the eyes visually.\nAvoid applying too much product to the lower lash line, as it can accentuate the downturned effect."
+                        },
+                        {
+                            "title": "Eyeliner",
+                            "description": "Create a slight upward wing to counteract the downward tilt.\nTightline the upper waterline to add subtle definition and lift."
+                        },
+                        {
+                            "title": "Mascara",
+                            "description": "Concentrate on the upper lashes and the outer corners for a lifted effect."
+                        },
+                        {
+                            "title": "Pro Tip",
+                            "description": "Use a highlighter in the inner corner and under the brow bone to brighten the eyes."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                }
+            ],
+            "faceShapes": [
+                {
+                    "colorOrShape": "oval",
+                    "contentDescription": "Your face shape is oval. Here some details... You will get some tips for usage of blush based on your face shape.",
+                    "goal": "Enhance the natural balance and symmetry of the face.",
+                    "recommendations": [
+                        {
+                            "title": "Application Step 1",
+                            "description": "Identify the apples of your cheeks (the fleshy part that becomes prominent when you smile)."
+                        },
+                        {
+                            "title": "Application Step 2",
+                            "description": "Apply blush lightly to the apples of the cheeks and blend it upward toward the temples."
+                        },
+                        {
+                            "title": "Application Step 3",
+                            "description": "Use soft, sweeping motions to avoid harsh lines and maintain the natural contours of the oval shape."
+                        },
+                        {
+                            "title": "Tip",
+                            "description": "Focus on blending for a natural flush. Avoid placing the blush too high or low to maintain proportionality."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                },
+                {
+                    "colorOrShape": "round",
+                    "contentDescription": "Your face shape is round. Here some details... You will get some tips for usage of blush based on your face shape.",
+                    "goal": "Create the illusion of length and define the cheekbones to add structure.",
+                    "recommendations": [
+                        {
+                            "title": "Application Step 1",
+                            "description": "Begin applying blush slightly above the apples of the cheeks to avoid emphasizing roundness."
+                        },
+                        {
+                            "title": "Application Step 2",
+                            "description": "Sweep the blush upward toward the ears or along the cheekbones to create an elongated effect."
+                        },
+                        {
+                            "title": "Application Step 3",
+                            "description": "Avoid concentrating blush directly on the fullest part of the cheeks, as this may enhance roundness."
+                        },
+                        {
+                            "title": "Tip",
+                            "description": "Use an angled brush for precise placement and to mimic the contouring effect."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                },
+                {
+                    "colorOrShape": "square",
+                    "contentDescription": "Your face shape is square. Here some details... You will get some tips for usage of blush based on your face shape.",
+                    "goal": "Soften the angular jawline and add a natural glow to balance the face.",
+                    "recommendations": [
+                        {
+                            "title": "Application Step 1",
+                            "description": "Focus on applying blush on the apples of the cheeks."
+                        },
+                        {
+                            "title": "Application Step 2",
+                            "description": "Blend the blush in a circular motion toward the temples, softening any sharp angles."
+                        },
+                        {
+                            "title": "Application Step 3",
+                            "description": "A subtle horizontal application can help reduce the prominence of strong facial lines.."
+                        },
+                        {
+                            "title": "Tip",
+                            "description": "Choose warm, natural tones to add softness and complement the angular structure."
+                        }
+                    ],
+                    "techniques": [],
+                    "imageLinks": [
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png",
+                        "assets/images/look1.png"
+                    ]
+                }
+            ]
         }
     ]
 }
