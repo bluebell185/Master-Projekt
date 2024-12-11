@@ -16,8 +16,9 @@ class ScrollableTabs extends StatefulWidget {
   State<ScrollableTabs> createState() => _ScrollableTabsState();
 }
 
+int? selectedIndex;
+
 class _ScrollableTabsState extends State<ScrollableTabs> {
-  int? selectedIndex;
 
   void onTabSelected(int index) {
     setState(() {
