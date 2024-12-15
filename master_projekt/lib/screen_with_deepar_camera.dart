@@ -27,6 +27,8 @@ class ScreenWithDeeparCamera extends StatefulWidget {
   State<ScreenWithDeeparCamera> createState() => _ScreenWithDeeparCamera();
 }
 
+Map<int, bool> selectedButtonsRois = {0: false, 1: false, 2: false, 3: false};
+
 class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
   int i = 0;
   List<Face> faces = [];
@@ -95,18 +97,35 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
               widget.child,
               if (showRecommendations && roiRectangles.isNotEmpty)
                 // Dynamisch platzierte Buttons
-          for (int i = 0; i < roiRectangles.length; i++)
-            Positioned(
-              left: roiRectangles[i].left,
-              top: roiRectangles[i].top,
-              width: roiRectangles[i].width,
-              height: roiRectangles[i].height,
-              child: TransparentButton(
-                onPressed: () {
-                  print("Button $i clicked!");
-                },
-              ),
-            ),
+                for (int i = 0; i < roiRectangles.length; i++)
+                  Positioned(
+                    left: roiRectangles[i].left,
+                    top: roiRectangles[i].top,
+                    width: roiRectangles[i].width,
+                    height: roiRectangles[i].height,
+                    child: TransparentButton(
+                      onPressed: () {
+                        print("Button $i clicked!");
+                        selectedButtonsRois[i] = !selectedButtonsRois[i]!;
+                        String tabToSelect = "eyes"; 
+                        switch(i){
+                          case 1:
+                           tabToSelect = "blush";
+                          case 2: 
+                          tabToSelect = "lips";
+                          case 3: 
+                          tabToSelect = "brows";
+                        }
+                        // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
+                        final featureOneState =
+                            context.findAncestorStateOfType<FeatureOneState>();
+                        if (featureOneState != null) {
+                          featureOneState.updateSelectedTab(tabToSelect);
+                        }
+                      },
+                      buttonId: i,
+                    ),
+                  ),
             ],
           ),
         ));
@@ -227,8 +246,18 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
 // TransparentButton: ein Button, der aussieht wie ein Rechteck
 class TransparentButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final int buttonId;
 
-  TransparentButton({required this.onPressed});
+  TransparentButton({required this.onPressed, required this.buttonId});
+
+  Color getBorderColor() {
+    bool? isButtonSelected = selectedButtonsRois[buttonId];
+    if (isButtonSelected == null || isButtonSelected == false) {
+      return Colors.grey[600]!;
+    } else {
+      return Colors.pink[100]!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +265,7 @@ class TransparentButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         backgroundColor: Colors.transparent,
-        side: BorderSide(color: Colors.grey[600]!, width: 2), // Rahmen
+        side: BorderSide(color: getBorderColor(), width: 2), // Rahmen
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
