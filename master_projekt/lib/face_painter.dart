@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
+List<Rect> roiRectangles = [];
+
 class FacePainter extends CustomPainter {
   ui.Image? image;
   List<Face> faces;
@@ -28,6 +30,8 @@ class FacePainter extends CustomPainter {
     if (faces.isNotEmpty &&
         faces[0].landmarks[FaceLandmarkType.leftEye] != null &&
         faces[0].contours.isNotEmpty) {
+
+      roiRectangles.clear();
       // --------- Kästchen um rechtes Auge -------------------------------------------------------
       // Position Auge
       final Point<int> rightEyePos =
@@ -53,7 +57,8 @@ class FacePainter extends CustomPainter {
           center: Offset(rightEyePos.x.toDouble(), rightEyePos.y.toDouble()),
           width: eyeWidth,
           height: eyeHeight);
-      canvas.drawRect(eyeR, contourPaint);
+      //canvas.drawRect(eyeR, contourPaint);
+      roiRectangles.add(eyeR);
 
 // --------- Kästchen um linke Wange -------------------------------------------------------
       // Position Wange
@@ -64,7 +69,8 @@ class FacePainter extends CustomPainter {
       Rect cheek = Rect.fromCircle(
           center: Offset(leftCheekPos.x.toDouble(), leftCheekPos.y.toDouble()),
           radius: 27);
-      canvas.drawRect(cheek, contourPaint);
+      //canvas.drawRect(cheek, contourPaint);
+      roiRectangles.add(cheek);
 
 // --------- Kästchen um den Mund -------------------------------------------------------
       // Punkte zur Bestimmung der Kästchenposition- und größe, da mehrere Landmarks vorhanden sind
@@ -81,7 +87,8 @@ class FacePainter extends CustomPainter {
           mouthBottomPos.y.toDouble() - 30,
           mouthRightPos.x.toDouble() + 10,
           mouthBottomPos.y.toDouble() + 10);
-      canvas.drawRect(mouthRect, contourPaint);
+      //canvas.drawRect(mouthRect, contourPaint);
+      roiRectangles.add(mouthRect);
 
 // --------- Kästchen um die linke Augenbraue -------------------------------------------------------
       // Position Augenbraue
@@ -97,7 +104,8 @@ class FacePainter extends CustomPainter {
           leftEyeBrowPosTop[3].y.toDouble() - 8,
           leftEyeBrowPosBottom[4].x.toDouble() + 10,
           leftEyeBrowPosBottom[0].y.toDouble() + 8);
-      canvas.drawRect(leftEyebrow, contourPaint);
+      //canvas.drawRect(leftEyebrow, contourPaint);
+      roiRectangles.add(leftEyebrow);
     }
 
     // TODO: was zeichnen, wenn else? -> sonst gerade nichts - leeres Bild - "flackern"
