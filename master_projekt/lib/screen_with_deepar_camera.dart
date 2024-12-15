@@ -93,6 +93,20 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
                 ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
+              if (showRecommendations && roiRectangles.isNotEmpty)
+                // Dynamisch platzierte Buttons
+          for (int i = 0; i < roiRectangles.length; i++)
+            Positioned(
+              left: roiRectangles[i].left,
+              top: roiRectangles[i].top,
+              width: roiRectangles[i].width,
+              height: roiRectangles[i].height,
+              child: TransparentButton(
+                onPressed: () {
+                  print("Button $i clicked!");
+                },
+              ),
+            ),
             ],
           ),
         ));
@@ -207,5 +221,27 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
     }
 
     return nv21Bytes;
+  }
+}
+
+// TransparentButton: ein Button, der aussieht wie ein Rechteck
+class TransparentButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  TransparentButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        side: BorderSide(color: Colors.grey[600]!, width: 2), // Rahmen
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+      child: Container(), // Kein Inhalt, da transparent
+    );
   }
 }
