@@ -11,13 +11,13 @@ class FeatureOne extends StatefulWidget {
   const FeatureOne({super.key});
 
   @override
-  State<FeatureOne> createState() => _FeatureOneState();
+  State<FeatureOne> createState() => FeatureOneState();
 }
 
   bool showRecommendations =
       false; // boolean zum Anzeigen von Frame mit Box 2 und 3
 
-class _FeatureOneState extends State<FeatureOne> {
+class FeatureOneState extends State<FeatureOne> {
   String? newSelectedTab;
   bool isBoxThreeOpen = false; // zur Navigation zwischen Box 2 und 3
 
@@ -35,7 +35,16 @@ class _FeatureOneState extends State<FeatureOne> {
 
   void updateSelectedTab(String? tab) {
     setState(() {
-      newSelectedTab = tab; // Update den Parent state
+      //newSelectedTab = tab; // Update den Parent state
+      if (newSelectedTab == tab) {
+        // Wenn der Tab bereits ausgewählt ist, deselektiere ihn
+        newSelectedTab = null;
+        print('Deselected Tab');
+      } else {
+        // Andernfalls wähle den neuen Tab aus
+        newSelectedTab = tab;
+        print('Selected Tab: $newSelectedTab');
+      }
       print('Selected Tab: $newSelectedTab');
     });
   }
