@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 // UI-Elemente
 import 'package:master_projekt/ui/buttons.dart';
 import 'package:master_projekt/ui/tabs.dart';
+import 'package:master_projekt/ui/tabs_for_popup.dart';
 
 // Das Pop-Up zur Überprüfung der Analysis Results und möglicher Modifikation des Users
 
 // Pop Up
-class ResultsCheckPopUp extends StatelessWidget {
+class ResultsCheckPopUp extends StatefulWidget {
   final String popUpHeading;
   final List<AnalysisElement> analysisElements;
   final VoidCallback onSave;
@@ -16,8 +17,24 @@ class ResultsCheckPopUp extends StatelessWidget {
     super.key,
     required this.popUpHeading,
     required this.analysisElements,
-    required this.onSave,
+   required this.onSave,
   });
+
+  @override
+  State<ResultsCheckPopUp> createState() => ResultsCheckPopUpState();
+}
+class ResultsCheckPopUpState extends State<ResultsCheckPopUp> {
+  late Map<int, String> selectedOptions; // Key: Nummer, Value: ausgewählte Option
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialisiere die ausgewählten Optionen mit den vorgegebenen Werten
+    selectedOptions = {
+      for (var element in widget.analysisElements)
+        element.number: element.selectedOption
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +52,7 @@ class ResultsCheckPopUp extends StatelessWidget {
           children: [
             // Heading
             Text(
-              popUpHeading,
+              widget.popUpHeading,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -46,7 +63,7 @@ class ResultsCheckPopUp extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Analysis Elements
-            ...analysisElements
+            ...widget.analysisElements
                 .map((element) => _buildAnalysisElement(element)),
 
             const SizedBox(height: 40),
@@ -54,7 +71,7 @@ class ResultsCheckPopUp extends StatelessWidget {
             // Save Button
             PrimaryButton(
               buttonText: 'save',
-              onPressed: onSave,
+              onPressed: widget.onSave,
             ),
           ],
         ),
@@ -117,15 +134,17 @@ class ResultsCheckPopUp extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        ScrollableTabs(
+      ScrollableTabsPopup(
           labels: element.options, // Tab Labels
           onTabSelected: (tab) {
-            if (tab == null) {
-              print('No option selected');
-            } else {
+            if (tab != null) {
+              setState(() {
+                selectedOptions[element.number] = tab;
+              });
               element.onOptionSelected(tab);
             }
           },
+          selectedTab: selectedOptions[element.number], // Highlight-Logik
         ),
         const SizedBox(height: 40),
       ],
@@ -138,7 +157,7 @@ class AnalysisElement {
   final String title;
   final String result;
   final List<String> options;
-  //final String selectedOption;
+  final String selectedOption;
   final Function(String) onOptionSelected;
 
   AnalysisElement({
@@ -146,7 +165,7 @@ class AnalysisElement {
     required this.title,
     required this.result,
     required this.options,
-    //required.this.selectedOption,
+    required this.selectedOption,
     required this.onOptionSelected,
   });
 }

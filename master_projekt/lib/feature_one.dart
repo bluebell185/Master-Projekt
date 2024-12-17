@@ -84,62 +84,66 @@ class FeatureOneState extends State<FeatureOne> {
                   AnalysisElement(
                     number: 1,
                     title: 'Eye color',
-                    result: 'blue', // Results der Gesichtsanalyse
+                    result: eyeColorCategory!.name, // Results der Gesichtsanalyse
                     options: [
                       'blue',
                       'green',
                       'brown',
                       'grey'
                     ], // Optionen der Kategorie
-                    //selectedOption: $result,
+                    selectedOption: eyeColorCategory!.name,
                     onOptionSelected: (selected) {
                       print('Selected for Eye color: $selected');
+                      setEyeColorCategory(selected);
                     },
                   ),
                   AnalysisElement(
                     number: 2,
                     title: 'Eye shape',
-                    result: 'round', // Results der Gesichtsanalyse
+                    result: eyeShapeCategory!.name, // Results der Gesichtsanalyse
                     options: [
                       'almond',
                       'round',
                       'upturned',
-                      'downturned',
-                      'monolid'
+                      'downturned' //,
+                      //'monolid'
                     ], // Optionen der Kategorie
-                    //selectedOption: $result,
+                    selectedOption: eyeShapeCategory!.name,
                     onOptionSelected: (selected) {
                       print('Selected for Eye shape: $selected');
+                      setEyeShapeCategory(selected);
                     },
                   ),
                   AnalysisElement(
                     number: 3,
                     title: 'Teint color',
-                    result: 'beige', // Results der Gesichtsanalyse
+                    result: blushCategory!.name, // Results der Gesichtsanalyse
                     options: [
-                      'light/pale',
+                      'light',
                       'beige',
                       'olive',
                       'tanned',
                       'dark'
                     ], // Optionen der Kategorie
-                    //selectedOption: $result,
+                    selectedOption: blushCategory!.name,
                     onOptionSelected: (selected) {
                       print('Selected for Head shape: $selected');
+                      setBlushCategory(selected);
                     },
                   ),
                   AnalysisElement(
-                    number: 3,
+                    number: 4,
                     title: 'Head shape',
-                    result: 'oval', // Results der Gesichtsanalyse
+                    result: blushShapeCategory!.name, // Results der Gesichtsanalyse
                     options: [
                       'square',
                       'round',
                       'oval'
                     ], // Optionen der Kategorie
-                    //selectedOption: $result,
+                    selectedOption: blushShapeCategory!.name,
                     onOptionSelected: (selected) {
                       print('Selected for Head shape: $selected');
+                      setBlushShapeCategory(selected);
                     },
                   ),
                 ],
