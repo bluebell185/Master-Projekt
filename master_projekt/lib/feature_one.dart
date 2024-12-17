@@ -23,6 +23,10 @@ class FeatureOneState extends State<FeatureOne> {
   String? newSelectedTab;
   bool isBoxThreeOpen = false; // zur Navigation zwischen Box 2 und 3
 
+  // DraggableScrollableController für die Position
+  final DraggableScrollableController _draggableController =
+      DraggableScrollableController();
+
   void navigateToBoxThree() {
     setState(() {
       isBoxThreeOpen = true;
@@ -166,6 +170,8 @@ class FeatureOneState extends State<FeatureOne> {
               ),
             if (showRecommendations)
               DraggableScrollableSheet(
+                key: const GlobalObjectKey('DraggableScrollableSheet'), // https://github.com/flutter/flutter/issues/140603#issuecomment-1871077425
+                controller: _draggableController,
                 initialChildSize: 0.25,
                 minChildSize: 0.25,
                 maxChildSize: isBox2Or3Visible ? 0.8 : 0.25,
@@ -195,5 +201,11 @@ class FeatureOneState extends State<FeatureOne> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _draggableController.dispose(); 
+    super.dispose();
   }
 }
