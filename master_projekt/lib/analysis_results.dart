@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/json_parse.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/start_analysis.dart';
+import 'package:master_projekt/filter_data.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
@@ -8,10 +10,10 @@ import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
 import 'package:master_projekt/ui/text.dart';
 
-// Definition der verschiedenen Kategorien für "eyes"-Tab
+// ---------------- Definition der verschiedenen Kategorien --------------->
 enum RoiColorTypes { eye, eyebrow, lip, face }
 
-enum EyeColorCategory { blue, green, brown, grey } // anpassen!
+enum EyeColorCategory { blue, green, brown, grey }
 
 enum EyeShapeCategory { almond, round, upturned, downturned, monolid }
 
@@ -60,33 +62,34 @@ BrowShapeCategory? browShapeCategory;
 // 'colorValue' bestimmt die Farbkategorie
 // 'eyeColorCategory'
 void setEyeColorCategory(String colorValue) {
-  if (colorValue == 'blue') {
-    eyeColorCategory = EyeColorCategory.blue;
-  } else if (colorValue == 'green') {
-    eyeColorCategory = EyeColorCategory.green;
-  } else if (colorValue == 'brown') {
-    eyeColorCategory = EyeColorCategory.brown;
-  } else if (colorValue == 'grey') {
-    eyeColorCategory = EyeColorCategory.grey;
+  switch (colorValue) {
+    case 'blue':
+      eyeColorCategory = EyeColorCategory.blue;
+    case 'green':
+      eyeColorCategory = EyeColorCategory.green;
+    case 'brown':
+      eyeColorCategory = EyeColorCategory.brown;
+    case 'grey':
+      eyeColorCategory = EyeColorCategory.grey;
   }
 }
 
 void setEyeShapeCategory(String shapeValue) {
-  if (shapeValue == 'almond') {
-    eyeShapeCategory = EyeShapeCategory.almond;
-  } else if (shapeValue == 'round') {
-    eyeShapeCategory = EyeShapeCategory.round;
-  } else if (shapeValue == 'upturned') {
-    eyeShapeCategory = EyeShapeCategory.upturned;
-  } else if (shapeValue == 'downturned') {
-    eyeShapeCategory = EyeShapeCategory.downturned;
-  } else if (shapeValue == 'monolid') {
-    eyeShapeCategory = EyeShapeCategory.monolid;
+  switch (shapeValue) {
+    case 'almond':
+      eyeShapeCategory = EyeShapeCategory.almond;
+    case 'round':
+      eyeShapeCategory = EyeShapeCategory.round;
+    case 'upturned':
+      eyeShapeCategory = EyeShapeCategory.upturned;
+    case 'downturned':
+      eyeShapeCategory = EyeShapeCategory.downturned;
+    case 'monolid':
+      eyeShapeCategory = EyeShapeCategory.monolid;
   }
 }
 
 // Beispielgerüst: Logik für die Blush-Kategorie?
-// Methode für Blush -> if else?
 void setBlushCategory(String blushValue) {
   switch (blushValue) {
     case 'beige':
@@ -152,12 +155,45 @@ void setBrowShapeCategory(String browValue) {
   }
 }
 
+// -----------------------------LOGIK--------------------------------->
 class _AnalysisResultsState extends State<AnalysisResults> {
   // Box 2b ist angezeigt für ROIs 'eyes' und 'blush'
   bool _shouldShowShape(String tab) {
     return tab == 'eyes' || tab == 'blush';
   }
 
+  // Anzeigen Filter: Approach nach
+  String? _activeFilter; // Speichert den aktuell aktiven Filter
+
+// Toggle-Logik für Filter bei Kachel-Tap
+  void _toggleFilter(String filterPath) {
+    setState(() {
+      final filterName =
+          filterPath.split('.').first; // Filtername ohne Extension
+      if (_activeFilter == filterName) {
+        // Filter ist bereits aktiv -> Filter entfernen
+        _activeFilter = null;
+        _clearFilter();
+      } else {
+        // Neuen Filter anwenden
+        _activeFilter = filterName;
+        _applyFilter(filterPath);
+      }
+    });
+  }
+
+  void _applyFilter(String filterPath) {
+    print("Applying filter: $filterPath");
+    deepArController.switchEffect(filterPath);
+    // deepArController.switchEffect(withSlot: "lips", path: "assets/filters/$filterName.deepar");
+  }
+
+  void _clearFilter() {
+    print("Removing filter");
+    deepArController.switchEffect(null);
+  }
+
+  // ------------------------------- Eye Color Content ------------------------------->
   Widget _getEyeColorContent(EyeColorCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].eyeColors) {
@@ -173,6 +209,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
+  // ------------------------------- Eye Shape Content ------------------------------->
   Widget _getEyeShapeContent(EyeShapeCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail shapeDetail in roiData.rois[0].eyeShapes) {
@@ -188,6 +225,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
+  // ------------------------------- Blush Color Content ------------------------------->
   Widget _getBlushContent(BlushCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].faceColors) {
@@ -205,6 +243,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     // TODO was ist mit default: return Container(); überall?
   }
 
+  // ------------------------------- Blush Shape Content ------------------------------->
   Widget _getBlushShapeContent(BlushShapeCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail shapeDetail in roiData.rois[0].faceShapes) {
@@ -220,6 +259,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
+  // ------------------------------- Lip Content ------------------------------->
   Widget _getLipContent(LipCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].lipColors) {
@@ -235,6 +275,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
+  // ------------------------------- Brow Content ------------------------------->
   Widget _getBrowContent(BrowCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].browColors) {
@@ -250,7 +291,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Main Content für jeden ausgewählten Tab - COLOR
+  // ------------------- Main COLOR Content für jeden selected Tab ------------------->
   Widget _getTabContentColor(String tab) {
     if (tab == 'eyes' && eyeColorCategory != null) {
       return _getEyeColorContent(eyeColorCategory!);
@@ -268,7 +309,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Main Content für jeden ausgewählten Tab - SHAPE
+  // ------------------- Main SHAPE Content für jeden selected Tab ------------------->
   Widget _getTabContentShape(String tab) {
     if (tab == 'eyes' && eyeShapeCategory != null) {
       return _getEyeShapeContent(eyeShapeCategory!);
@@ -313,7 +354,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Content Box 1
+  // ------------------------------- Content Box 1 ------------------------------->
+  // -------------- enthält auswählbare Tabs für ROIs 'eyes' etc. ---------------->
+
   Widget _buildBox1() {
     return Container(
       padding: const EdgeInsets.all(10),
@@ -347,7 +390,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Content Box 2 - enthält Box 2a) COLOR und Box 2b) SHAPE
+  // ------------------------------- Content Box 2 ------------------------------->
+  // ---------------- enthält Box 2a) COLOR und Box 2b) SHAPE -------------------->
+
   Widget _buildBox2() {
     // Schauen, dass ein Tab ausgewählt ist bevor Box 2 gebuilded wird
     if (widget.selectedTab == null) {
@@ -409,8 +454,11 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // Content Box 3 - enthält die bildlichen Recommendations
+  // ------------------------------- Content Box 3 ------------------------------->
+  // ------------------- enthält bildliche Recommendations ----------------------->
+
   Widget _buildBox3() {
+    // final imageLinks = _getImageLinks();
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -435,15 +483,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           ),
 
           ImageRecommendationsGrid(
-            images: [
-              // Kategorien-based Grids/Listen anlegen?
-              'assets/images/look1.png',
-              'assets/images/look1.png',
-              'assets/images/look1.png',
-              'assets/images/look1.png',
-              'assets/images/look1.png',
-              'assets/images/look1.png',
-            ], // Liste der Bild-Pfade
+            filters: filters, // Liste mit Filtern
+            activeFilter: _activeFilter, // Filter, der active ist
+            onTileTap: _toggleFilter, // Callback für Tap-Event
           ),
 
           // Navigation zu Box 2
@@ -459,3 +501,39 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 }
+
+/*
+List<String> _getImageLinks() {
+  if (roiData == null || selectedTab == null || recognizedValue == null) {
+    return [];
+  }
+
+  final roi = roiData!.rois[0]; // Erster "rois"-Eintrag aus der JSON
+
+  switch (recognizedCategory) {
+    case 'eyeColors':
+      return roi.eyeColors
+          .firstWhere(
+            (item) => item.colorOrShape == recognizedValue,
+            orElse: () => ColorOrShapeDetail(
+              colorOrShape: '',
+              contentDescription: '',
+              goal: '',
+              recommendations: [],
+              techniques: [],
+              imageLinks: [],
+            ),
+          )
+          .imageLinks;
+    case 'lipColors':
+      return roi.lipColors
+          .firstWhere((item) => item.colorOrShape == recognizedValue)
+          .imageLinks;
+    case 'faceColors':
+      return roi.faceColors
+          .firstWhere((item) => item.colorOrShape == recognizedValue)
+          .imageLinks;
+    default:
+      return [];
+  }
+}*/
