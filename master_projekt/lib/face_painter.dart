@@ -26,12 +26,13 @@ class FacePainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..color = Color(0xFFFFDCE8);
 
+    roiRectangles.clear();
+
     // Zeichnen der Kästen um ROIs herum
     if (faces.isNotEmpty &&
         faces[0].landmarks[FaceLandmarkType.leftEye] != null &&
         faces[0].contours.isNotEmpty) {
 
-      roiRectangles.clear();
       // --------- Kästchen um rechtes Auge -------------------------------------------------------
       // Position Auge
       final Point<int> rightEyePos =

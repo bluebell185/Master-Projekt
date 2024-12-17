@@ -274,7 +274,7 @@ class TransparentButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         backgroundColor: Colors.transparent,
-        side: BorderSide(color: getBorderColor(), width: 2), // Rahmen
+        side: BorderSide(color: getBorderColor(), width: 2), // Rahmen, der abgerundete Ecken hat
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
