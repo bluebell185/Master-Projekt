@@ -15,10 +15,11 @@ class FeatureOne extends StatefulWidget {
   State<FeatureOne> createState() => FeatureOneState();
 }
 
-  bool showRecommendations =
-      false; // boolean zum Anzeigen von Frame mit Box 2 und 3
+bool showRecommendations =
+    false; // boolean zum Anzeigen von Frame mit Box 2 und 3
 
 class FeatureOneState extends State<FeatureOne> {
+  bool isBox2Or3Visible = false; // Zustandsabfrage: ist Box 2 oder 3 sichtbar?
   String? newSelectedTab;
   bool isBoxThreeOpen = false; // zur Navigation zwischen Box 2 und 3
 
@@ -41,13 +42,20 @@ class FeatureOneState extends State<FeatureOne> {
         // Wenn der Tab bereits ausgewählt ist, deselektiere ihn
         newSelectedTab = null;
         selectedIndex = null;
+        isBox2Or3Visible = false;
         print('Deselected Tab');
       } else {
         // Andernfalls wähle den neuen Tab aus
         newSelectedTab = tab;
         print('Selected Tab: $newSelectedTab');
       }
-      print('Selected Tab: $newSelectedTab');
+      if (tab == null) {
+        // Box 2/3 ist nicht (mehr) sichtbar, sobald ein Tab deselected wurde
+        isBox2Or3Visible = false;
+      } else {
+        // Box 2/3 ist sichtbar, sobald ein Tab ausgewählt wurde
+        isBox2Or3Visible = true;
+      }
     });
   }
 
@@ -84,7 +92,8 @@ class FeatureOneState extends State<FeatureOne> {
                   AnalysisElement(
                     number: 1,
                     title: 'Eye color',
-                    result: eyeColorCategory!.name, // Results der Gesichtsanalyse
+                    result:
+                        eyeColorCategory!.name, // Results der Gesichtsanalyse
                     options: [
                       'blue',
                       'green',
@@ -100,7 +109,8 @@ class FeatureOneState extends State<FeatureOne> {
                   AnalysisElement(
                     number: 2,
                     title: 'Eye shape',
-                    result: eyeShapeCategory!.name, // Results der Gesichtsanalyse
+                    result:
+                        eyeShapeCategory!.name, // Results der Gesichtsanalyse
                     options: [
                       'almond',
                       'round',
@@ -134,7 +144,8 @@ class FeatureOneState extends State<FeatureOne> {
                   AnalysisElement(
                     number: 4,
                     title: 'Head shape',
-                    result: blushShapeCategory!.name, // Results der Gesichtsanalyse
+                    result:
+                        blushShapeCategory!.name, // Results der Gesichtsanalyse
                     options: [
                       'square',
                       'round',
@@ -157,7 +168,7 @@ class FeatureOneState extends State<FeatureOne> {
               DraggableScrollableSheet(
                 initialChildSize: 0.25,
                 minChildSize: 0.25,
-                maxChildSize: 0.8,
+                maxChildSize: isBox2Or3Visible ? 0.8 : 0.25,
                 builder: (context, scrollController) {
                   return Container(
                     decoration: BoxDecoration(
