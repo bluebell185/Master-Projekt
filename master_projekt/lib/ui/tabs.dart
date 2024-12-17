@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
 
 // INTERACTIVE TABS
 class ScrollableTabs extends StatefulWidget {
@@ -19,12 +20,19 @@ class ScrollableTabs extends StatefulWidget {
 int? selectedIndex;
 
 class _ScrollableTabsState extends State<ScrollableTabs> {
-
   void onTabSelected(int index) {
     setState(() {
       // Auswahl und De-Selection
       selectedIndex = (selectedIndex == index) ? null : index;
-      ; // Ausgewählter Index wird geupdated oder auf null gesetzt
+      selectedButtonsRois[index] == true
+          ? selectedButtonsRois[index] = false
+          : selectedButtonsRois[index] = true;
+      for (int k = 0; k < 4; k++) {
+        if (k != index) {
+          selectedButtonsRois[k] = false;
+        }
+      }
+      // Ausgewählter Index wird geupdated oder auf null gesetzt
     });
     widget.onTabSelected(
       selectedIndex != null ? widget.labels[selectedIndex!] : null,
