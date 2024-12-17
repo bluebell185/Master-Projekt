@@ -24,7 +24,7 @@ class FacePainter extends CustomPainter {
     final Paint contourPaintSelected = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
-      ..color = Colors.pink[100]!;
+      ..color = Color(0xFFFFDCE8);
 
     // Zeichnen der Kästen um ROIs herum
     if (faces.isNotEmpty &&

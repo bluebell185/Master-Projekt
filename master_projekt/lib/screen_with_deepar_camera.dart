@@ -14,6 +14,8 @@ import 'package:master_projekt/face_painter.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
 
+import 'package:master_projekt/ui/tabs.dart';
+
 class ScreenWithDeeparCamera extends StatefulWidget {
   const ScreenWithDeeparCamera(
       {required this.child,
@@ -106,20 +108,27 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
                     child: TransparentButton(
                       onPressed: () {
                         print("Button $i clicked!");
-                        selectedButtonsRois[i] = !selectedButtonsRois[i]!;
-                        String tabToSelect = "eyes"; 
-                        switch(i){
+                        for (int k = 0; k < 4; k++) {
+                          if (k == i) {
+                            selectedButtonsRois[i] = !selectedButtonsRois[i]!;
+                          } else {
+                            selectedButtonsRois[k] = false;
+                          }
+                        }
+                        String tabToSelect = "eyes";
+                        switch (i) {
                           case 1:
-                           tabToSelect = "blush";
-                          case 2: 
-                          tabToSelect = "lips";
-                          case 3: 
-                          tabToSelect = "brows";
+                            tabToSelect = "blush";
+                          case 2:
+                            tabToSelect = "lips";
+                          case 3:
+                            tabToSelect = "brows";
                         }
                         // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
                         final featureOneState =
                             context.findAncestorStateOfType<FeatureOneState>();
                         if (featureOneState != null) {
+                          selectedIndex = i;
                           featureOneState.updateSelectedTab(tabToSelect);
                         }
                       },
@@ -255,7 +264,7 @@ class TransparentButton extends StatelessWidget {
     if (isButtonSelected == null || isButtonSelected == false) {
       return Colors.grey[600]!;
     } else {
-      return Colors.pink[100]!;
+      return Color(0xFFFFDCE8);
     }
   }
 

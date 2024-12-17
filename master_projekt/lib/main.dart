@@ -97,6 +97,8 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     '- your personal make up guide',
                     textAlign: TextAlign.center,
+                    softWrap: false, // verhindert Zeilenumbruch
+                    overflow: TextOverflow.visible, // Text bleibt sichtbar
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,

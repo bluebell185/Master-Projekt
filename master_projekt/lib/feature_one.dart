@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/ui/tabs.dart';
 import 'results_check.dart';
 import 'analysis_results.dart';
 
@@ -39,6 +40,7 @@ class FeatureOneState extends State<FeatureOne> {
       if (newSelectedTab == tab) {
         // Wenn der Tab bereits ausgewählt ist, deselektiere ihn
         newSelectedTab = null;
+        selectedIndex = null;
         print('Deselected Tab');
       } else {
         // Andernfalls wähle den neuen Tab aus
