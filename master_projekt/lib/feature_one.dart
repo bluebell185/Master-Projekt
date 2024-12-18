@@ -19,7 +19,7 @@ bool showRecommendations =
     false; // boolean zum Anzeigen von Frame mit Box 2 und 3
 
 final DraggableScrollableController draggableController =
-      DraggableScrollableController();
+    DraggableScrollableController();
 
 class FeatureOneState extends State<FeatureOne> {
   bool isBox2Or3Visible = false; // Zustandsabfrage: ist Box 2 oder 3 sichtbar?
@@ -173,7 +173,8 @@ class FeatureOneState extends State<FeatureOne> {
               ),
             if (showRecommendations)
               DraggableScrollableSheet(
-                key: const GlobalObjectKey('DraggableScrollableSheet'), // https://github.com/flutter/flutter/issues/140603#issuecomment-1871077425
+                key: const GlobalObjectKey(
+                    'DraggableScrollableSheet'), // https://github.com/flutter/flutter/issues/140603#issuecomment-1871077425
                 controller: draggableController,
                 initialChildSize: 0.25,
                 minChildSize: 0.25,
@@ -208,7 +209,7 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   void dispose() {
-    //_draggableController.dispose(); 
+    //_draggableController.dispose();
     super.dispose();
   }
 }

@@ -14,8 +14,6 @@ import 'package:master_projekt/face_painter.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
 
-import 'package:master_projekt/ui/tabs.dart';
-
 class ScreenWithDeeparCamera extends StatefulWidget {
   const ScreenWithDeeparCamera(
       {required this.child,
@@ -28,8 +26,6 @@ class ScreenWithDeeparCamera extends StatefulWidget {
   @override
   State<ScreenWithDeeparCamera> createState() => _ScreenWithDeeparCamera();
 }
-
-Map<int, bool> selectedButtonsRois = {0: false, 1: false, 2: false, 3: false};
 
 class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
   int i = 0;
@@ -97,53 +93,6 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
                 ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
-              if (showRecommendations)
-                Offstage(
-                  offstage: roiRectangles
-                      .isEmpty, // Buttons nicht erstellen, wenn die Liste mit Rectangles leer ist
-                  child: Stack(
-                    children: [
-                      // Dynamisch platzierte Buttons
-                      for (int i = 0; i < roiRectangles.length; i++)
-                        Positioned(
-                          left: roiRectangles[i].left,
-                          top: roiRectangles[i].top,
-                          width: roiRectangles[i].width,
-                          height: roiRectangles[i].height,
-                          child: TransparentButton(
-                            onPressed: () {
-                              print("Button $i clicked!");
-                              for (int k = 0; k < 4; k++) {
-                                if (k == i) {
-                                  selectedButtonsRois[i] =
-                                      !selectedButtonsRois[i]!;
-                                } else {
-                                  selectedButtonsRois[k] = false;
-                                }
-                              }
-                              String tabToSelect = "eyes";
-                              switch (i) {
-                                case 1:
-                                  tabToSelect = "blush";
-                                case 2:
-                                  tabToSelect = "lips";
-                                case 3:
-                                  tabToSelect = "brows";
-                              }
-                              // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
-                              final featureOneState = context
-                                  .findAncestorStateOfType<FeatureOneState>();
-                              if (featureOneState != null) {
-                                selectedIndex = i;
-                                featureOneState.updateSelectedTab(tabToSelect);
-                              }
-                            },
-                            buttonId: i,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
             ],
           ),
         ));
@@ -205,11 +154,11 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
       // Gesichtskonturen rausziehen
       if (inputImage.bytes != null) {
         final detectedFaces = await faceDetector.processImage(inputImage);
-        //if (detectedFaces.isNotEmpty) {
+        if (detectedFaces.isNotEmpty) {
           setState(() {
             faces = detectedFaces;
           });
-        //}
+        }
       }
     } catch (e) {
       print("Error bei der Aufnahme von Screenshot: $e");
@@ -258,37 +207,5 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
     }
 
     return nv21Bytes;
-  }
-}
-
-// TransparentButton: ein Button, der aussieht wie ein Rechteck
-class TransparentButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final int buttonId;
-
-  TransparentButton({required this.onPressed, required this.buttonId});
-
-  Color getBorderColor() {
-    bool? isButtonSelected = selectedButtonsRois[buttonId];
-    if (isButtonSelected == null || isButtonSelected == false) {
-      return Colors.grey[600]!;
-    } else {
-      return Color(0xFFFFDCE8);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        side: BorderSide(color: getBorderColor(), width: 2), // Rahmen, der abgerundete Ecken hat
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ),
-      child: Container(), // Kein Inhalt, da transparent
-    );
   }
 }
