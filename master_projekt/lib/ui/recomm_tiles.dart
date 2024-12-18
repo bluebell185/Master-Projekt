@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class RecommendationTile extends StatelessWidget {
   final String imageLink;
   final String label;
-  final bool isActive;
+  final bool isActive; // TO DO: Bug fixen
   final VoidCallback onTap; // Callback bei Tap
 
   const RecommendationTile({
