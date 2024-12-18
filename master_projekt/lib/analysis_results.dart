@@ -294,8 +294,6 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   // -------------------------------- FILTER ANZEIGEN -------------------------------->
   // Approach nach
   String? _activeFilter; // Speichert den aktuell aktiven Filter
-  String selectedTab = ''; // Werte ziehen?
-  String analyzedValue = ''; // Werte ziehen?
 
 // Toggle-Logik für Filter bei Kachel-Tap
   void _toggleFilter(String filterPath) {
@@ -328,30 +326,27 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
   // Extrahiert die Preview-Images
-  List<String> _getImageLinks(String selectedTab, String analyzedValue) {
-    switch (selectedTab) {
+  List<String> _getImageLinks() {
+    switch (widget.selectedTab) {
       case 'lips':
         return roiData.rois[0].lipColors
-            .firstWhere(
-                (item) =>
-                    item.colorOrShape ==
-                    analyzedValue, // prüft, ob der Wert von item.colorOrShape = analyzedValue ist
+            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
                 orElse: () =>
                     _emptyColorOrShapeDetail()) // sonst wird leeres Objekt zurückgegeben
             .imageLinks; // greift auf imageLinks zu, nachdem das richtige Objekt gefunden wurde
       case 'eyes':
         return roiData.rois[0].eyeColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .imageLinks;
       case 'blush':
         return roiData.rois[0].faceColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .imageLinks;
       case 'brows':
         return roiData.rois[0].browColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == browCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .imageLinks;
       default:
@@ -360,26 +355,26 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   }
 
 // Extrahiert die Filter-Pfade
-  List<String> _getFilters(String selectedTab, String analyzedValue) {
-    switch (selectedTab) {
+  List<String> _getFilters() {
+    switch (widget.selectedTab) {
       case 'lips':
         return roiData.rois[0].lipColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .filters;
       case 'eyes':
         return roiData.rois[0].eyeColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .filters;
       case 'blush':
         return roiData.rois[0].faceColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .filters;
       case 'brows':
         return roiData.rois[0].browColors
-            .firstWhere((item) => item.colorOrShape == analyzedValue,
+            .firstWhere((item) => item.colorOrShape == browCategory!.name,
                 orElse: () => _emptyColorOrShapeDetail())
             .filters;
       default:
@@ -536,8 +531,8 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   // ------------------- enthält bildliche Recommendations ----------------------->
 
   Widget _buildBox3() {
-    final imageLinks = _getImageLinks(selectedTab, analyzedValue);
-    final filterPaths = _getFilters(selectedTab, analyzedValue);
+    final imageLinks = _getImageLinks();
+    final filterPaths = _getFilters();
 
     return Container(
       padding: const EdgeInsets.all(10),
