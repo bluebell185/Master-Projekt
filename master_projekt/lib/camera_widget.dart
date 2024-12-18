@@ -16,6 +16,7 @@ String faceColor = 'Gesichtsfarbe noch nicht gefunden';
 
 double inputImageWidth = 1;
 double inputImageHeight = 1;
+Size screenSize = Size.zero;
 
 FaceDetector faceDetector = FaceDetector(options: FaceDetectorOptions());
 late CameraController cameraController;
@@ -145,7 +146,7 @@ class _CameraWidgetState extends State<CameraWidget> {
     // Lösung für ein verzerrtes Kamerabild von: https://stackoverflow.com/a/61487358
     var camera = cameraController.value;
     // Bildschirmgröße ermitteln
-    final screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery.of(context).size;
 
     double scale = screenSize.aspectRatio * camera.aspectRatio;
     if (scale < 1) scale = 1 / scale;

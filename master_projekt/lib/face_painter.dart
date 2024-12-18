@@ -2,6 +2,8 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:master_projekt/camera_widget.dart';
+import 'package:master_projekt/feature_one.dart';
 
 List<Rect> roiRectangles = [];
 
@@ -26,14 +28,19 @@ class FacePainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..color = Color(0xFFFFDCE8);
 
+    double draggedHeightOfDraggableSheet = draggableController.size;
+    double draggableSheetHeightInPixels = draggableController.sizeToPixels(draggedHeightOfDraggableSheet);
+
     roiRectangles.clear();
 
     // Zeichnen der Kästen um ROIs herum
+     // Zeichnen der Kästen um ROIs herum
     if (faces.isNotEmpty &&
         faces[0].landmarks[FaceLandmarkType.leftEye] != null &&
-        faces[0].contours.isNotEmpty) {
+        faces[0].contours.isNotEmpty
+        && faces[0].landmarks[FaceLandmarkType.bottomMouth]!.position.y + 10 < (screenSize.height - draggableSheetHeightInPixels)) {
 
-      // --------- Kästchen um rechtes Auge -------------------------------------------------------
+// --------- Kästchen um rechtes Auge -------------------------------------------------------
       // Position Auge
       final Point<int> rightEyePos =
           faces[0].landmarks[FaceLandmarkType.rightEye]!.position;
@@ -85,7 +92,7 @@ class FacePainter extends CustomPainter {
       // Rechteck erstellen
       Rect mouthRect = Rect.fromLTRB(
           mouthLeftPos.x.toDouble() - 10,
-          mouthBottomPos.y.toDouble() - 30,
+          mouthBottomPos.y.toDouble() - 40,
           mouthRightPos.x.toDouble() + 10,
           mouthBottomPos.y.toDouble() + 10);
       //canvas.drawRect(mouthRect, contourPaint);
