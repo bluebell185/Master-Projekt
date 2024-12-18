@@ -30,12 +30,20 @@
                         "For eyeliner, experiment with emerald green or deep purple for a unique touch."
                     ],
                     "imageLinks": [
-                        "assets/images/look1.png",
+                        "assets/images/eyes_simple_liner_lashes_img.png",
                         "assets/images/look1.png",
                         "assets/images/look1.png",
                         "assets/images/look1.png",
                         "assets/images/look1.png",
                         "assets/images/look1.png"
+                    ],
+                    "filters": [
+                        "assets/images/eyes_simple_liner_lashes.deepar",
+                        "assets/images/lips_matte_red.deepar",
+                        "assets/images/lips_nude.deepar",
+                        "assets/images/lips_orange.deepar",
+                        "assets/images/lips_pink.deepar",
+                        "assets/images/lips_vibrant_red.deepar"
                     ]
                 },
                 {

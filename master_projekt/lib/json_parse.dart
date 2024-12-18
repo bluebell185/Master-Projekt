@@ -31,8 +31,7 @@ class Roi {
   final List<ColorOrShapeDetail> faceColors;
   final List<ColorOrShapeDetail> lipColors;
   final List<ColorOrShapeDetail> browColors;
-  final List<ColorOrShapeDetail>
-      eyeShapes; 
+  final List<ColorOrShapeDetail> eyeShapes;
   final List<ColorOrShapeDetail> faceShapes;
 
   Roi({
@@ -86,6 +85,7 @@ class ColorOrShapeDetail {
   final List<RecommendedColor> recommendations;
   final List<String> techniques;
   final List<String> imageLinks;
+  final List<String> filters;
 
   ColorOrShapeDetail({
     required this.colorOrShape,
@@ -94,6 +94,7 @@ class ColorOrShapeDetail {
     required this.recommendations,
     required this.techniques,
     required this.imageLinks,
+    required this.filters,
   });
 
   factory ColorOrShapeDetail.fromJson(Map<String, dynamic> json) {
@@ -106,6 +107,7 @@ class ColorOrShapeDetail {
           .toList(),
       techniques: List<String>.from(json['techniques']),
       imageLinks: List<String>.from(json['imageLinks']),
+      filters: List<String>.from(json['filters']),
     );
   }
 
@@ -118,6 +120,7 @@ class ColorOrShapeDetail {
           recommendations.map((color) => color.toJson()).toList(),
       'techniques': techniques,
       'imageLinks': imageLinks,
+      'filters': filters,
     };
   }
 }
