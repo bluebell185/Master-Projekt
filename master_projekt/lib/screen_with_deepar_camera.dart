@@ -97,44 +97,53 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
                 ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
-              if (showRecommendations && roiRectangles.isNotEmpty)
-                // Dynamisch platzierte Buttons
-                for (int i = 0; i < roiRectangles.length; i++)
-                  Positioned(
-                    left: roiRectangles[i].left,
-                    top: roiRectangles[i].top,
-                    width: roiRectangles[i].width,
-                    height: roiRectangles[i].height,
-                    child: TransparentButton(
-                      onPressed: () {
-                        print("Button $i clicked!");
-                        for (int k = 0; k < 4; k++) {
-                          if (k == i) {
-                            selectedButtonsRois[i] = !selectedButtonsRois[i]!;
-                          } else {
-                            selectedButtonsRois[k] = false;
-                          }
-                        }
-                        String tabToSelect = "eyes";
-                        switch (i) {
-                          case 1:
-                            tabToSelect = "blush";
-                          case 2:
-                            tabToSelect = "lips";
-                          case 3:
-                            tabToSelect = "brows";
-                        }
-                        // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
-                        final featureOneState =
-                            context.findAncestorStateOfType<FeatureOneState>();
-                        if (featureOneState != null) {
-                          selectedIndex = i;
-                          featureOneState.updateSelectedTab(tabToSelect);
-                        }
-                      },
-                      buttonId: i,
-                    ),
+              if (showRecommendations)
+                Offstage(
+                  offstage: roiRectangles
+                      .isEmpty, // Buttons nicht erstellen, wenn die Liste mit Rectangles leer ist
+                  child: Stack(
+                    children: [
+                      // Dynamisch platzierte Buttons
+                      for (int i = 0; i < roiRectangles.length; i++)
+                        Positioned(
+                          left: roiRectangles[i].left,
+                          top: roiRectangles[i].top,
+                          width: roiRectangles[i].width,
+                          height: roiRectangles[i].height,
+                          child: TransparentButton(
+                            onPressed: () {
+                              print("Button $i clicked!");
+                              for (int k = 0; k < 4; k++) {
+                                if (k == i) {
+                                  selectedButtonsRois[i] =
+                                      !selectedButtonsRois[i]!;
+                                } else {
+                                  selectedButtonsRois[k] = false;
+                                }
+                              }
+                              String tabToSelect = "eyes";
+                              switch (i) {
+                                case 1:
+                                  tabToSelect = "blush";
+                                case 2:
+                                  tabToSelect = "lips";
+                                case 3:
+                                  tabToSelect = "brows";
+                              }
+                              // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
+                              final featureOneState = context
+                                  .findAncestorStateOfType<FeatureOneState>();
+                              if (featureOneState != null) {
+                                selectedIndex = i;
+                                featureOneState.updateSelectedTab(tabToSelect);
+                              }
+                            },
+                            buttonId: i,
+                          ),
+                        ),
+                    ],
                   ),
+                ),
             ],
           ),
         ));
@@ -196,11 +205,11 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
       // Gesichtskonturen rausziehen
       if (inputImage.bytes != null) {
         final detectedFaces = await faceDetector.processImage(inputImage);
-        if (detectedFaces.isNotEmpty) {
+        //if (detectedFaces.isNotEmpty) {
           setState(() {
             faces = detectedFaces;
           });
-        }
+        //}
       }
     } catch (e) {
       print("Error bei der Aufnahme von Screenshot: $e");
