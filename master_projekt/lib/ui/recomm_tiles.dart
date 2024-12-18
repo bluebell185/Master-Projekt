@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/filter.dart';
 
 class RecommendationTile extends StatelessWidget {
-  final String imagePath;
+  final String imageLink;
   final String label;
   final bool isActive;
   final VoidCallback onTap; // Callback bei Tap
 
   const RecommendationTile({
     super.key,
-    required this.imagePath,
+    required this.imageLink,
     required this.label,
     required this.isActive,
     required this.onTap,
@@ -39,7 +38,7 @@ class RecommendationTile extends StatelessWidget {
                     topRight: Radius.circular(8),
                   ),
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
+                    image: AssetImage(imageLink),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -60,12 +59,14 @@ class RecommendationTile extends StatelessWidget {
 }
 
 class ImageRecommendationsGrid extends StatelessWidget {
-  final List<Filters> filters; // Liste der Filter-Datem
+  final List<String> images; // Preview-Images
+  final List<String> filters; // Filter-Pfade
   final String? activeFilter; // null = kein Filter
   final ValueChanged<String> onTileTap; // Callback für Tap-Event
 
   const ImageRecommendationsGrid({
     super.key,
+    required this.images,
     required this.filters,
     this.activeFilter,
     required this.onTileTap,
@@ -84,24 +85,21 @@ class ImageRecommendationsGrid extends StatelessWidget {
       ),
       itemCount: filters.length,
       itemBuilder: (context, index) {
-        final filter = filters[index];
-        // final effectFile = 'assets/filters/${filter.filterPath}';
-        final filterName = filter.filterPath
-            .split('.')
-            .first; // aus Filterpfad den Filternamen extrahieren (ohne .deepar)
+        final imagePath = images[index];
+        final filterPath = filters[index];
+
         return RecommendationTile(
-          imagePath:
-              'assets/previews/${filter.imagePath}', // Bildpfad des Preview-Bildes
-          label: filterName.replaceAll('_', ' '), // Kachel-Name anzeigen
-          isActive: activeFilter == filterName, // Prüfen, ob Filter active ist
-          onTap: () => onTileTap(filterName), // Filter-Logik auslösen
+          imageLink: imagePath,
+          label: 'Look ${index + 1}',
+          isActive: activeFilter == filterPath,
+          onTap: () => onTileTap(filterPath), // Filter-Logik auslösen
         );
       },
     );
   }
 }
 
-  /*@override
+/*@override
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
@@ -129,6 +127,47 @@ class ImageRecommendationsGrid extends StatelessWidget {
     );
   }
 }*/
+
+class ImageRecommendationsList extends StatelessWidget {
+  final List<String> images; // Preview-Images
+  final List<String> filters; // Filter-Pfade
+  final String? activeFilter; // null = kein Filter
+  final ValueChanged<String> onTileTap; // Callback für Tap-Event
+
+  const ImageRecommendationsList({
+    super.key,
+    required this.images,
+    required this.filters,
+    this.activeFilter,
+    required this.onTileTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal, // Horizontal scrollen
+      child: Row(
+        children: List.generate(images.length, (index) {
+          final imagePath = images[index]; // aktuelles Preview-Image
+          final filterPath = filters[index]; // dazu passender Filter-Pfad
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: SizedBox(
+              width: 150,
+              child: RecommendationTile(
+                imageLink: imagePath,
+                label: 'Look ${index + 1}',
+                isActive: activeFilter == filterPath,
+                onTap: () => onTileTap(filterPath),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
 
 /*
 class ImageRecommendationsList extends StatelessWidget {

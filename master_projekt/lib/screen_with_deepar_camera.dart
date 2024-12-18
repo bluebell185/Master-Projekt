@@ -48,7 +48,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
 
     if (widget.isAfterAnalysis) {
       // Starte regelmäßige Screenshots zur Erkennung der Features
-      startScreenshotTimer();
+      //startScreenshotTimer();
     }
   }
 

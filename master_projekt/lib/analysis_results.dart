@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/json_parse.dart';
 import 'package:master_projekt/main.dart';
 import 'package:master_projekt/start_analysis.dart';
-import 'package:master_projekt/filter_data.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/accordion.dart';
@@ -155,42 +154,11 @@ void setBrowShapeCategory(String browValue) {
   }
 }
 
-// -----------------------------LOGIK--------------------------------->
+// ---------------------------------------------- LOGIK ------------------------------------------------>
 class _AnalysisResultsState extends State<AnalysisResults> {
   // Box 2b ist angezeigt für ROIs 'eyes' und 'blush'
   bool _shouldShowShape(String tab) {
     return tab == 'eyes' || tab == 'blush';
-  }
-
-  // Anzeigen Filter: Approach nach
-  String? _activeFilter; // Speichert den aktuell aktiven Filter
-
-// Toggle-Logik für Filter bei Kachel-Tap
-  void _toggleFilter(String filterPath) {
-    setState(() {
-      final filterName =
-          filterPath.split('.').first; // Filtername ohne Extension
-      if (_activeFilter == filterName) {
-        // Filter ist bereits aktiv -> Filter entfernen
-        _activeFilter = null;
-        _clearFilter();
-      } else {
-        // Neuen Filter anwenden
-        _activeFilter = filterName;
-        _applyFilter(filterPath);
-      }
-    });
-  }
-
-  void _applyFilter(String filterPath) {
-    print("Applying filter: $filterPath");
-    deepArController.switchEffect(filterPath);
-    // deepArController.switchEffect(withSlot: "lips", path: "assets/filters/$filterName.deepar");
-  }
-
-  void _clearFilter() {
-    print("Removing filter");
-    deepArController.switchEffect(null);
   }
 
   // ------------------------------- Eye Color Content ------------------------------->
@@ -225,7 +193,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // ------------------------------- Blush Color Content ------------------------------->
+  // ----------------------------- Blush Color Content ------------------------------->
   Widget _getBlushContent(BlushCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].faceColors) {
@@ -243,7 +211,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     // TODO was ist mit default: return Container(); überall?
   }
 
-  // ------------------------------- Blush Shape Content ------------------------------->
+  // ------------------------------ Blush Shape Content ------------------------------>
   Widget _getBlushShapeContent(BlushShapeCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail shapeDetail in roiData.rois[0].faceShapes) {
@@ -259,7 +227,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // ------------------------------- Lip Content ------------------------------->
+  // ---------------------------------- Lip Content ---------------------------------->
   Widget _getLipContent(LipCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].lipColors) {
@@ -275,7 +243,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // ------------------------------- Brow Content ------------------------------->
+  // -------------------------------- Brow Content ------------------------------------>
   Widget _getBrowContent(BrowCategory category) {
     String textToDisplay = "Content missing!";
     for (ColorOrShapeDetail colorDetail in roiData.rois[0].browColors) {
@@ -291,7 +259,7 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
-  // ------------------- Main COLOR Content für jeden selected Tab ------------------->
+  // ------------------- Main COLOR Content für jeden selected Tab -------------------->
   Widget _getTabContentColor(String tab) {
     if (tab == 'eyes' && eyeColorCategory != null) {
       return _getEyeColorContent(eyeColorCategory!);
@@ -323,6 +291,116 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 
+  // -------------------------------- FILTER ANZEIGEN -------------------------------->
+  // Approach nach
+  String? _activeFilter; // Speichert den aktuell aktiven Filter
+  String selectedTab = ''; // Werte ziehen?
+  String analyzedValue = ''; // Werte ziehen?
+
+// Toggle-Logik für Filter bei Kachel-Tap
+  void _toggleFilter(String filterPath) {
+    setState(() {
+      final filterName =
+          filterPath.split('.').first; // Filtername ohne Extension
+      if (_activeFilter == filterName) {
+        // Filter ist bereits aktiv -> Filter entfernen
+        _activeFilter = null;
+        _clearFilter();
+      } else {
+        // Neuen Filter anwenden
+        _activeFilter = filterName;
+        _applyFilter(filterPath);
+      }
+    });
+  }
+
+  void _applyFilter(String filterPath) {
+    // String slot
+    print("Applying filter: $filterPath");
+    deepArController.switchEffect(filterPath);
+    // deepArController.switchEffect(filterPath, slot: slot);
+    // deepArController.switchEffect(withSlot: "lips", path: "assets/filters/$filterName.deepar");
+  }
+
+  void _clearFilter() {
+    print("Removing filter");
+    deepArController.switchEffect(null);
+  }
+
+  // Extrahiert die Preview-Images
+  List<String> _getImageLinks(String selectedTab, String analyzedValue) {
+    switch (selectedTab) {
+      case 'lips':
+        return roiData.rois[0].lipColors
+            .firstWhere(
+                (item) =>
+                    item.colorOrShape ==
+                    analyzedValue, // prüft, ob der Wert von item.colorOrShape = analyzedValue ist
+                orElse: () =>
+                    _emptyColorOrShapeDetail()) // sonst wird leeres Objekt zurückgegeben
+            .imageLinks; // greift auf imageLinks zu, nachdem das richtige Objekt gefunden wurde
+      case 'eyes':
+        return roiData.rois[0].eyeColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .imageLinks;
+      case 'blush':
+        return roiData.rois[0].faceColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .imageLinks;
+      case 'brows':
+        return roiData.rois[0].browColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .imageLinks;
+      default:
+        return [];
+    }
+  }
+
+// Extrahiert die Filter-Pfade
+  List<String> _getFilters(String selectedTab, String analyzedValue) {
+    switch (selectedTab) {
+      case 'lips':
+        return roiData.rois[0].lipColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .filters;
+      case 'eyes':
+        return roiData.rois[0].eyeColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .filters;
+      case 'blush':
+        return roiData.rois[0].faceColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .filters;
+      case 'brows':
+        return roiData.rois[0].browColors
+            .firstWhere((item) => item.colorOrShape == analyzedValue,
+                orElse: () => _emptyColorOrShapeDetail())
+            .filters;
+      default:
+        return [];
+    }
+  }
+
+// leere Rückgabewerte, falls keine ROI-Results gefunden wurde
+  ColorOrShapeDetail _emptyColorOrShapeDetail() {
+    return ColorOrShapeDetail(
+      colorOrShape: '',
+      contentDescription: '',
+      goal: '',
+      recommendations: [],
+      techniques: [],
+      imageLinks: [],
+      filters: [],
+    );
+  }
+
+// <------------------------------------ BUILD ------------------------------------>
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -458,7 +536,9 @@ class _AnalysisResultsState extends State<AnalysisResults> {
   // ------------------- enthält bildliche Recommendations ----------------------->
 
   Widget _buildBox3() {
-    // final imageLinks = _getImageLinks();
+    final imageLinks = _getImageLinks(selectedTab, analyzedValue);
+    final filterPaths = _getFilters(selectedTab, analyzedValue);
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -483,7 +563,8 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           ),
 
           ImageRecommendationsGrid(
-            filters: filters, // Liste mit Filtern
+            images: imageLinks, // Preview-Images
+            filters: filterPaths, // Filter-Pfade
             activeFilter: _activeFilter, // Filter, der active ist
             onTileTap: _toggleFilter, // Callback für Tap-Event
           ),
@@ -501,39 +582,3 @@ class _AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 }
-
-/*
-List<String> _getImageLinks() {
-  if (roiData == null || selectedTab == null || recognizedValue == null) {
-    return [];
-  }
-
-  final roi = roiData!.rois[0]; // Erster "rois"-Eintrag aus der JSON
-
-  switch (recognizedCategory) {
-    case 'eyeColors':
-      return roi.eyeColors
-          .firstWhere(
-            (item) => item.colorOrShape == recognizedValue,
-            orElse: () => ColorOrShapeDetail(
-              colorOrShape: '',
-              contentDescription: '',
-              goal: '',
-              recommendations: [],
-              techniques: [],
-              imageLinks: [],
-            ),
-          )
-          .imageLinks;
-    case 'lipColors':
-      return roi.lipColors
-          .firstWhere((item) => item.colorOrShape == recognizedValue)
-          .imageLinks;
-    case 'faceColors':
-      return roi.faceColors
-          .firstWhere((item) => item.colorOrShape == recognizedValue)
-          .imageLinks;
-    default:
-      return [];
-  }
-}*/

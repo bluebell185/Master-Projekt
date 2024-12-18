@@ -114,7 +114,8 @@ class AccordionWidget extends StatelessWidget {
         goal: "",
         recommendations: [],
         techniques: [],
-        imageLinks: []);
+        imageLinks: [],
+        filters: []);
 
     if (roi == 'eyes') {
       for (ColorOrShapeDetail colorDetail in roiData.rois[0].eyeColors) {
@@ -181,7 +182,8 @@ class AccordionWidget extends StatelessWidget {
         goal: "",
         recommendations: [],
         techniques: [],
-        imageLinks: []);
+        imageLinks: [],
+        filters: []);
 
     if (roi == 'eyes') {
       for (ColorOrShapeDetail colorDetail in roiData.rois[0].eyeShapes) {
