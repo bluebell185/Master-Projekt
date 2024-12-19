@@ -146,7 +146,10 @@ class ImageRecommendationsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal, // Horizontal scrollen
-      child: Row(
+      child: Container(
+      height: 150,
+      child:Row(
+        mainAxisSize: MainAxisSize.min, // Row passt sich der Kindergröße an
         children: List.generate(images.length, (index) {
           final imagePath = images[index]; // aktuelles Preview-Image
           final filterPath = filters[index]; // dazu passender Filter-Pfad
@@ -164,6 +167,7 @@ class ImageRecommendationsList extends StatelessWidget {
             ),
           );
         }),
+      ),
       ),
     );
   }

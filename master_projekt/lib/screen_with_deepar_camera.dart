@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/feature_one.dart';
 import 'package:master_projekt/main.dart';
 import 'dart:async';
@@ -12,6 +13,7 @@ import 'package:flutter/rendering.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:master_projekt/face_painter.dart';
 import 'package:image/image.dart' as img;
+import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'dart:ui' as ui;
 
 import 'package:master_projekt/ui/tabs.dart';
@@ -146,6 +148,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                                 selectedIndex = i;
                                 featureOneState.updateSelectedTab(tabToSelect);
                               }
+                              showRecommendationList = true;
                             },
                             buttonId: i,
                           ),

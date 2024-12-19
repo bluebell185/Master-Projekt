@@ -45,8 +45,10 @@ class AnalysisResults extends StatefulWidget {
   });
 
   @override
-  State<AnalysisResults> createState() => _AnalysisResultsState();
+  State<AnalysisResults> createState() => AnalysisResultsState();
 }
+
+bool showRecommendationList = false;
 
 EyeColorCategory?
     eyeColorCategory; // Tracked die Augenfarben-Kategorie für "eyes"
@@ -155,7 +157,7 @@ void setBrowShapeCategory(String browValue) {
 }
 
 // ---------------------------------------------- LOGIK ------------------------------------------------>
-class _AnalysisResultsState extends State<AnalysisResults> {
+class AnalysisResultsState extends State<AnalysisResults> {
   // Box 2b ist angezeigt für ROIs 'eyes' und 'blush'
   bool _shouldShowShape(String tab) {
     return tab == 'eyes' || tab == 'blush';
@@ -412,6 +414,13 @@ class _AnalysisResultsState extends State<AnalysisResults> {
           controller: widget.scrollController,
           child: Column(
             children: [
+              if (showRecommendationList)
+                ImageRecommendationsList(
+                  images: _getImageLinks(), // Preview-Images
+                  filters: _getFilters(), // Filter-Pfade
+                  activeFilter: _activeFilter, // Filter, der active ist
+                  onTileTap: _toggleFilter, // Callback für Tap-Event
+                ),
               // Content Box 1
               _buildBox1(),
               // Einfügen von Box 2 nach Tab-Auswahl
