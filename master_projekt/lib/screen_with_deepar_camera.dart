@@ -52,7 +52,9 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
 
     if (widget.isAfterAnalysis) {
       // Starte regelmäßige Screenshots zur Erkennung der Features
-      startScreenshotTimer();
+      if (!Platform.isIOS) {
+        startScreenshotTimer();
+      }
     }
   }
 
@@ -82,7 +84,6 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
               Transform.scale(
                 scale: scale, //scale,
                 child: Center(
-                    // TODO: iOS-Sonderfall einfügen!
                     child: deepArController.isInitialized || Platform.isIOS
                         ? DeepArPreview(deepArController)
                         : //deepArController.hasPermission ?

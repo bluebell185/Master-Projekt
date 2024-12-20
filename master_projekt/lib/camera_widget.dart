@@ -18,6 +18,8 @@ double inputImageWidth = 1;
 double inputImageHeight = 1;
 Size screenSize = Size.zero;
 
+bool isCameraDisposed = false;
+
 FaceDetector faceDetector = FaceDetector(options: FaceDetectorOptions());
 late CameraController cameraController;
 late CameraDescription selfieCam;
@@ -139,7 +141,7 @@ class _CameraWidgetState extends State<CameraWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!cameraController.value.isInitialized) {
+    if (!cameraController.value.isInitialized || isCameraDisposed) {
       return Container();
     }
 

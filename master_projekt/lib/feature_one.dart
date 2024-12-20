@@ -16,7 +16,7 @@ class FeatureOne extends StatefulWidget {
 }
 
 bool showRecommendations =
-    false; // boolean zum Anzeigen von Frame mit Box 2 und 3
+    true; // boolean zum Anzeigen von Frame mit Box 2 und 3
 
 final DraggableScrollableController draggableController =
     DraggableScrollableController();
@@ -91,86 +91,6 @@ class FeatureOneState extends State<FeatureOne> {
               ),
             ),
             Toolbar(),
-            if (!showRecommendations)
-              ResultsCheckPopUp(
-                popUpHeading: 'Your analysis results',
-                analysisElements: [
-                  // TO DO: ROI-Analyse-Ergebnis aus den Tabs rausnehmen? Drinlassen, aber als default selected?
-                  AnalysisElement(
-                    number: 1,
-                    title: 'Eye color',
-                    result:
-                        eyeColorCategory!.name, // Results der Gesichtsanalyse
-                    options: [
-                      'blue',
-                      'green',
-                      'brown',
-                      'grey'
-                    ], // Optionen der Kategorie
-                    selectedOption: eyeColorCategory!.name,
-                    onOptionSelected: (selected) {
-                      print('Selected for Eye color: $selected');
-                      setEyeColorCategory(selected);
-                    },
-                  ),
-                  AnalysisElement(
-                    number: 2,
-                    title: 'Eye shape',
-                    result:
-                        eyeShapeCategory!.name, // Results der Gesichtsanalyse
-                    options: [
-                      'almond',
-                      'round',
-                      'upturned',
-                      'downturned' //,
-                      //'monolid'
-                    ], // Optionen der Kategorie
-                    selectedOption: eyeShapeCategory!.name,
-                    onOptionSelected: (selected) {
-                      print('Selected for Eye shape: $selected');
-                      setEyeShapeCategory(selected);
-                    },
-                  ),
-                  AnalysisElement(
-                    number: 3,
-                    title: 'Teint color',
-                    result: blushCategory!.name, // Results der Gesichtsanalyse
-                    options: [
-                      'light',
-                      'beige',
-                      'olive',
-                      'tanned',
-                      'dark'
-                    ], // Optionen der Kategorie
-                    selectedOption: blushCategory!.name,
-                    onOptionSelected: (selected) {
-                      print('Selected for Head shape: $selected');
-                      setBlushCategory(selected);
-                    },
-                  ),
-                  AnalysisElement(
-                    number: 4,
-                    title: 'Head shape',
-                    result:
-                        blushShapeCategory!.name, // Results der Gesichtsanalyse
-                    options: [
-                      'square',
-                      'round',
-                      'oval'
-                    ], // Optionen der Kategorie
-                    selectedOption: blushShapeCategory!.name,
-                    onOptionSelected: (selected) {
-                      print('Selected for Head shape: $selected');
-                      setBlushShapeCategory(selected);
-                    },
-                  ),
-                ],
-                onSave: () {
-                  setState(() {
-                    showRecommendations = true;
-                  });
-                },
-              ),
             if (showRecommendations)
               DraggableScrollableSheet(
                 key: const GlobalObjectKey(
