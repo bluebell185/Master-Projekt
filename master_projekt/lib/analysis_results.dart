@@ -59,6 +59,10 @@ LipCategory? lipCategory;
 BrowCategory? browCategory;
 BrowShapeCategory? browShapeCategory;
 
+List<String>  imageLinks = [];
+List<String> filterPaths = [];
+String? activeFilter; // Speichert den aktuell aktiven Filter
+
 // Beispielgerüst: Logik für die Augenfarbe-Kategorien?
 // 'colorValue' bestimmt die Farbkategorie
 // 'eyeColorCategory'
@@ -295,20 +299,20 @@ class AnalysisResultsState extends State<AnalysisResults> {
 
   // -------------------------------- FILTER ANZEIGEN -------------------------------->
   // Approach nach
-  String? _activeFilter; // Speichert den aktuell aktiven Filter
+  // String? activeFilter; // Speichert den aktuell aktiven Filter
 
 // Toggle-Logik für Filter bei Kachel-Tap
   void _toggleFilter(String filterPath) {
     setState(() {
       final filterName =
           filterPath.split('.').first; // Filtername ohne Extension
-      if (_activeFilter == filterName) {
+      if (activeFilter == filterName) {
         // Filter ist bereits aktiv -> Filter entfernen
-        _activeFilter = null;
+        activeFilter = null;
         _clearFilter();
       } else {
         // Neuen Filter anwenden
-        _activeFilter = filterName;
+        activeFilter = filterName;
         _applyFilter(filterPath);
       }
     });
@@ -400,6 +404,9 @@ class AnalysisResultsState extends State<AnalysisResults> {
 // <------------------------------------ BUILD ------------------------------------>
   @override
   Widget build(BuildContext context) {
+    imageLinks = _getImageLinks();
+    filterPaths = _getFilters();
+    
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -414,13 +421,6 @@ class AnalysisResultsState extends State<AnalysisResults> {
           controller: widget.scrollController,
           child: Column(
             children: [
-              if (showRecommendationList)
-                ImageRecommendationsList(
-                  images: _getImageLinks(), // Preview-Images
-                  filters: _getFilters(), // Filter-Pfade
-                  activeFilter: _activeFilter, // Filter, der active ist
-                  onTileTap: _toggleFilter, // Callback für Tap-Event
-                ),
               // Content Box 1
               _buildBox1(),
               // Einfügen von Box 2 nach Tab-Auswahl
@@ -435,6 +435,8 @@ class AnalysisResultsState extends State<AnalysisResults> {
       ),
     );
   }
+
+  
 
   // ------------------------------- Content Box 1 ------------------------------->
   // -------------- enthält auswählbare Tabs für ROIs 'eyes' etc. ---------------->
@@ -540,9 +542,6 @@ class AnalysisResultsState extends State<AnalysisResults> {
   // ------------------- enthält bildliche Recommendations ----------------------->
 
   Widget _buildBox3() {
-    final imageLinks = _getImageLinks();
-    final filterPaths = _getFilters();
-
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -569,7 +568,7 @@ class AnalysisResultsState extends State<AnalysisResults> {
           ImageRecommendationsGrid(
             images: imageLinks, // Preview-Images
             filters: filterPaths, // Filter-Pfade
-            activeFilter: _activeFilter, // Filter, der active ist
+            activeFilter: activeFilter, // Filter, der active ist
             onTileTap: _toggleFilter, // Callback für Tap-Event
           ),
 

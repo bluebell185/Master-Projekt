@@ -146,9 +146,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                                   .findAncestorStateOfType<FeatureOneState>();
                               if (featureOneState != null) {
                                 selectedIndex = i;
-                                featureOneState.updateSelectedTab(tabToSelect);
+                                featureOneState.updateSelectedTabFromButtons(tabToSelect);
                               }
-                              showRecommendationList = true;
                             },
                             buttonId: i,
                           ),
