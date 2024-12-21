@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
 import 'results_check.dart';
 import 'analysis_results.dart';
@@ -46,15 +47,45 @@ class FeatureOneState extends State<FeatureOne> {
         newSelectedTab = null;
         selectedIndex = null;
         isBox2Or3Visible = false;
+        showRecommendationList = false;
         print('Deselected Tab');
       } else {
         // Andernfalls wähle den neuen Tab aus
         newSelectedTab = tab;
+        showRecommendationList = false;
         print('Selected Tab: $newSelectedTab');
       }
       if (tab == null) {
         // Box 2/3 ist nicht (mehr) sichtbar, sobald ein Tab deselected wurde
         isBox2Or3Visible = false;
+        showRecommendationList = false;
+      } else {
+        // Box 2/3 ist sichtbar, sobald ein Tab ausgewählt wurde
+        isBox2Or3Visible = true;
+      }
+    });
+  }
+
+  void updateSelectedTabFromButtons(String? tab) {
+    setState(() {
+      //newSelectedTab = tab; // Update den Parent state
+      if (newSelectedTab == tab) {
+        // Wenn der Tab bereits ausgewählt ist, deselektiere ihn
+        newSelectedTab = null;
+        selectedIndex = null;
+        isBox2Or3Visible = false;
+        showRecommendationList = false;
+        print('Deselected Tab');
+      } else {
+        // Andernfalls wähle den neuen Tab aus
+        newSelectedTab = tab;
+        showRecommendationList = true;
+        print('Selected Tab: $newSelectedTab');
+      }
+      if (tab == null) {
+        // Box 2/3 ist nicht (mehr) sichtbar, sobald ein Tab deselected wurde
+        isBox2Or3Visible = false;
+        showRecommendationList = false;
       } else {
         // Box 2/3 ist sichtbar, sobald ein Tab ausgewählt wurde
         isBox2Or3Visible = true;
@@ -94,7 +125,7 @@ class FeatureOneState extends State<FeatureOne> {
                 controller: draggableController,
                 initialChildSize: 0.25,
                 minChildSize: 0.25,
-                maxChildSize: isBox2Or3Visible ? 0.8 : 0.25,
+                maxChildSize: isBox2Or3Visible ? 0.75 : 0.25,
                 builder: (context, scrollController) {
                   return Container(
                     decoration: BoxDecoration(
@@ -116,6 +147,13 @@ class FeatureOneState extends State<FeatureOne> {
                     ),
                   );
                 },
+              ),
+            if (showRecommendationList)
+              ImageRecommendationsList(
+                images: imageLinks, // Preview-Images
+                filters: filterPaths, // Filter-Pfade
+                activeFilter: null, // Filter, der active ist
+                onTileTap: (value) {}, // Callback für Tap-Event
               ),
           ],
         ),

@@ -145,10 +145,12 @@ class ImageRecommendationsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: 40),
       scrollDirection: Axis.horizontal, // Horizontal scrollen
       child: Container(
       height: 150,
-      child:Row(
+       child:
+      Row(
         mainAxisSize: MainAxisSize.min, // Row passt sich der Kindergröße an
         children: List.generate(images.length, (index) {
           final imagePath = images[index]; // aktuelles Preview-Image
