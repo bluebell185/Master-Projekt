@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/main.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // Tool Bar rechts
 // muss noch für die Navigation mit den anderen Screens connected werden
@@ -18,7 +19,7 @@ class Toolbar extends StatelessWidget {
       child: Column(
         children: [
           _buildToolbarIcon(
-            iconPath: 'assets/icons/user.png',
+            iconPath: 'assets/icons/user.svg',
             onTap: () {
               // TO DO: Zum User-Account
               print("User icon tapped");
@@ -26,7 +27,7 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(
-            iconPath: 'assets/icons/flash.png',
+            iconPath: 'assets/icons/flash.svg',
             onTap: () {
               // TO DO: Ein-/Ausschalten Blitz & Icon austauschen
               deepArController.toggleFlash();
@@ -35,7 +36,7 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(
-            iconPath: 'assets/icons/analysis.png',
+            iconPath: 'assets/icons/analysis.svg',
             onTap: () {
               // TO DO: Öffnen von Feature One: Analysis
               print("Analysis icon tapped");
@@ -43,7 +44,7 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(
-            iconPath: 'assets/icons/create.png',
+            iconPath: 'assets/icons/create.svg',
             onTap: () {
               // TO DO: Öffnen von Feature Zwei: Create Look
               print("Create icon tapped");
@@ -51,7 +52,7 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(
-            iconPath: 'assets/icons/eye.png',
+            iconPath: 'assets/icons/eye.svg',
             onTap: () {
               // TO DO: Ausblenden von ROI-Kästchen (und ContainerBoxen?)
               print("Eye icon tapped");
@@ -70,7 +71,10 @@ class Toolbar extends StatelessWidget {
       child: SizedBox(
         width: 24,
         height: 24,
-        child: Image.asset(iconPath),
+        child: SvgPicture.asset(
+          iconPath, // Verwendet SvgPicture.asset für SVG-Dateien
+          semanticsLabel: 'Toolbar Icon',
+        ),
       ),
     );
   }
