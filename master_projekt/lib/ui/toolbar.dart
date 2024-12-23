@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/main.dart';
 
 // Tool Bar rechts
 // muss noch für die Navigation mit den anderen Screens connected werden
@@ -28,6 +29,7 @@ class Toolbar extends StatelessWidget {
             iconPath: 'assets/icons/flash.png',
             onTap: () {
               // TO DO: Ein-/Ausschalten Blitz & Icon austauschen
+              deepArController.toggleFlash;
               print("Flash icon tapped");
             },
           ),
