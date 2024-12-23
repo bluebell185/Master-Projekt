@@ -9,8 +9,11 @@ import 'analysis_results.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 
+// GlobalKey für FeatureOne
+final GlobalKey<FeatureOneState> featureOneKey = GlobalKey<FeatureOneState>();
+
 class FeatureOne extends StatefulWidget {
-  const FeatureOne({super.key});
+  FeatureOne({Key? key}) : super(key: featureOneKey);
 
   @override
   State<FeatureOne> createState() => FeatureOneState();
@@ -20,6 +23,7 @@ final GlobalKey<AnalysisResultsState> analysisResultsKey = GlobalKey<AnalysisRes
 
 bool showRecommendations =
     true; // boolean zum Anzeigen von Frame mit Box 2 und 3
+bool hideWidgets = false;
 
 final DraggableScrollableController draggableController =
     DraggableScrollableController();
@@ -41,6 +45,11 @@ class FeatureOneState extends State<FeatureOne> {
     });
   }
 
+  void toggleWidgetHiding() {
+    setState(() {
+      hideWidgets = !hideWidgets;
+    });
+  }
   void updateSelectedTab(String? tab) {
     setState(() {
       //newSelectedTab = tab; // Update den Parent state
@@ -114,13 +123,13 @@ class FeatureOneState extends State<FeatureOne> {
                 children: [
                   ScreenTitle(
                     titleText: 'Analysis',
-                    titleColor: Colors.white,
+                    titleColor: hideWidgets ? Colors.transparent : Colors.white,
                   ),
                 ],
               ),
             ),
             Toolbar(),
-            if (showRecommendations)
+            if (showRecommendations && !hideWidgets)
               DraggableScrollableSheet(
                 key: const GlobalObjectKey(
                     'DraggableScrollableSheet'), // https://github.com/flutter/flutter/issues/140603#issuecomment-1871077425

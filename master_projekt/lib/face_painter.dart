@@ -34,7 +34,7 @@ class FacePainter extends CustomPainter {
     roiRectangles.clear();
 
     // Zeichnen der Kästen um ROIs herum
-    if (faces.isNotEmpty &&
+    if (!hideWidgets && faces.isNotEmpty &&
         faces[0].landmarks[FaceLandmarkType.leftEye] != null &&
          faces[0].contours.isNotEmpty
         && faces[0].landmarks[FaceLandmarkType.bottomMouth]!.position.y + 10 < (screenSize.height - draggableSheetHeightInPixels)) {
