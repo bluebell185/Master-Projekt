@@ -16,6 +16,8 @@ class FeatureOne extends StatefulWidget {
   State<FeatureOne> createState() => FeatureOneState();
 }
 
+final GlobalKey<AnalysisResultsState> analysisResultsKey = GlobalKey<AnalysisResultsState>();
+
 bool showRecommendations =
     true; // boolean zum Anzeigen von Frame mit Box 2 und 3
 
@@ -136,6 +138,7 @@ class FeatureOneState extends State<FeatureOne> {
                       ),
                     ),
                     child: AnalysisResults(
+                      key: analysisResultsKey,
                       selectedTab:
                           newSelectedTab, // weitergeben des geupdateten ausgewählten Tabs an AnalysisResults
                       isBoxThreeOpen: isBoxThreeOpen,
@@ -152,8 +155,8 @@ class FeatureOneState extends State<FeatureOne> {
               ImageRecommendationsList(
                 images: imageLinks, // Preview-Images
                 filters: filterPaths, // Filter-Pfade
-                activeFilter: null, // Filter, der active ist
-                onTileTap: (value) {}, // Callback für Tap-Event
+                activeFilter: activeFilter, // Filter, der active ist
+                onTileTap: toggleFilter, // Callback für Tap-Event
               ),
           ],
         ),
@@ -165,5 +168,9 @@ class FeatureOneState extends State<FeatureOne> {
   void dispose() {
     draggableController.dispose();
     super.dispose();
+  }
+
+  toggleFilter(String filterPath) {
+    analysisResultsKey.currentState?.toggleFilter(filterPath);
   }
 }

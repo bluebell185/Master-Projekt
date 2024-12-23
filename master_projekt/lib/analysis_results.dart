@@ -302,7 +302,7 @@ class AnalysisResultsState extends State<AnalysisResults> {
   // String? activeFilter; // Speichert den aktuell aktiven Filter
 
 // Toggle-Logik für Filter bei Kachel-Tap
-  void _toggleFilter(String filterPath) {
+  void toggleFilter(String filterPath) {
     setState(() {
       final filterName =
           filterPath.split('.').first; // Filtername ohne Extension
@@ -331,81 +331,11 @@ class AnalysisResultsState extends State<AnalysisResults> {
     deepArController.switchEffect(null);
   }
 
-  // Extrahiert die Preview-Images
-  List<String> _getImageLinks() {
-    switch (widget.selectedTab) {
-      case 'lips':
-        return roiData.rois[0].lipColors
-            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
-                orElse: () =>
-                    _emptyColorOrShapeDetail()) // sonst wird leeres Objekt zurückgegeben
-            .imageLinks; // greift auf imageLinks zu, nachdem das richtige Objekt gefunden wurde
-      case 'eyes':
-        return roiData.rois[0].eyeColors
-            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .imageLinks;
-      case 'blush':
-        return roiData.rois[0].faceColors
-            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .imageLinks;
-      case 'brows':
-        return roiData.rois[0].browColors
-            .firstWhere((item) => item.colorOrShape == browCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .imageLinks;
-      default:
-        return [];
-    }
-  }
-
-// Extrahiert die Filter-Pfade
-  List<String> _getFilters() {
-    switch (widget.selectedTab) {
-      case 'lips':
-        return roiData.rois[0].lipColors
-            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .filters;
-      case 'eyes':
-        return roiData.rois[0].eyeColors
-            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .filters;
-      case 'blush':
-        return roiData.rois[0].faceColors
-            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .filters;
-      case 'brows':
-        return roiData.rois[0].browColors
-            .firstWhere((item) => item.colorOrShape == browCategory!.name,
-                orElse: () => _emptyColorOrShapeDetail())
-            .filters;
-      default:
-        return [];
-    }
-  }
-
-// leere Rückgabewerte, falls keine ROI-Results gefunden wurde
-  ColorOrShapeDetail _emptyColorOrShapeDetail() {
-    return ColorOrShapeDetail(
-      colorOrShape: '',
-      contentDescription: '',
-      goal: '',
-      recommendations: [],
-      techniques: [],
-      imageLinks: [],
-      filters: [],
-    );
-  }
-
 // <------------------------------------ BUILD ------------------------------------>
   @override
   Widget build(BuildContext context) {
-    imageLinks = _getImageLinks();
-    filterPaths = _getFilters();
+    imageLinks = getImageLinks(widget.selectedTab);
+    filterPaths = getFilters(widget.selectedTab);
     
     return Container(
       decoration: const BoxDecoration(
@@ -569,7 +499,7 @@ class AnalysisResultsState extends State<AnalysisResults> {
             images: imageLinks, // Preview-Images
             filters: filterPaths, // Filter-Pfade
             activeFilter: activeFilter, // Filter, der active ist
-            onTileTap: _toggleFilter, // Callback für Tap-Event
+            onTileTap: toggleFilter, // Callback für Tap-Event
           ),
 
           // Navigation zu Box 2
@@ -585,3 +515,73 @@ class AnalysisResultsState extends State<AnalysisResults> {
     );
   }
 }
+
+// Extrahiert die Preview-Images
+  List<String> getImageLinks(String? selectedTab) {
+    switch (selectedTab) {
+      case 'lips':
+        return roiData.rois[0].lipColors
+            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
+                orElse: () =>
+                    emptyColorOrShapeDetail()) // sonst wird leeres Objekt zurückgegeben
+            .imageLinks; // greift auf imageLinks zu, nachdem das richtige Objekt gefunden wurde
+      case 'eyes':
+        return roiData.rois[0].eyeColors
+            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .imageLinks;
+      case 'blush':
+        return roiData.rois[0].faceColors
+            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .imageLinks;
+      case 'brows':
+        return roiData.rois[0].browColors
+            .firstWhere((item) => item.colorOrShape == browCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .imageLinks;
+      default:
+        return [];
+    }
+  }
+
+// Extrahiert die Filter-Pfade
+  List<String> getFilters(String? selectedTab) {
+    switch (selectedTab) {
+      case 'lips':
+        return roiData.rois[0].lipColors
+            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .filters;
+      case 'eyes':
+        return roiData.rois[0].eyeColors
+            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .filters;
+      case 'blush':
+        return roiData.rois[0].faceColors
+            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .filters;
+      case 'brows':
+        return roiData.rois[0].browColors
+            .firstWhere((item) => item.colorOrShape == browCategory!.name,
+                orElse: () => emptyColorOrShapeDetail())
+            .filters;
+      default:
+        return [];
+    }
+  }
+
+// leere Rückgabewerte, falls keine ROI-Results gefunden wurde
+  ColorOrShapeDetail emptyColorOrShapeDetail() {
+    return ColorOrShapeDetail(
+      colorOrShape: '',
+      contentDescription: '',
+      goal: '',
+      recommendations: [],
+      techniques: [],
+      imageLinks: [],
+      filters: [],
+    );
+  }

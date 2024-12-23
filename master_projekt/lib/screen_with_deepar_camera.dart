@@ -147,6 +147,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                               if (featureOneState != null) {
                                 selectedIndex = i;
                                 featureOneState.updateSelectedTabFromButtons(tabToSelect);
+                                imageLinks = getImageLinks(tabToSelect);
+                                filterPaths = getFilters(tabToSelect);
                               }
                             },
                             buttonId: i,
