@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:master_projekt/feature_one.dart';
 
 // Tool Bar rechts
 // muss noch für die Navigation mit den anderen Screens connected werden
@@ -54,7 +55,9 @@ class Toolbar extends StatelessWidget {
           _buildToolbarIcon(
             iconPath: 'assets/icons/eye.svg',
             onTap: () {
-              // TO DO: Ausblenden von ROI-Kästchen (und ContainerBoxen?)
+              if (featureOneKey.currentState != null) {
+                featureOneKey.currentState!.toggleWidgetHiding();
+              }
               print("Eye icon tapped");
             },
           ),
