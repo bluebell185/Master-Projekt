@@ -31,15 +31,18 @@ class ScreenWithDeeparCamera extends StatefulWidget {
 
 Map<int, bool> selectedButtonsRois = {0: false, 1: false, 2: false, 3: false};
 
-class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
+class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
+    with WidgetsBindingObserver {
   int i = 0;
   List<Face> faces = [];
   late FaceDetector faceDetector;
   Timer? _screenshotTimer;
+  bool runDeeparCamera = true;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     final detectorOptions = FaceDetectorOptions(
         enableClassification: false,
@@ -60,6 +63,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     faceDetector.close();
     deepArController.destroy();
     _screenshotTimer?.cancel();
@@ -81,15 +85,19 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
           body: Stack(
             children: [
               // Hintergrund: CameraWidget
-              Transform.scale(
-                scale: scale, //scale,
-                child: Center(
-                    child: deepArController.isInitialized || Platform.isIOS
-                        ? DeepArPreview(deepArController)
-                        : //deepArController.hasPermission ?
-                        CircularProgressIndicator()
-                    //: TODO Error Widget wegen Kamera/Mikrofon-Berechtigung
-                    ),
+              Offstage(
+                offstage: false,
+                child: Transform.scale(
+                  scale: scale, //scale,
+                  child: Center(
+                      child: (deepArController.isInitialized || Platform.isIOS) && runDeeparCamera
+                          ? DeepArPreview(
+                              key: ValueKey('DeepArPreview'), deepArController)
+                          : //deepArController.hasPermission ?
+                          CircularProgressIndicator()
+                      //: TODO Error Widget wegen Kamera/Mikrofon-Berechtigung
+                      ),
+                ),
               ),
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild
               if (showRecommendations)
@@ -259,6 +267,24 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera> {
     }
 
     return nv21Bytes;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      // App geht in den Hintergrund
+      //deepArController.stop(); // Pausieren des Kamera-Feeds
+      runDeeparCamera = false;
+      print("Pause");
+    } else if (state == AppLifecycleState.resumed) {
+      // App kehrt zurück in den Vordergrund
+      //deepArController.start(); // Wiederaufnahme des Kamera-Feeds
+      runDeeparCamera = true;
+      print("Weiter");
+    }
   }
 }
 

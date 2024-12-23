@@ -29,7 +29,7 @@ class Toolbar extends StatelessWidget {
             iconPath: 'assets/icons/flash.png',
             onTap: () {
               // TO DO: Ein-/Ausschalten Blitz & Icon austauschen
-              deepArController.toggleFlash;
+              deepArController.toggleFlash();
               print("Flash icon tapped");
             },
           ),

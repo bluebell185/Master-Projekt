@@ -26,10 +26,6 @@ class FeatureOneState extends State<FeatureOne> {
   String? newSelectedTab;
   bool isBoxThreeOpen = false; // zur Navigation zwischen Box 2 und 3
 
-  // DraggableScrollableController für die Position
-  final DraggableScrollableController _draggableController =
-      DraggableScrollableController();
-
   void navigateToBoxThree() {
     setState(() {
       isBoxThreeOpen = true;
@@ -129,7 +125,7 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   void dispose() {
-    //_draggableController.dispose();
+    draggableController.dispose();
     super.dispose();
   }
 }
