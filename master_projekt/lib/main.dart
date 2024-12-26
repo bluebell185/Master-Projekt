@@ -122,11 +122,12 @@ class HomeScreen extends StatelessWidget {
               child: PrimaryButton(
                 buttonText: 'continue',
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil (
                     context,
                     MaterialPageRoute(
                       builder: (context) => StartAnalysis(title: 'Analysis'),
                     ),
+                    (route) => false,
                   );
                 },
               ),

@@ -1,7 +1,12 @@
+import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/feature_one.dart';
+import 'package:master_projekt/main.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/start_analysis.dart';
 
 // Tool Bar rechts
 // muss noch für die Navigation mit den anderen Screens connected werden
@@ -10,7 +15,9 @@ import 'package:master_projekt/feature_one.dart';
 // --- "active" Icons state? -> default/active
 
 class Toolbar extends StatelessWidget {
-  const Toolbar({super.key});
+  final String widgetCallingToolbar;
+
+  const Toolbar({super.key, required this.widgetCallingToolbar});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +46,26 @@ class Toolbar extends StatelessWidget {
           _buildToolbarIcon(
             iconPath: 'assets/icons/analysis.svg',
             onTap: () {
-              // TO DO: Öffnen von Feature One: Analysis
+              if (widgetCallingToolbar != startAnalysisWidgetName){
+              shouldCalcRoiButtons = false;
+              isCameraDisposed = false;
+
+              if (widgetCallingToolbar == featureOneWidgetName) {
+                isGoingBackAllowedInNavigator = true;
+              }
+              if (cameraController.value.isInitialized) {
+                cameraController.dispose();
+              }
+              // Navigieren zur StartAnalysis-Seite
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StartAnalysis(title: 'Analysis'),
+                ),
+                //(route) => false, // Entfernt alle vorherigen Routen
+              );
               print("Analysis icon tapped");
-            },
+            }},
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(

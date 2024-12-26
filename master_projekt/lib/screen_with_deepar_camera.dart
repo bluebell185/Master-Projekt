@@ -32,13 +32,15 @@ class ScreenWithDeeparCamera extends StatefulWidget {
 }
 
 Map<int, bool> selectedButtonsRois = {0: false, 1: false, 2: false, 3: false};
+bool shouldCalcRoiButtons = true;
+
+Timer? screenshotTimer;
 
 class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     with WidgetsBindingObserver {
   int i = 0;
   List<Face> faces = [];
   late FaceDetector faceDetector;
-  Timer? _screenshotTimer;
   bool runDeeparCamera = true;
 
   @override
@@ -55,7 +57,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
         performanceMode: FaceDetectorMode.accurate);
     faceDetector = FaceDetector(options: detectorOptions);
 
-    if (widget.isAfterAnalysis) {
+    if (widget.isAfterAnalysis && shouldCalcRoiButtons) {
       // Starte regelmäßige Screenshots zur Erkennung der Features
       if (!Platform.isIOS) {
         startScreenshotTimer();
@@ -68,7 +70,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     WidgetsBinding.instance.removeObserver(this);
     faceDetector.close();
     deepArController.destroy();
-    _screenshotTimer?.cancel();
+    screenshotTimer?.cancel();
     super.dispose();
   }
 
@@ -173,7 +175,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
   }
 
   void startScreenshotTimer() {
-    _screenshotTimer =
+    screenshotTimer =
         Timer.periodic(const Duration(milliseconds: 800), (timer) {
       takeScreenshot();
     });
@@ -216,7 +218,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
       );
 
       // Gesichtskonturen rausziehen
-      if (inputImage.bytes != null) {
+      if (inputImage.bytes != null && shouldCalcRoiButtons) {
         final detectedFaces = await faceDetector.processImage(inputImage);
         //if (detectedFaces.isNotEmpty) {
         setState(() {
