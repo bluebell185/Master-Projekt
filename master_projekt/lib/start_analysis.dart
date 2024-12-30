@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/camera_widget.dart';
@@ -216,6 +218,9 @@ class _StartAnalysisState extends State<StartAnalysis> {
       isCameraDisposed = true;
       shouldCalcRoiButtons = true;
     });
+
+    updateDataInDb();
+    
     if (isGoingBackAllowedInNavigator) {
       isGoingBackAllowedInNavigator = false;
       Navigator.pop(context);
@@ -227,6 +232,25 @@ class _StartAnalysisState extends State<StartAnalysis> {
         ),
         (route) => false, // Entfernt alle vorherigen Routen
       );
+    }
+  }
+
+  void updateDataInDb() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String useruid = user.uid;
+      final roiData = {
+        'blushCategory': blushCategory!.name,
+        'blushShapeCategory': blushShapeCategory!.name,
+        'browCategory': browCategory!.name,
+        'browShapeCategory': browShapeCategory!.name,
+        'eyeColorCategory': eyeColorCategory!.name,
+        'eyeShapeCategory': eyeShapeCategory!.name,
+        'lipCategory': lipCategory!.name,
+        'userId': useruid,
+      };
+      final userTable = FirebaseFirestore.instance.collection('roiData');
+      userTable.doc(useruid).set(roiData);
     }
   }
 }
