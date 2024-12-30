@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/auth_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
@@ -144,6 +145,13 @@ class HomeScreen extends StatelessWidget {
                         child: PrimaryButton(
                           buttonText: 'continue',
                           onPressed: () {
+                            // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
+                            getUserAnalysisData().then((roiData) {
+                              if (roiData != null) {
+                                fillAnalysisResultsIntoApp(roiData);
+                              }
+                            });
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -183,6 +191,13 @@ class HomeScreen extends StatelessWidget {
                       child: PrimaryButton(
                         buttonText: 'continue',
                         onPressed: () {
+                          // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
+                          getUserAnalysisData().then((roiData) {
+                            if (roiData != null) {
+                              fillAnalysisResultsIntoApp(roiData);
+                            }
+                          });
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -201,5 +216,83 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void fillAnalysisResultsIntoApp(DocumentSnapshot<Object?> roiData) {
+    String eyeColor = roiData.get('eyeColorCategory');
+    for (EyeColorCategory category in EyeColorCategory.values) {
+      if (category.name == eyeColor) {
+        eyeColorCategory = category;
+        break;
+      }
+    }
+
+    String eyeShape = roiData.get('eyeShapeCategory');
+    for (EyeShapeCategory category in EyeShapeCategory.values) {
+      if (category.name == eyeShape) {
+        eyeShapeCategory = category;
+        break;
+      }
+    }
+
+    String blushColor = roiData.get('blushCategory');
+    for (BlushCategory category in BlushCategory.values) {
+      if (category.name == blushColor) {
+        blushCategory = category;
+        break;
+      }
+    }
+
+    String blushShape = roiData.get('blushShapeCategory');
+    for (BlushShapeCategory category in BlushShapeCategory.values) {
+      if (category.name == blushShape) {
+        blushShapeCategory = category;
+        break;
+      }
+    }
+
+    String lipColor = roiData.get('lipCategory');
+    for (LipCategory category in LipCategory.values) {
+      if (category.name == lipColor) {
+        lipCategory = category;
+        break;
+      }
+    }
+
+    String browColor = roiData.get('browCategory');
+    for (BrowCategory category in BrowCategory.values) {
+      if (category.name == browColor) {
+        browCategory = category;
+        break;
+      }
+    }
+
+    String browShape = roiData.get('browShapeCategory');
+    for (BrowShapeCategory category in BrowShapeCategory.values) {
+      if (category.name == browShape) {
+        browShapeCategory = category;
+        break;
+      }
+    }
+  }
+
+  Future<DocumentSnapshot<Object?>?> getUserAnalysisData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String useruid = user.uid;
+      try {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('roiData')
+            .doc(useruid)
+            .get();
+
+        if (documentSnapshot.exists) {
+          return documentSnapshot;
+        } else {}
+      } catch (error) {
+        // TODO????
+      }
+    } else {}
+    return null;
   }
 }
