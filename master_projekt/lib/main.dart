@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 late List<CameraDescription> camerasOfPhone;
 final DeepArController deepArController = DeepArController();
@@ -11,14 +13,22 @@ final DeepArController deepArController = DeepArController();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Identifizieren der verbauten Kameras im Gerät
   camerasOfPhone = await availableCameras();
 
+  // Initialisierung DeepAR Kamera
   deepArController.initialize(
       androidLicenseKey:
           "1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
       iosLicenseKey:
           "bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
       resolution: Resolution.high);
+
+  // Initialisierung Firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }
