@@ -208,7 +208,6 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    (route) => false,
                   );
                 }
                 return Container();

@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:master_projekt/analysis_results.dart';
@@ -24,6 +26,11 @@ class FaceAnalysis {
 
     getEyeShape(face);
     getFaceShape(face);
+
+// Form der Brauen wird (noch) nicht ermittelt/angezeigt - wird der Vollständigkeit halber aber trotzdem gefüllt
+    browShapeCategory = BrowShapeCategory.straight;
+
+    putDataIntoDb();
   }
 
   static void getEyeShape(Face face) {
@@ -271,6 +278,25 @@ class FaceAnalysis {
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit
         }
         return "beige"; // Im Zweifelsfall zurückgeben
+    }
+  }
+
+  static void putDataIntoDb() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String useruid = user.uid;
+      final roiData = {
+        'blushCategory': blushCategory!.name,
+        'blushShapeCategory': blushShapeCategory!.name,
+        'browCategory': browCategory!.name,
+        'browShapeCategory': browShapeCategory!.name,
+        'eyeColorCategory': eyeColorCategory!.name,
+        'eyeShapeCategory': eyeShapeCategory!.name,
+        'lipCategory': lipCategory!.name,
+        'userId': useruid,
+      };
+      final userTable = FirebaseFirestore.instance.collection('roiData');
+      userTable.doc(useruid).set(roiData);
     }
   }
 }
