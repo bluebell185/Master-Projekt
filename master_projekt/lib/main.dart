@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:master_projekt/auth_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,6 +55,8 @@ class MyApp extends StatelessWidget {
 
 // Diese Klasse ruft den Homescreen auf, über den man durch den CTA-Button "continue" weitergeleitet wird
 class HomeScreen extends StatelessWidget {
+  final db = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,27 +127,77 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // CTA Button unten, führt zu StartAnalysis()
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 70,
-            child: Center(
-              child: PrimaryButton(
-                buttonText: 'continue',
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil (
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StartAnalysis(title: 'Analysis'),
+          StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+                if (!snapshot.hasData) {
+                  // CTA Button unten, führt zu StartAnalysis()
+                  Stack(children: [
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 140,
+                      child: Center(
+                        child: PrimaryButton(
+                          buttonText: 'continue',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    StartAnalysis(title: 'Analysis'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 70,
+                      child: Center(
+                        child: PrimaryButton(
+                          buttonText: 'sign in',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AuthWidget(db),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  ]);
+                } else {
+                  return Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 70,
+                    child: Center(
+                      child: PrimaryButton(
+                        buttonText: 'continue',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  StartAnalysis(title: 'Analysis'),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     (route) => false,
                   );
-                },
-              ),
-            ),
-          ),
+                }
+                return Container();
+              }),
         ],
       ),
     );
