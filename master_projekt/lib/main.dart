@@ -136,7 +136,7 @@ class HomeScreen extends StatelessWidget {
                 }
                 if (!snapshot.hasData) {
                   // CTA Button unten, führt zu StartAnalysis()
-                  Stack(children: [
+                  return Stack(children: [
                     Positioned(
                       left: 0,
                       right: 0,
@@ -210,7 +210,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 }
-                return Container();
               }),
         ],
       ),

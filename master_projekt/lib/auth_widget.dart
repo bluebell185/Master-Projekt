@@ -77,11 +77,15 @@ class _AuthWidgetState extends State {
                 fillAnalysisResultsIntoApp(roiData);
               }
             });
-            // Falls der Nutzer angemeldet und verifiziert ist, gehe weiter
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StartAnalysis(title: 'Analysis'),
+
+            // Falls der Nutzer angemeldet und verifiziert ist, gehe weiter zum Analysis-Screen
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StartAnalysis(title: 'Analysis'),
+                ),
+                (route) => false,
               ),
             );
           }
