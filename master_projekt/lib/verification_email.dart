@@ -49,7 +49,7 @@ class _EmailVerificationState extends State<EmailVerification> {
     if (!isEmailVerified) {
       return Scaffold(
           appBar: AppBar(
-            title: Text('Email-Adresse bestätigen'),
+            title: Text('Confirmation'),
             backgroundColor: Theme.of(context).colorScheme.primary,
             titleTextStyle: Theme.of(context)
                 .textTheme
