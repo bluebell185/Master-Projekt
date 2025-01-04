@@ -5,6 +5,7 @@ import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
 import 'package:master_projekt/json_parse.dart';
 import 'package:master_projekt/results_check.dart';
+import 'package:master_projekt/test.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -181,7 +182,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FeatureOne(),
+                      builder: (context) => TestDeepArCamera(),
                     ),
                   );
                 },

@@ -97,10 +97,7 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenWithDeeparCamera(
-      deepArPreviewKey: GlobalKey(),
-      isAfterAnalysis: true,
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
@@ -160,7 +157,6 @@ class FeatureOneState extends State<FeatureOne> {
               ),
           ],
         ),
-      ),
     );
   }
 
