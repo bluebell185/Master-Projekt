@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -146,9 +147,6 @@ class AccountPopup extends StatelessWidget {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
-                  // Popup erstmal schließen
-                  Navigator.of(context).pop();
-
                   // Listener für Authentifizierungsstatus hinzufügen, damit sich der Login-Screen nach Login/Registrierung wieder schließt
                   late final StreamSubscription<User?> authSubscription;
                   authSubscription = FirebaseAuth.instance
@@ -156,18 +154,13 @@ class AccountPopup extends StatelessWidget {
                       .listen((User? user) {
                     if (user != null) {
                       // Benutzer ist eingeloggt, SignInScreen schließen
-                      //Navigator.of(context).pop(); // Schließt den SignInScreen
                       authSubscription.cancel(); // Listener entfernen
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              StartAnalysis(title: 'Analysis'),
-                        ),
-                        (route) => false,
-                      );
+
+                      Navigator.of(context).pop(); // Schließt den SignInScreen
+                      Navigator.of(context).pop(); // Popup schließen
+
                       // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
-                      giveLoginFeedback('Successfully logged in', context);
+                      giveLoginFeedback('You successfully logged in', context);
                     }
                   });
 
@@ -176,40 +169,20 @@ class AccountPopup extends StatelessWidget {
                       // Derselbe SignIn-Screen wie auch in auth_widget.dart TODO rausziehen?
                       builder: (context) => SignInScreen(
                         providers: [EmailAuthProvider()],
-                        // headerBuilder: (context, constraints, shrinkOffset) {
-                        //   // User? test = FirebaseAuth.instance.currentUser;
-                        //   // if (test == null) {
-                        //   return Padding(
-                        //     padding: const EdgeInsets.all(20),
-                        //     child: const Text('Sign in'),
-                        //   );
-                        //   // } else {
-                        //   //   Navigator.of(context).pop();
-                        //   // }
-                        // },
                         headerBuilder: (context, constraints, shrinkOffset) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Flexible(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Image.asset(
-              'assets/logo.png',
-            ),
-          ),
-        ),
-      ),
-      // Header-Text
-      const Text(
-        'Sign in',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ],
-  );
-},
+                          return Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: FractionallySizedBox(
+                                widthFactor: 0.8,
+                                heightFactor: 0.6,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Image.asset(
+                                    'assets/logo.png',
+                                  ),
+                                )),
+                          );
+                        },
                         subtitleBuilder: (context, action) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -262,6 +235,8 @@ class AccountPopup extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
+                  // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
+                  giveLoginFeedback('You successfully logged out', context);
                   Navigator.of(context).pop();
                 },
                 child: const Text('Log Out'),
@@ -292,7 +267,12 @@ class AccountPopup extends StatelessWidget {
 
                   if (confirm == true) {
                     try {
+                      // Löschen der Analyseergebnisse
+                      await FirebaseFirestore.instance.collection('roiData').doc(user.uid).delete();
+                      // Löschen des Accounts
                       await user.delete();
+                      // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
+                      giveLoginFeedback('You successfully deleted your account', context);
                       Navigator.of(context).pop();
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(

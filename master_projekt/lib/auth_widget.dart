@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/start_analysis.dart';
+import 'package:master_projekt/ui/login_feedback.dart';
 import 'dart:async';
 
 import 'package:master_projekt/verification_email.dart';
@@ -34,7 +35,15 @@ class _AuthWidgetState extends State {
             headerBuilder: (context, constraints, shrinkOffset) {
               return Padding(
                 padding: const EdgeInsets.all(20),
-                child: const Text('Sign in'),
+                child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    heightFactor: 0.6,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.asset(
+                        'assets/logo.png',
+                      ),
+                    )),
               );
             },
             subtitleBuilder: (context, action) {
@@ -45,20 +54,6 @@ class _AuthWidgetState extends State {
                         'Sign in to store and retrieve your analysis results!')
                     : const Text(
                         'Register to store and retrieve your analysis results!'),
-              );
-            },
-            sideBuilder: (context, constraints) {
-              return Padding(
-                padding: const EdgeInsets.all(20),
-                child: FractionallySizedBox(
-                    widthFactor: 0.7,
-                    heightFactor: 0.5,
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: Image.asset(
-                        'assets/logo.png',
-                      ),
-                    )),
               );
             },
           );
