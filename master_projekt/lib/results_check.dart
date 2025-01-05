@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/buttons.dart';
-import 'package:master_projekt/ui/tabs.dart';
 import 'package:master_projekt/ui/tabs_for_popup.dart';
 
 // Das Pop-Up zur Überprüfung der Analysis Results und möglicher Modifikation des Users
@@ -17,14 +16,16 @@ class ResultsCheckPopUp extends StatefulWidget {
     super.key,
     required this.popUpHeading,
     required this.analysisElements,
-   required this.onSave,
+    required this.onSave,
   });
 
   @override
   State<ResultsCheckPopUp> createState() => ResultsCheckPopUpState();
 }
+
 class ResultsCheckPopUpState extends State<ResultsCheckPopUp> {
-  late Map<int, String> selectedOptions; // Key: Nummer, Value: ausgewählte Option
+  late Map<int, String>
+      selectedOptions; // Key: Nummer, Value: ausgewählte Option
 
   @override
   void initState() {
@@ -134,7 +135,7 @@ class ResultsCheckPopUpState extends State<ResultsCheckPopUp> {
           ],
         ),
         const SizedBox(height: 10),
-      ScrollableTabsPopup(
+        ScrollableTabsPopup(
           labels: element.options, // Tab Labels
           onTabSelected: (tab) {
             if (tab != null) {

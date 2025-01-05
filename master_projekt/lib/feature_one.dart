@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
-import 'results_check.dart';
 import 'analysis_results.dart';
 
 // UI-Elemente
