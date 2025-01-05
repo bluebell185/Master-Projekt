@@ -5,15 +5,13 @@ import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
 import 'package:master_projekt/json_parse.dart';
 import 'package:master_projekt/results_check.dart';
+import 'package:master_projekt/scanning_animation.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
-
-// TO DO:
-// pngs übel unscharf, Flutter an sich kann nicht mit svgs -> flutter plugin zur svg static image verarbeitung
 
 final String startAnalysisWidgetName = 'StartAnalysis';
 
@@ -73,38 +71,43 @@ class _StartAnalysisState extends State<StartAnalysis> {
                     right: 0,
                     bottom: eyeColorCategory == null ? 70 : 140,
                     child: Center(
-                      child: isLoading
-                          ? CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : PrimaryButton(
-                              buttonText: eyeColorCategory == null
-                                  ? 'start analysis'
-                                  : 'repeat analysis',
-                              onPressed: () async {
-                                setState(() {
-                                  isLoading = true;
-                                });
+                      child: PrimaryButton(
+                        buttonText: eyeColorCategory == null
+                            ? 'start analysis'
+                            : 'repeat analysis',
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                                // 3 Sekunden warten TODO hier dann den Ladescreen einbauen
-                                await Future.delayed(Duration(seconds: 3));
+                          // ScannerWidget in einem Overlay anzeigen
+                          await showDialog(
+                            context: context,
+                            barrierDismissible:
+                                false, // nicht manuell schließbar
+                            builder: (BuildContext context) {
+                              return Scaffold(
+                                backgroundColor: Colors.transparent,
+                                body: ScannerWidget(),
+                              );
+                            },
+                          );
 
-                                try {
-                                  // Gesichtsanalyse starten
-                                  await FaceAnalysis.analyseColorsInFace(
-                                      faceForAnalysis);
-                                  roiData = await loadRoisData();
-                                } catch (e) {
-                                  print('Error during analysis: $e');
-                                } finally {
-                                  setState(() {
-                                    isLoading = false;
-                                    showRecommendations = false;
-                                  });
-                                }
-                              },
-                            ),
+                          try {
+                            // Gesichtsanalyse starten
+                            await FaceAnalysis.analyseColorsInFace(
+                                faceForAnalysis);
+                            roiData = await loadRoisData();
+                          } catch (e) {
+                            print('Error during analysis: $e');
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                              showRecommendations = false;
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ),
                 if (showRecommendations && eyeColorCategory != null)

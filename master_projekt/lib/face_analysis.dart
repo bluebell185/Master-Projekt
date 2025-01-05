@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:master_projekt/analysis_results.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FaceAnalysis {
@@ -56,59 +55,61 @@ class FaceAnalysis {
         "almond"); // häufigste Augenform zurückgeben -> Quelle Lashadora (s. Ausarbeitung)
   }
 
-    static void getFaceShape(Face face) {
-  List<Point> faceContour = face.contours[FaceContourType.face]!.points;
+  static void getFaceShape(Face face) {
+    List<Point> faceContour = face.contours[FaceContourType.face]!.points;
 
-  // Wichtige Punkte holen
-  final top = faceContour[0]; // Punkt ganz oben (Stirnmitte)
-  final bottom = faceContour[18]; // Punkt ganz unten (Kinnspitze)
-  final left = faceContour[9]; // Linke Kieferkante
-  final right = faceContour[27]; // Rechte Kieferkante
+    // Wichtige Punkte holen
+    final top = faceContour[0]; // Punkt ganz oben (Stirnmitte)
+    final bottom = faceContour[18]; // Punkt ganz unten (Kinnspitze)
+    final left = faceContour[9]; // Linke Kieferkante
+    final right = faceContour[27]; // Rechte Kieferkante
 
-  // Berechnung Gesichtslänge und -breite
-  double faceHeight = bottom.y.toDouble() - top.y.toDouble();
-  double faceWidth = left.x.toDouble() - right.x.toDouble();
+    // Berechnung Gesichtslänge und -breite
+    double faceHeight = bottom.y.toDouble() - top.y.toDouble();
+    double faceWidth = left.x.toDouble() - right.x.toDouble();
 
-  double lengthToWidthRatio = faceHeight / faceWidth;
+    double lengthToWidthRatio = faceHeight / faceWidth;
 
-  // Krümmung der Kieferlinie
-  double jawCurve = calculateJawCurve(faceContour);
+    // Krümmung der Kieferlinie
+    double jawCurve = calculateJawCurve(faceContour);
 
-  // Klassifikation basierend auf Kriterien
-  if (lengthToWidthRatio > 1.4 && jawCurve < 0.1) {
-    setBlushShapeCategory("oval");
-  } else if (lengthToWidthRatio <= 1.4 && lengthToWidthRatio >= 1.0 && jawCurve >= 0.1) {
-    setBlushShapeCategory("round");
-  } else {
-    setBlushShapeCategory("square");
-  }
-}
-
-static double calculateJawCurve(List<Point> faceContour) {
-  // Berechnet die Krümmung der Kieferlinie (unterer Teil der Gesichtskontur)
-  List<Point> jawPoints = faceContour.sublist(7,29);
-
-  double totalCurve = 0.0;
-  for (int i = 1; i < jawPoints.length - 1; i++) {
-    Point previous = jawPoints[i - 1];
-    Point current = jawPoints[i];
-    Point next = jawPoints[i + 1];
-
-    // Winkel zwischen aufeinanderfolgenden Segmenten
-    double angle = _angleBetween(previous, current, next);
-    totalCurve += angle;
+    // Klassifikation basierend auf Kriterien
+    if (lengthToWidthRatio > 1.4 && jawCurve < 0.1) {
+      setBlushShapeCategory("oval");
+    } else if (lengthToWidthRatio <= 1.4 &&
+        lengthToWidthRatio >= 1.0 &&
+        jawCurve >= 0.1) {
+      setBlushShapeCategory("round");
+    } else {
+      setBlushShapeCategory("square");
+    }
   }
 
-  return totalCurve / jawPoints.length;
-}
+  static double calculateJawCurve(List<Point> faceContour) {
+    // Berechnet die Krümmung der Kieferlinie (unterer Teil der Gesichtskontur)
+    List<Point> jawPoints = faceContour.sublist(7, 29);
 
-static double _angleBetween(Point a, Point b, Point c) {
-  // Berechne den Winkel zwischen drei Punkten
-  double ab = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
-  double bc = sqrt(pow(c.x - b.x, 2) + pow(c.y - b.y, 2));
-  double ac = sqrt(pow(c.x - a.x, 2) + pow(c.y - a.y, 2));
-  return acos((pow(ab, 2) + pow(bc, 2) - pow(ac, 2)) / (2 * ab * bc));
-}
+    double totalCurve = 0.0;
+    for (int i = 1; i < jawPoints.length - 1; i++) {
+      Point previous = jawPoints[i - 1];
+      Point current = jawPoints[i];
+      Point next = jawPoints[i + 1];
+
+      // Winkel zwischen aufeinanderfolgenden Segmenten
+      double angle = _angleBetween(previous, current, next);
+      totalCurve += angle;
+    }
+
+    return totalCurve / jawPoints.length;
+  }
+
+  static double _angleBetween(Point a, Point b, Point c) {
+    // Berechne den Winkel zwischen drei Punkten
+    double ab = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
+    double bc = sqrt(pow(c.x - b.x, 2) + pow(c.y - b.y, 2));
+    double ac = sqrt(pow(c.x - a.x, 2) + pow(c.y - a.y, 2));
+    return acos((pow(ab, 2) + pow(bc, 2) - pow(ac, 2)) / (2 * ab * bc));
+  }
 
   static void getAverageEyeColor(img.Image? image, Face face) {
     Point<int> leftEyeMiddlePoint =
@@ -232,9 +233,9 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "green";
         } else if (hue >= 180 && hue < 300) {
           return "blue";
-        }  // else if (hue >= 5 && hue < 60) {
-          return "brown"; // Im Zweifelsfall die häufigste Augenfarbe zurückgeben
-        
+        } // else if (hue >= 5 && hue < 60) {
+        return "brown"; // Im Zweifelsfall die häufigste Augenfarbe zurückgeben
+
       case RoiColorTypes.eyebrow:
         if (value < 0.2) {
           return "black"; // Sehr dunkle Augenbrauen
@@ -243,8 +244,8 @@ static double _angleBetween(Point a, Point b, Point c) {
         } else if (hue >= 20 && hue < 40 && saturation > 0.5) {
           return "brown"; // Brauntöne
         } // else if (hue >= 10 && hue < 20 && value < 0.6) {
-          return "brown"; // Dunklere Brauntöne // Im Zweifelsfall die häufigste Augenbrauenfarbe zurückgeben
-        
+        return "brown"; // Dunklere Brauntöne // Im Zweifelsfall die häufigste Augenbrauenfarbe zurückgeben
+
       case RoiColorTypes.lip:
         if (saturation < 0.3 && value > 0.7) {
           return "pink"; // Dezente, blasse Lippen
@@ -254,9 +255,9 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "coral"; // Warme Korall- und Orangetöne
         } else if (hue >= 60 && hue < 100 && saturation > 0.5) {
           return "nude"; // Dunklere Brauntöne
-        } 
-          return "red"; // Im Zweifelsfall zurückgeben
-        
+        }
+        return "red"; // Im Zweifelsfall zurückgeben
+
       case RoiColorTypes.face:
         if (saturation < 0.3 && value > 0.8) {
           return "light"; // Sehr helle Haut
@@ -268,7 +269,8 @@ static double _angleBetween(Point a, Point b, Point c) {
           return "tanned"; // Dunklere Haut
         } else if (saturation < 0.2 && value < 0.5) {
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit
-        } return "beige";  // Im Zweifelsfall zurückgeben
+        }
+        return "beige"; // Im Zweifelsfall zurückgeben
     }
   }
 }

@@ -1,10 +1,8 @@
-import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/feature_one.dart';
-import 'package:master_projekt/main.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/start_analysis.dart';
 

@@ -13,7 +13,6 @@ import 'package:flutter/rendering.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:master_projekt/face_painter.dart';
 import 'package:image/image.dart' as img;
-import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'dart:ui' as ui;
 
 import 'package:master_projekt/ui/tabs.dart';
@@ -94,11 +93,14 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                 child: Transform.scale(
                   scale: scale, //scale,
                   child: Center(
-                      child: (deepArController.isInitialized || Platform.isIOS) && runDeeparCamera
-                          ? DeepArPreview(
-                              key: ValueKey('DeepArPreview'), deepArController)
-                          : //deepArController.hasPermission ?
-                          CircularProgressIndicator()
+                      child:
+                          (deepArController.isInitialized || Platform.isIOS) &&
+                                  runDeeparCamera
+                              ? DeepArPreview(
+                                  key: ValueKey('DeepArPreview'),
+                                  deepArController)
+                              : //deepArController.hasPermission ?
+                              CircularProgressIndicator()
                       //: TODO Error Widget wegen Kamera/Mikrofon-Berechtigung
                       ),
                 ),
@@ -148,7 +150,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                                   .findAncestorStateOfType<FeatureOneState>();
                               if (featureOneState != null) {
                                 selectedIndex = i;
-                                featureOneState.updateSelectedTabFromButtons(tabToSelect);
+                                featureOneState
+                                    .updateSelectedTabFromButtons(tabToSelect);
                                 imageLinks = getImageLinks(tabToSelect);
                                 filterPaths = getFilters(tabToSelect);
                               }
