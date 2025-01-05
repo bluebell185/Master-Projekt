@@ -49,5 +49,7 @@
 	<string>Die Kamera wird benötigt, um Make-up-Looks empfehlen und anzeigen zu können</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Das Mikrofon wird für das Plugin benötigt.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Diese Berechtigung wird benötigt, um Bilder vom erstellten Look in der Gallerie speichern zu können.</string>
 </dict>
 </plist>
