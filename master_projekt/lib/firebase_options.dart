@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCAcytzBainm7J0zlSYGnAkfE24RIP9opA',
-    appId: '1:473579398608:android:ba0993cfecb45dc2ea05d5',
-    messagingSenderId: '473579398608',
-    projectId: 'projektarbeit-446e1',
-    storageBucket: 'projektarbeit-446e1.firebasestorage.app',
+    apiKey: 'AIzaSyDk3wzVBwt2bvBBRow_8_qjyM6bCYZdxuw',
+    appId: '1:1041970530131:android:f91949735c21ef4b64c3a6',
+    messagingSenderId: '1041970530131',
+    projectId: 'projektarbeit-35cef',
+    storageBucket: 'projektarbeit-35cef.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCsQ50kiS3xv3Z_w9w_4N2SKZELbUAr-mc',
-    appId: '1:473579398608:ios:894c37a9a855ccf3ea05d5',
-    messagingSenderId: '473579398608',
-    projectId: 'projektarbeit-446e1',
-    storageBucket: 'projektarbeit-446e1.firebasestorage.app',
+    apiKey: 'AIzaSyCA7C4u5xEJuOud2za5NRa2ShL8vzPlAYg',
+    appId: '1:1041970530131:ios:58fbbddbfae8c7d364c3a6',
+    messagingSenderId: '1041970530131',
+    projectId: 'projektarbeit-35cef',
+    storageBucket: 'projektarbeit-35cef.firebasestorage.app',
     iosBundleId: 'com.example.masterProjekt',
   );
 
