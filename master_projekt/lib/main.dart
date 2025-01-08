@@ -2,11 +2,13 @@ import 'package:deepar_flutter_lib/deepar_flutter.dart';
 //import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
 late List<CameraDescription> camerasOfPhone;
 final DeepArController deepArController = DeepArController();
+InputImageRotation? rotation;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

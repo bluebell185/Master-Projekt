@@ -36,9 +36,9 @@ Map<int, bool> selectedButtonsRois = {0: false, 1: false, 2: false, 3: false};
 class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     with WidgetsBindingObserver {
   int i = 0;
-  List<Face> faces = [];
-  late FaceDetector faceDetector;
-  Timer? _screenshotTimer;
+  // List<Face> faces = [];
+  // late FaceDetector faceDetector;
+  // Timer? _screenshotTimer;
   bool runDeeparCamera = true;
 
   @override
@@ -46,29 +46,29 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    final detectorOptions = FaceDetectorOptions(
-        enableClassification: false,
-        enableLandmarks: true,
-        enableContours: true,
-        enableTracking: true,
-        minFaceSize: 0.3,
-        performanceMode: FaceDetectorMode.accurate);
-    faceDetector = FaceDetector(options: detectorOptions);
+    // final detectorOptions = FaceDetectorOptions(
+    //     enableClassification: false,
+    //     enableLandmarks: true,
+    //     enableContours: true,
+    //     enableTracking: true,
+    //     minFaceSize: 0.3,
+    //     performanceMode: FaceDetectorMode.accurate);
+    // faceDetector = FaceDetector(options: detectorOptions);
 
-    if (widget.isAfterAnalysis) {
-      // Starte regelmäßige Screenshots zur Erkennung der Features
-      if (!Platform.isIOS) {
-        startScreenshotTimer();
-      }
-    }
+    // if (widget.isAfterAnalysis) {
+    //   // Starte regelmäßige Screenshots zur Erkennung der Features
+    //   if (!Platform.isIOS) {
+    //     startScreenshotTimer();
+    //   }
+    // }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    faceDetector.close();
+    // faceDetector.close();
     deepArController.destroy();
-    _screenshotTimer?.cancel();
+    // _screenshotTimer?.cancel();
     super.dispose();
   }
 
@@ -102,61 +102,61 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                 ),
               ),
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild
-              if (showRecommendations)
-                CustomPaint(
-                  foregroundPainter: FacePainter(null, faces),
-                ),
+              // if (showRecommendations)
+              //   CustomPaint(
+              //     foregroundPainter: FacePainter(null, faces),
+              //   ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
-              if (showRecommendations)
-                Offstage(
-                  offstage: roiRectangles
-                      .isEmpty, // Buttons nicht erstellen, wenn die Liste mit Rectangles leer ist
-                  child: Stack(
-                    children: [
-                      // Dynamisch platzierte Buttons
-                      for (int i = 0; i < roiRectangles.length; i++)
-                        Positioned(
-                          left: roiRectangles[i].left,
-                          top: roiRectangles[i].top,
-                          width: roiRectangles[i].width,
-                          height: roiRectangles[i].height,
-                          child: TransparentButton(
-                            onPressed: () {
-                              print("Button $i clicked!");
-                              for (int k = 0; k < 4; k++) {
-                                if (k == i) {
-                                  selectedButtonsRois[i] =
-                                      !selectedButtonsRois[i]!;
-                                } else {
-                                  selectedButtonsRois[k] = false;
-                                }
-                              }
-                              String tabToSelect = "eyes";
-                              switch (i) {
-                                case 1:
-                                  tabToSelect = "blush";
-                                case 2:
-                                  tabToSelect = "lips";
-                                case 3:
-                                  tabToSelect = "brows";
-                              }
-                              // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
-                              final featureOneState = context
-                                  .findAncestorStateOfType<FeatureOneState>();
-                              if (featureOneState != null) {
-                                selectedIndex = i;
-                                featureOneState.updateSelectedTabFromButtons(tabToSelect);
-                                imageLinks = getImageLinks(tabToSelect);
-                                filterPaths = getFilters(tabToSelect);
-                              }
-                            },
-                            buttonId: i,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+              // if (showRecommendations)
+              //   Offstage(
+              //     offstage: roiRectangles
+              //         .isEmpty, // Buttons nicht erstellen, wenn die Liste mit Rectangles leer ist
+              //     child: Stack(
+              //       children: [
+              //         // Dynamisch platzierte Buttons
+              //         for (int i = 0; i < roiRectangles.length; i++)
+              //           Positioned(
+              //             left: roiRectangles[i].left,
+              //             top: roiRectangles[i].top,
+              //             width: roiRectangles[i].width,
+              //             height: roiRectangles[i].height,
+              //             child: TransparentButton(
+              //               onPressed: () {
+              //                 print("Button $i clicked!");
+              //                 for (int k = 0; k < 4; k++) {
+              //                   if (k == i) {
+              //                     selectedButtonsRois[i] =
+              //                         !selectedButtonsRois[i]!;
+              //                   } else {
+              //                     selectedButtonsRois[k] = false;
+              //                   }
+              //                 }
+              //                 String tabToSelect = "eyes";
+              //                 switch (i) {
+              //                   case 1:
+              //                     tabToSelect = "blush";
+              //                   case 2:
+              //                     tabToSelect = "lips";
+              //                   case 3:
+              //                     tabToSelect = "brows";
+              //                 }
+              //                 // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
+              //                 final featureOneState = context
+              //                     .findAncestorStateOfType<FeatureOneState>();
+              //                 if (featureOneState != null) {
+              //                   selectedIndex = i;
+              //                   featureOneState.updateSelectedTabFromButtons(tabToSelect);
+              //                   imageLinks = getImageLinks(tabToSelect);
+              //                   filterPaths = getFilters(tabToSelect);
+              //                 }
+              //               },
+              //               buttonId: i,
+              //             ),
+              //           ),
+              //       ],
+              //     ),
+              //   ),
             ],
           ),
         ));
@@ -172,106 +172,106 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     return camerasOfPhone[0];
   }
 
-  void startScreenshotTimer() {
-    _screenshotTimer =
-        Timer.periodic(const Duration(milliseconds: 800), (timer) {
-      takeScreenshot();
-    });
-  }
+  // void startScreenshotTimer() {
+  //   _screenshotTimer =
+  //       Timer.periodic(const Duration(milliseconds: 800), (timer) {
+  //     takeScreenshot();
+  //   });
+  // }
 
-  Future<void> takeScreenshot() async {
-    try {
-      final boundary = widget.deepArPreviewKey.currentContext
-          ?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) {
-        print("RepaintBoundary nicht gefunden");
-        return;
-      }
+  // Future<void> takeScreenshot() async {
+  //   try {
+  //     final boundary = widget.deepArPreviewKey.currentContext
+  //         ?.findRenderObject() as RenderRepaintBoundary?;
+  //     if (boundary == null) {
+  //       print("RepaintBoundary nicht gefunden");
+  //       return;
+  //     }
 
-      // Nimm das Bild als ui.Image
-      final ui.Image image = await boundary.toImage(pixelRatio: 1.0);
+  //     // Nimm das Bild als ui.Image
+  //     final ui.Image image = await boundary.toImage(pixelRatio: 1.0);
 
-      // Wandle ui.Image in Byte-Daten um (PNG-Format)
-      final ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) return;
+  //     // Wandle ui.Image in Byte-Daten um (PNG-Format)
+  //     final ByteData? byteData =
+  //         await image.toByteData(format: ui.ImageByteFormat.png);
+  //     if (byteData == null) return;
 
-      final Uint8List pngBytes = byteData.buffer.asUint8List();
+  //     final Uint8List pngBytes = byteData.buffer.asUint8List();
 
-      final nv21Bytes =
-          convertPngToNv21(pngBytes, image.width.toInt(), image.height.toInt());
+  //     final nv21Bytes =
+  //         convertPngToNv21(pngBytes, image.width.toInt(), image.height.toInt());
 
-      // TODO iOS -> convertPngToBgra8888
+  //     // TODO iOS -> convertPngToBgra8888
 
-      InputImage inputImage = InputImage.fromBytes(
-        bytes: nv21Bytes,
-        metadata: InputImageMetadata(
-          size: Size(boundary.size.width, boundary.size.height),
-          rotation: InputImageRotation
-              .rotation0deg, // TODO Passe je nach Kameraposition an
-          format: InputImageFormat.nv21,
-          bytesPerRow: boundary.size.width.toInt() *
-              4, // 4 Bytes pro Pixel bei RGBA/BGRA
-        ),
-      );
+  //     InputImage inputImage = InputImage.fromBytes(
+  //       bytes: nv21Bytes,
+  //       metadata: InputImageMetadata(
+  //         size: Size(boundary.size.width, boundary.size.height),
+  //         rotation: InputImageRotation
+  //             .rotation0deg, // TODO Passe je nach Kameraposition an
+  //         format: InputImageFormat.nv21,
+  //         bytesPerRow: boundary.size.width.toInt() *
+  //             4, // 4 Bytes pro Pixel bei RGBA/BGRA
+  //       ),
+  //     );
 
-      // Gesichtskonturen rausziehen
-      if (inputImage.bytes != null) {
-        final detectedFaces = await faceDetector.processImage(inputImage);
-        //if (detectedFaces.isNotEmpty) {
-        setState(() {
-          faces = detectedFaces;
-        });
-        //}
-      }
-    } catch (e) {
-      print("Error bei der Aufnahme von Screenshot: $e");
-    }
-  }
+  //     // Gesichtskonturen rausziehen
+  //     if (inputImage.bytes != null) {
+  //       final detectedFaces = await faceDetector.processImage(inputImage);
+  //       //if (detectedFaces.isNotEmpty) {
+  //       setState(() {
+  //         faces = detectedFaces;
+  //       });
+  //       //}
+  //     }
+  //   } catch (e) {
+  //     print("Error bei der Aufnahme von Screenshot: $e");
+  //   }
+  // }
 
-  Uint8List convertPngToNv21(Uint8List pngBytes, int width, int height) {
-    // Schritt 1: PNG in RGBA umwandeln
-    final decodedImage = img.decodePng(pngBytes);
-    if (decodedImage == null) {
-      throw Exception("Failed to decode PNG");
-    }
+  // Uint8List convertPngToNv21(Uint8List pngBytes, int width, int height) {
+  //   // Schritt 1: PNG in RGBA umwandeln
+  //   final decodedImage = img.decodePng(pngBytes);
+  //   if (decodedImage == null) {
+  //     throw Exception("Failed to decode PNG");
+  //   }
 
-    // Schritt 2: RGBA-Daten extrahieren
-    final rgbaBytes = decodedImage.getBytes();
+  //   // Schritt 2: RGBA-Daten extrahieren
+  //   final rgbaBytes = decodedImage.getBytes();
 
-    // Schritt 3: NV21 initialisieren
-    final yuvSize = width * height + (width * height / 2).round();
-    final nv21Bytes = Uint8List(yuvSize);
+  //   // Schritt 3: NV21 initialisieren
+  //   final yuvSize = width * height + (width * height / 2).round();
+  //   final nv21Bytes = Uint8List(yuvSize);
 
-    // Schritt 4: Konvertierung RGBA zu YUV (Y, U, V)
-    int yIndex = 0;
-    int uvIndex = width * height;
+  //   // Schritt 4: Konvertierung RGBA zu YUV (Y, U, V)
+  //   int yIndex = 0;
+  //   int uvIndex = width * height;
 
-    for (int j = 0; j < height - 1; j++) {
-      for (int i = 0; i < width - 1; i++) {
-        final rgbaIndex = (j * width + i) * 4;
-        final r = rgbaBytes[rgbaIndex];
-        final g = rgbaBytes[rgbaIndex + 1];
-        final b = rgbaBytes[rgbaIndex + 2];
+  //   for (int j = 0; j < height - 1; j++) {
+  //     for (int i = 0; i < width - 1; i++) {
+  //       final rgbaIndex = (j * width + i) * 4;
+  //       final r = rgbaBytes[rgbaIndex];
+  //       final g = rgbaBytes[rgbaIndex + 1];
+  //       final b = rgbaBytes[rgbaIndex + 2];
 
-        // YUV-Werte berechnen
-        final y = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16;
-        final u = ((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128;
-        final v = ((112 * r - 94 * g - 18 * b + 128) >> 8) + 128;
+  //       // YUV-Werte berechnen
+  //       final y = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16;
+  //       final u = ((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128;
+  //       final v = ((112 * r - 94 * g - 18 * b + 128) >> 8) + 128;
 
-        // Y in NV21 speichern
-        nv21Bytes[yIndex++] = y.clamp(0, 255);
+  //       // Y in NV21 speichern
+  //       nv21Bytes[yIndex++] = y.clamp(0, 255);
 
-        // U und V nur für jeden zweiten Pixel (2x2 Block)
-        if (j % 2 == 0 && i % 2 == 0) {
-          nv21Bytes[uvIndex++] = v.clamp(0, 255);
-          nv21Bytes[uvIndex++] = u.clamp(0, 255);
-        }
-      }
-    }
+  //       // U und V nur für jeden zweiten Pixel (2x2 Block)
+  //       if (j % 2 == 0 && i % 2 == 0) {
+  //         nv21Bytes[uvIndex++] = v.clamp(0, 255);
+  //         nv21Bytes[uvIndex++] = u.clamp(0, 255);
+  //       }
+  //     }
+  //   }
 
-    return nv21Bytes;
-  }
+  //   return nv21Bytes;
+  // }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

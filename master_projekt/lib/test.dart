@@ -11,15 +11,15 @@ class TestDeepArCamera extends StatefulWidget {
 }
 
 final GlobalKey<AnalysisResultsState> analysisResultsKey = GlobalKey<AnalysisResultsState>();
-
+final GlobalKey deepArRepaintBoundaryKey = GlobalKey();
 
 class TestDeepArCameraState extends State<TestDeepArCamera> {
   @override
   Widget build(BuildContext context) {
     return ScreenWithDeeparCamera(
-      deepArPreviewKey: GlobalKey(),
+      deepArPreviewKey: deepArRepaintBoundaryKey,
       isAfterAnalysis: true,
-      child: FeatureOne());
+      child: FeatureOne(featureOneKey: GlobalKey()));
   }
 
   @override

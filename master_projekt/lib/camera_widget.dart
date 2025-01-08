@@ -204,7 +204,6 @@ InputImage? inputImageFromCameraImage(
     CameraImage image, CameraDescription camera, CameraController controller) {
   // Bildrotation
   final sensorOrientation = camera.sensorOrientation;
-  InputImageRotation? rotation;
   if (Platform.isIOS) {
     rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
   } else if (Platform.isAndroid) {
@@ -234,7 +233,7 @@ InputImage? inputImageFromCameraImage(
     bytes: plane.bytes,
     metadata: InputImageMetadata(
       size: Size(image.width.toDouble(), image.height.toDouble()),
-      rotation: rotation,
+      rotation: rotation!,
       format: format,
       bytesPerRow: plane.bytesPerRow,
     ),
