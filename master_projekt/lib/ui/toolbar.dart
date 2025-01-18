@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/start_look_generator.dart';
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/feature_one.dart';
+import 'package:master_projekt/feature_two.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/start_analysis.dart';
 
@@ -44,33 +46,53 @@ class Toolbar extends StatelessWidget {
           _buildToolbarIcon(
             iconPath: 'assets/icons/analysis.svg',
             onTap: () {
-              if (widgetCallingToolbar != startAnalysisWidgetName){
-              shouldCalcRoiButtons = false;
-              isCameraDisposed = false;
+              if (widgetCallingToolbar != startAnalysisWidgetName) {
+                shouldCalcRoiButtons = false;
+                isCameraDisposed = false;
 
-              if (widgetCallingToolbar == featureOneWidgetName) {
-                isGoingBackAllowedInNavigator = true;
+                if (widgetCallingToolbar == featureOneWidgetName) {
+                  isGoingBackAllowedInNavigator = true;
+                }
+                if (cameraController.value.isInitialized) {
+                  cameraController.dispose();
+                }
+                // Navigieren zur StartAnalysis-Seite
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartAnalysis(title: 'Analysis'),
+                  ),
+                  //(route) => false, // Entfernt alle vorherigen Routen
+                );
+                print("Analysis icon tapped");
               }
-              if (cameraController.value.isInitialized) {
-                cameraController.dispose();
-              }
-              // Navigieren zur StartAnalysis-Seite
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StartAnalysis(title: 'Analysis'),
-                ),
-                //(route) => false, // Entfernt alle vorherigen Routen
-              );
-              print("Analysis icon tapped");
-            }},
+            },
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(
             iconPath: 'assets/icons/create.svg',
             onTap: () {
               // TO DO: Öffnen von Feature Zwei: Create Look
-              print("Create icon tapped");
+              if (widgetCallingToolbar != startLookGeneratorWidgetName) {
+                isCameraDisposed = false;
+
+                if (widgetCallingToolbar == featureTwoWidgetName) {
+                  isGoingBackAllowedInLookNavigator = true;
+                }
+                if (cameraController.value.isInitialized) {
+                  cameraController.dispose();
+                }
+                // Navigieren zur StartLookGenerator-Seite
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        StartLookGenerator(title: 'Look Generator'),
+                  ),
+                  //(route) => false, // Entfernt alle vorherigen Routen
+                );
+                print("Create icon tapped");
+              }
             },
           ),
           const SizedBox(height: 25),
