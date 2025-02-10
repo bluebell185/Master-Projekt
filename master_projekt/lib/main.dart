@@ -191,20 +191,28 @@ class HomeScreen extends StatelessWidget {
                       child: PrimaryButton(
                         buttonText: 'continue',
                         onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "just one moment - we're checking if you have saved analysis results", style: TextStyle(color: Colors.grey[900]),),
+                              duration: const Duration(seconds: 3),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.pink[50],
+                            ),
+                          );
                           // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
                           getUserAnalysisData().then((roiData) {
                             if (roiData != null) {
                               fillAnalysisResultsIntoApp(roiData);
                             }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    StartAnalysis(title: 'Analysis'),
+                              ),
+                            );
                           });
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  StartAnalysis(title: 'Analysis'),
-                            ),
-                          );
                         },
                       ),
                     ),

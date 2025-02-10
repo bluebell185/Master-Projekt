@@ -33,7 +33,7 @@ class Toolbar extends StatelessWidget {
       child: Column(
         children: [
           _buildToolbarIcon(
-            iconPath: 'assets/icons/user.png',
+            iconPath: 'assets/icons/user.svg',
             onTap: () => showAccountPopup(context),
           ),
           const SizedBox(height: 25),
@@ -49,26 +49,27 @@ class Toolbar extends StatelessWidget {
           _buildToolbarIcon(
             iconPath: 'assets/icons/analysis.svg',
             onTap: () {
-              if (widgetCallingToolbar != startAnalysisWidgetName){
-              shouldCalcRoiButtons = false;
-              isCameraDisposed = false;
+              if (widgetCallingToolbar != startAnalysisWidgetName) {
+                shouldCalcRoiButtons = false;
+                isCameraDisposed = false;
 
-              if (widgetCallingToolbar == featureOneWidgetName) {
-                isGoingBackAllowedInNavigator = true;
+                if (widgetCallingToolbar == featureOneWidgetName) {
+                  isGoingBackAllowedInNavigator = true;
+                }
+                if (cameraController.value.isInitialized) {
+                  cameraController.dispose();
+                }
+                // Navigieren zur StartAnalysis-Seite
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartAnalysis(title: 'Analysis'),
+                  ),
+                  //(route) => false, // Entfernt alle vorherigen Routen
+                );
+                print("Analysis icon tapped");
               }
-              if (cameraController.value.isInitialized) {
-                cameraController.dispose();
-              }
-              // Navigieren zur StartAnalysis-Seite
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StartAnalysis(title: 'Analysis'),
-                ),
-                //(route) => false, // Entfernt alle vorherigen Routen
-              );
-              print("Analysis icon tapped");
-            }},
+            },
           ),
           const SizedBox(height: 25),
           _buildToolbarIcon(
@@ -119,10 +120,12 @@ class AccountPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-// Popup für das User Account Management TODO Design
+// Popup für das User Account Management
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      insetPadding: const EdgeInsets.all(20.0),
+      backgroundColor: Color.fromARGB(255, 249, 224, 233),
+      surfaceTintColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(25.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -132,7 +135,7 @@ class AccountPopup extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Account Management',
+                  'account management',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 // Popup verlassen
@@ -146,11 +149,14 @@ class AccountPopup extends StatelessWidget {
 // Nutzer NICHT eingeloggt -> Login/Register-Option
             if (user == null) ...[
               const Text(
-                  'You are not logged in. Please log in or register to store and retrieve your analysis results.'),
+                  'you are not logged in - please log in or register to store and retrieve your analysis results'),
               const SizedBox(height: 16.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800]!,
+                    textStyle: TextStyle(color: Colors.white)),
                 onPressed: () async {
-                  // Listener für Authentifizierungsstatus hinzufügen, damit sich der Login-Screen nach Login/Registrierung wieder schließt
+                  // Listener für Authentifizierungsstatus, damit sich der Login-Screen nach Login/Registrierung wieder schließt
                   late final StreamSubscription<User?> authSubscription;
                   authSubscription = FirebaseAuth.instance
                       .authStateChanges()
@@ -163,7 +169,7 @@ class AccountPopup extends StatelessWidget {
                       Navigator.of(context).pop(); // Popup schließen
 
                       // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
-                      giveLoginFeedback('You successfully logged in', context);
+                      giveLoginFeedback('you successfully logged in', context);
                     }
                   });
 
@@ -191,9 +197,9 @@ class AccountPopup extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: action == AuthAction.signIn
                                 ? const Text(
-                                    'Sign in to store and retrieve your analysis results!')
+                                    'sign in to store and retrieve your analysis results!')
                                 : const Text(
-                                    'Register to store and retrieve your analysis results!'),
+                                    'register to store and retrieve your analysis results!'),
                           );
                         },
                         sideBuilder: (context, constraints) {
@@ -214,78 +220,99 @@ class AccountPopup extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('Log In / Register'),
+                child: const Text('log in / register',
+                    style: TextStyle(color: Colors.white)),
               ),
 // User eingeloggt -> versch. Account-Optionen
             ] else ...[
               // Anzeige: Hinterlegte Email
-              Text('Email: ${user.email ?? "Not available"}'),
+              Text('e-mail: ${user.email ?? "not available"}'),
               const SizedBox(height: 16.0),
-
-              // Passwort ändern
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  showDialog(
-                    context: context,
-                    builder: (context) => const PasswordResetDialog(),
-                  );
-                },
-                child: const Text('Change Password'),
-              ),
-
-              // Logout
-              ElevatedButton(
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
-                  giveLoginFeedback('You successfully logged out', context);
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Log Out'),
-              ),
-
-              // Account löschen
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.red),
-                onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Confirm Account Deletion'),
-                      content: const Text(
-                          'Are you sure you want to delete your account and the belonging stored analysis data? This action cannot be undone!'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          child: const Text('Delete'),
-                        ),
-                      ],
+              IntrinsicWidth( // https://stackoverflow.com/a/68431507
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                    // Passwort ändern
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800]!,
+                    foregroundColor: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        showDialog(
+                          context: context,
+                          builder: (context) => const PasswordResetDialog(),
+                        );
+                      },
+                      child: const Text('change password'),
                     ),
-                  );
 
-                  if (confirm == true) {
-                    try {
-                      // Löschen der Analyseergebnisse
-                      await FirebaseFirestore.instance.collection('roiData').doc(user.uid).delete();
-                      // Löschen des Accounts
-                      await user.delete();
-                      // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
-                      giveLoginFeedback('You successfully deleted your account', context);
-                      Navigator.of(context).pop();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error deleting account: $e')),
-                      );
-                    }
-                  }
-                },
-                child: const Text('Delete Account'),
-              ),
+                    // Logout
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800]!,
+                    foregroundColor: Colors.white),
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
+                        giveLoginFeedback(
+                            'you successfully logged out', context);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('log out'),
+                    ),
+
+                    // Account löschen - Der einzige Text mit Großbuchstaben, da das Thema ernst ist
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom( backgroundColor: Colors.grey[800]!, foregroundColor: Colors.red),
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Confirm Account Deletion'),
+                            content: const Text(
+                                'Are you sure you want to delete your account and the belonging stored analysis data? This action cannot be undone!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true) {
+                          try {
+                            // Löschen der Analyseergebnisse
+                            await FirebaseFirestore.instance
+                                .collection('roiData')
+                                .doc(user.uid)
+                                .delete();
+                            // Löschen des Accounts
+                            await user.delete();
+                            // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
+                            giveLoginFeedback(
+                                'You successfully deleted your account',
+                                context);
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Error deleting account: $e')),
+                            );
+                          }
+                        }
+                      },
+                      child: const Text('delete account'),
+                    ),
+                  ]))
             ],
             const SizedBox(height: 16.0),
 
@@ -293,8 +320,12 @@ class AccountPopup extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800]!,
+                    textStyle: TextStyle(color: Colors.white)),
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
+                child:
+                    const Text('cancel', style: TextStyle(color: Colors.white)),
               ),
             ),
           ],
@@ -310,9 +341,9 @@ class PasswordResetDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Change Password'),
+      title: const Text('change password'),
       content:
-          const Text('Password reset instructions will be sent to your email.'),
+          const Text('password reset instructions will be sent to your e-mail'),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -325,12 +356,12 @@ class PasswordResetDialog extends StatelessWidget {
               await FirebaseAuth.instance
                   .sendPasswordResetEmail(email: user!.email!);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Password reset email sent.')),
+                const SnackBar(content: Text('password reset e-mail sent')),
               );
             }
             Navigator.of(context).pop();
           },
-          child: const Text('Send Email'),
+          child: const Text('send e-mail'),
         ),
       ],
     );

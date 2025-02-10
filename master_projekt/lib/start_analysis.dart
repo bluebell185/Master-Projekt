@@ -121,6 +121,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
                           child: PrimaryButton(
                         buttonText: 'skip analysis',
                         onPressed: () async {
+                          roiData = await loadRoisData();
                           await stepsToGoToFeatureOne(context);
                         },
                       ))),
