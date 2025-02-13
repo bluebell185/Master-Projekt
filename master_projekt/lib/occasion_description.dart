@@ -10,7 +10,7 @@ import 'package:master_projekt/ui/tabs_for_occasion.dart';
 class OccasionDescription extends StatefulWidget {
   final String popUpHeading;
   final List<Question> question;
-  final VoidCallback onSave;
+  final ValueChanged<Map<int, String>> onSave; // zum Mapping der Antworten
 
   const OccasionDescription({
     super.key,
@@ -71,7 +71,7 @@ class OccasionDescriptionState extends State<OccasionDescription> {
             // Save Button
             PrimaryButton(
               buttonText: 'create look',
-              onPressed: widget.onSave,
+              onPressed: () => widget.onSave(selectedOptions),
             ),
           ],
         ),

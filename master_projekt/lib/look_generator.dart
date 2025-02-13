@@ -6,8 +6,6 @@ also Mapping der Antworten zu den fertigen Looks:
 
 - Einbinden der DeepAR Kamera (für Application der Filter)
 
-z.b.
-
 String mapLookToFilter(Map<int, String> selectedOptions) {
   // Mapping der Antworten zu fertigen Look-Filtern
   if (selectedOptions.values.containsAll(['Casual', 'Sunny', 'Natural'])) {
@@ -20,5 +18,4 @@ String mapLookToFilter(Map<int, String> selectedOptions) {
   // Standard-Look, falls keine passende Kombination gefunden wird
   deepArController.switchEffect('assets/filters/look_default.deepar');
 }
-
 */

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/screen_with_deepar_camera.dart';
 
 // INTERACTIVE TABS
 class ScrollableTabsPopup extends StatefulWidget {
@@ -25,9 +24,7 @@ class _ScrollableTabsPopupState extends State<ScrollableTabsPopup> {
   @override
   void initState() {
     super.initState();
-    // Initialisiere `selectedIndex` basierend auf dem bereits ausgewählten Tab
-    // Bspl: widget.selectedTab = "brown"
-    // widget.labels: Liste der Farben
+    // initialisiert den Index basierend auf dem übergebenen "selectedTab"
     selectedIndex = widget.selectedTab != null
         ? widget.labels.indexOf(widget.selectedTab!)
         : null;
@@ -36,17 +33,15 @@ class _ScrollableTabsPopupState extends State<ScrollableTabsPopup> {
   void onTabSelected(int index) {
     setState(() {
       // Auswahl und De-Selection
-      selectedIndex = index;
-      selectedButtonsRois[index] == true
-          ? selectedButtonsRois[index] = false
-          : selectedButtonsRois[index] = true;
-      for (int k = 0; k < 4; k++) {
-        if (k != index) {
-          selectedButtonsRois[k] = false;
-        }
+      if (selectedIndex == index) {
+        // Wenn bereits ausgewählt -> abwählen
+        selectedIndex = null;
+      } else {
+        // Sonst eben index selektieren
+        selectedIndex = index;
       }
-      // Ausgewählter Index wird geupdated oder auf null gesetzt
     });
+    // Callback mit dem neuen Wert oder null, wenn abgewählt
     widget.onTabSelected(
       selectedIndex != null ? widget.labels[selectedIndex!] : null,
     ); // Parent ausgewählten Tab melden oder null
@@ -63,7 +58,7 @@ class _ScrollableTabsPopupState extends State<ScrollableTabsPopup> {
             padding: const EdgeInsets.only(right: 10),
             child: TabElement(
               label: widget.labels[index],
-              isSelected: selectedIndex == index,
+              isSelected: (selectedIndex == index),
               onTap: () => onTabSelected(index),
             ),
           ),
