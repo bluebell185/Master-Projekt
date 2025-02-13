@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/camera_widget.dart';
-import 'package:master_projekt/feature_one.dart';
-// import 'package:master_projekt/json_parse.dart';
+import 'package:master_projekt/feature_one.dart'; // TO DO: ändern zu feature_two
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/occasion_description.dart';
+// import 'package:master_projekt/json_parse.dart';
 // import 'package:master_projekt/screen_with_deepar_camera.dart';
-import 'package:master_projekt/analysis_results.dart';
+// import 'package:master_projekt/analysis_results.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -15,8 +16,10 @@ import 'package:master_projekt/ui/buttons.dart';
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
 
-// bool isAnalysisStarted = false;
-// late RoisData roiData;
+// steuert, ob Pop-Up im Stack anzeigen
+bool showOccasionDescription = false;
+
+// steuert, ob man zurück navigieren darf
 bool isGoingBackAllowedInLookNavigator = false; // hinzugefügt: LOOK Navigator
 
 class StartLookGenerator extends StatefulWidget {
@@ -63,16 +66,19 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                 Toolbar(
                   widgetCallingToolbar: startLookGeneratorWidgetName,
                 ),
+
                 // CTA Button unten
                 Positioned(
                   left: 0,
                   right: 0,
+                  bottom: 70,
                   child: Center(
                     child: PrimaryButton(
                       buttonText: 'create look',
                       onPressed: () async {
                         setState(() {
-                          isLoading = true;
+                          showOccasionDescription = true;
+                          isLoading = true; // falls Ladezustand anzeigen
                         });
 
 /* vielleicht Sparkles hinzufügen?
@@ -93,120 +99,153 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                   ),
                 ),
 
-                OccasionDescription(
-                  popUpHeading: 'Your occasion for today',
-                  question: [
-                    Question(
-                      number: 1,
-                      title: 'What is the occasion?',
-                      options: [
-                        'casual',
-                        'business',
-                        'party',
-                        'wedding',
-                        'date night',
-                        'festival',
-                        'holiday'
-                      ], // Antworten zur Frage
-                      selectedOption: eyeColorCategory!.name, // TO DO
-                      onOptionSelected: (selected) {
-                        print('Selected for occasion type: $selected');
-                        //setEyeColorCategory(selected);
-                      },
-                    ),
-                    Question(
-                      number: 2,
-                      title: 'How is the weather like?',
-                      options: [
-                        'sunny',
-                        'rainy',
-                        'cloudy',
-                        'snowy',
-                        'windy',
-                        'hot',
-                        'cold'
-                      ], // Antworten zur Frage
-                      selectedOption: eyeShapeCategory!.name, // TO DO
-                      onOptionSelected: (selected) {
-                        print('Selected for weather: $selected');
-                        //setEyeShapeCategory(selected);
-                      },
-                    ),
-                    Question(
-                      number: 3,
-                      title: 'What type of look do you desire?',
-                      options: [
-                        'natural',
-                        'glamorous',
-                        'bold',
-                        'soft',
-                        'classic',
-                        'minimalistic',
-                        'trendy'
-                      ], // Antworten zur Frage
-                      selectedOption: blushCategory!.name, // TO DO
-                      onOptionSelected: (selected) {
-                        print('Selected for desired look: $selected');
-                        //setBlushCategory(selected);
-                      },
-                    ),
-                    Question(
-                      number: 4,
-                      title: 'What mood do you want to express?',
-                      options: [
-                        'confident',
-                        'romantic',
-                        'playful',
-                        'edgy',
-                        'mysterious',
-                        'elegant',
-                        'relaxed'
-                      ], // Antworten zur Frage
-                      selectedOption: blushShapeCategory!.name, // TO DO
-                      onOptionSelected: (selected) {
-                        print('Selected for desired mood: $selected');
-                        //setBlushShapeCategory(selected);
-                      },
-                    ),
-                    Question(
-                      number: 5,
-                      title: 'What kind of vibe do you want to achieve?',
-                      options: [
-                        'soft & dreamy',
-                        'bold & daring',
-                        'energetic & fun',
-                        'minimalist & clean'
-                      ], // Antworten zur Frage
-                      selectedOption: blushShapeCategory!.name, // TO DO
-                      onOptionSelected: (selected) {
-                        print('Selected for desired vibe: $selected');
-                        //setBlushShapeCategory(selected);
-                      },
-                    ),
-                    Question(
-                      number: 6,
-                      title: 'How much time do you have to get ready?',
-                      options: [
-                        '5 minutes',
-                        '15 minutes',
-                        '30 minutes',
-                        'as much as needed'
-                      ], // Antworten zur Frage
-                      selectedOption: blushShapeCategory!.name, // TO DO
-                      onOptionSelected: (selected) {
-                        print('Selected for available time: $selected');
-                        //setBlushShapeCategory(selected);
-                      },
-                    ),
-                  ],
-                  onSave: () async {
-                    await stepsToGoToFeatureTwo(context);
-                  },
-                ),
+                if (showOccasionDescription)
+                  OccasionDescription(
+                      popUpHeading: 'Your occasion for today',
+                      question: [
+                        Question(
+                          number: 1,
+                          title: 'What is the occasion?',
+                          options: [
+                            'casual',
+                            'business',
+                            'party',
+                            'wedding',
+                            'date night',
+                            'festival',
+                            'holiday'
+                          ], // Antworten zur Frage
+                          selectedOption: '', // TO DO
+                          onOptionSelected: (selected) {
+                            print('Selected for occasion type: $selected');
+                          },
+                        ),
+                        Question(
+                          number: 2,
+                          title: 'How is the weather like?',
+                          options: [
+                            'sunny',
+                            'rainy',
+                            'cloudy',
+                            'snowy',
+                            'windy',
+                            'hot',
+                            'cold'
+                          ], // Antworten zur Frage
+                          selectedOption: '', // TO DO
+                          onOptionSelected: (selected) {
+                            print('Selected for weather: $selected');
+                          },
+                        ),
+                        Question(
+                          number: 3,
+                          title: 'What type of look do you desire?',
+                          options: [
+                            'natural',
+                            'glamorous',
+                            'bold',
+                            'soft',
+                            'classic',
+                            'minimalistic',
+                            'trendy'
+                          ], // Antworten zur Frage
+                          selectedOption: '', // TO DO
+                          onOptionSelected: (selected) {
+                            print('Selected for desired look: $selected');
+                          },
+                        ),
+                        Question(
+                          number: 4,
+                          title: 'What mood do you want to express?',
+                          options: [
+                            'confident',
+                            'romantic',
+                            'playful',
+                            'edgy',
+                            'mysterious',
+                            'elegant',
+                            'relaxed'
+                          ], // Antworten zur Frage
+                          selectedOption: '', // TO DO
+                          onOptionSelected: (selected) {
+                            print('Selected for desired mood: $selected');
+                          },
+                        ),
+                        Question(
+                          number: 5,
+                          title: 'What kind of vibe do you want to achieve?',
+                          options: [
+                            'soft & dreamy',
+                            'bold & daring',
+                            'energetic & fun',
+                            'minimalist & clean'
+                          ], // Antworten zur Frage
+                          selectedOption: '', // TO DO
+                          onOptionSelected: (selected) {
+                            print('Selected for desired vibe: $selected');
+                          },
+                        ),
+                        Question(
+                          number: 6,
+                          title: 'How much time do you have to get ready?',
+                          options: [
+                            '5 minutes',
+                            '15 minutes',
+                            '30 minutes',
+                            'as much as needed'
+                          ], // Antworten zur Frage
+                          selectedOption: '', // TO DO
+                          onOptionSelected: (selected) {
+                            print('Selected for available time: $selected');
+                          },
+                        ),
+                      ],
+                      onSave: (answersMap) {
+                        // Pop-Up ausblenden
+                        // TO DO: Antworten speichern!!!!!
+                        setState(() {
+                          showOccasionDescription = false;
+                          isLoading = false;
+                        });
+
+                        // Auswertung der Antworten
+                        if (answersMap.isNotEmpty) {
+                          print("User selections: $answersMap");
+                          mapLookToFilter(answersMap);
+                        } else {
+                          print("Keine Auswahl oder Abbruch des Pop-ups");
+                        }
+                      }
+
+                      /* async {
+                      await stepsToGoToFeatureTwo(context);
+                    },*/
+
+                      ),
               ],
             ),
           ),
         ));
+  }
+
+  void mapLookToFilter(Map<int, String> selectedOptions) {
+    // Mapping der Antworten zu fertigen Look-Filtern
+    if (selectedOptions.values
+        .toSet()
+        .containsAll({'Casual', 'Sunny', 'Natural'})) {
+      deepArController.switchEffect('assets/filters/look_natural.deepar');
+    } else if (selectedOptions.values
+        .toSet()
+        .containsAll({'Party', 'Rainy', 'Bold'})) {
+      deepArController.switchEffect('assets/filters/look_bold.deepar');
+    } else if (selectedOptions.values
+        .toSet()
+        .containsAll({'Wedding', 'Snowy', 'Soft'})) {
+      deepArController.switchEffect('assets/filters/look_romantic.deepar');
+    } else {
+      // Standard-Look, falls keine passende Kombination gefunden wird
+      deepArController.switchEffect('assets/filters/look_default.deepar');
+    }
   }
 
   /*------------------------------------------ needed? ------------------------------------+*/
@@ -216,7 +255,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
       await cameraController.dispose();
     }
     setState(() {
-      // showRecommendations = true;
+      showOccasionDescription = true;
       isCameraDisposed = true;
     });
     if (isGoingBackAllowedInLookNavigator) {
