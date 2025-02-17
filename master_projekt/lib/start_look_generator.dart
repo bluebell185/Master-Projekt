@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/camera_widget.dart';
-import 'package:master_projekt/feature_one.dart'; // TO DO: ändern zu feature_two
 import 'package:master_projekt/main.dart';
 import 'package:master_projekt/occasion_description.dart';
-// import 'package:master_projekt/json_parse.dart';
-// import 'package:master_projekt/screen_with_deepar_camera.dart';
-// import 'package:master_projekt/analysis_results.dart';
+import 'package:master_projekt/screen_with_deepar_camera.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -15,9 +12,6 @@ import 'package:master_projekt/ui/buttons.dart';
 /*-------------- Look Generator: ruft das Pop-Up (OccasionDescrption) auf----------------*/
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
-
-// steuert, ob Pop-Up im Stack anzeigen
-bool showOccasionDescription = false;
 
 // steuert, ob man zurück navigieren darf
 bool isGoingBackAllowedInLookNavigator = false; // hinzugefügt: LOOK Navigator
@@ -34,40 +28,145 @@ class StartLookGenerator extends StatefulWidget {
 class StartLookGeneratorState extends State<StartLookGenerator> {
   bool isLoading = false; // Ladezustand
 
+  // steuert, ob Pop-Up im Stack angezeigt wird
+  bool showOccasionDescription = false;
+
+  // checkt, ob das Pop-Up schon geöffnet wurde
+  bool isLookCreated = false;
+
+  // um die selektierten Antworten zu speichern (zur Modifikation des Looks)
+  Map<int, String> savedOptions = {};
+
+  // Questions im Pop-Up
+  List<Question> questions = [
+    Question(
+      number: 1,
+      title: 'What is the occasion?',
+      options: [
+        'casual',
+        'business',
+        'party',
+        'wedding',
+        'date night',
+        'festival',
+        'holiday'
+      ],
+      selectedOption: '',
+      onOptionSelected: (selected) {
+        print('Selected for occasion type: $selected');
+      },
+    ),
+    Question(
+      number: 2,
+      title: 'How is the weather like?',
+      options: ['sunny', 'rainy', 'cloudy', 'snowy', 'windy', 'hot', 'cold'],
+      selectedOption: '',
+      onOptionSelected: (selected) {
+        print('Selected for weather: $selected');
+      },
+    ),
+    Question(
+      number: 3,
+      title: 'What type of look do you desire?',
+      options: [
+        'natural',
+        'glamorous',
+        'bold',
+        'soft',
+        'classic',
+        'minimalistic',
+        'trendy'
+      ],
+      selectedOption: '',
+      onOptionSelected: (selected) {
+        print('Selected for desired look: $selected');
+      },
+    ),
+    Question(
+      number: 4,
+      title: 'What mood do you want to express?',
+      options: [
+        'confident',
+        'romantic',
+        'playful',
+        'edgy',
+        'mysterious',
+        'elegant',
+        'relaxed'
+      ],
+      selectedOption: '',
+      onOptionSelected: (selected) {
+        print('Selected for desired mood: $selected');
+      },
+    ),
+    Question(
+      number: 5,
+      title: 'What kind of vibe do you want to achieve?',
+      options: [
+        'soft & dreamy',
+        'bold & daring',
+        'energetic & fun',
+        'minimalist & clean'
+      ],
+      selectedOption: '',
+      onOptionSelected: (selected) {
+        print('Selected for desired vibe: $selected');
+      },
+    ),
+    Question(
+      number: 6,
+      title: 'How much time do you have to get ready?',
+      options: ['5 minutes', '15 minutes', '30 minutes', 'as much as needed'],
+      selectedOption: '',
+      onOptionSelected: (selected) {
+        print('Selected for available time: $selected');
+      },
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Am Anfang soll Pop-up angezeigt werden
+    showOccasionDescription = false;
+    isLookCreated = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: isGoingBackAllowedInLookNavigator,
-        child: CameraWidget(
-          title: 'Kamerabild 1',
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Stack(
-              children: [
-                // Main content background container
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Title oben
-                      ScreenTitle(
-                        titleText: 'Look Generator',
-                        titleColor: Colors.white,
-                      ),
-                    ],
-                  ),
+      canPop: isGoingBackAllowedInLookNavigator,
+      child: CameraWidget(
+        title: 'Kamerabild 1',
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              // Main content background container
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Title oben
+                    ScreenTitle(
+                      titleText: 'Look Generator',
+                      titleColor: Colors.white,
+                    ),
+                  ],
                 ),
+              ),
 
-                Toolbar(
-                  widgetCallingToolbar: startLookGeneratorWidgetName,
-                ),
+              Toolbar(
+                widgetCallingToolbar: startLookGeneratorWidgetName,
+              ),
 
-                // CTA Button unten
+              // Falls noch kein Look erstellt wurde und das Pop-up nicht sichtbar ist, wird der erste CTA "create look" angezeigt
+              if (!showOccasionDescription && !isLookCreated)
                 Positioned(
                   left: 0,
                   right: 0,
@@ -78,197 +177,101 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                       onPressed: () async {
                         setState(() {
                           showOccasionDescription = true;
-                          isLoading = true; // falls Ladezustand anzeigen
+                          isLoading = true;
                         });
-
-/* vielleicht Sparkles hinzufügen?
-                          // ScannerWidget in einem Overlay anzeigen
-                          await showDialog(
-                            context: context,
-                            barrierDismissible:
-                                false, // nicht manuell schließbar
-                            builder: (BuildContext context) {
-                              return Scaffold(
-                                backgroundColor: Colors.transparent,
-                                body: ScannerWidget(),
-                              );
-                            },
-                          );*/
                       },
                     ),
                   ),
                 ),
 
-                if (showOccasionDescription)
-                  OccasionDescription(
-                      popUpHeading: 'Your occasion for today',
-                      question: [
-                        Question(
-                          number: 1,
-                          title: 'What is the occasion?',
-                          options: [
-                            'casual',
-                            'business',
-                            'party',
-                            'wedding',
-                            'date night',
-                            'festival',
-                            'holiday'
-                          ], // Antworten zur Frage
-                          selectedOption: '', // TO DO
-                          onOptionSelected: (selected) {
-                            print('Selected for occasion type: $selected');
-                          },
-                        ),
-                        Question(
-                          number: 2,
-                          title: 'How is the weather like?',
-                          options: [
-                            'sunny',
-                            'rainy',
-                            'cloudy',
-                            'snowy',
-                            'windy',
-                            'hot',
-                            'cold'
-                          ], // Antworten zur Frage
-                          selectedOption: '', // TO DO
-                          onOptionSelected: (selected) {
-                            print('Selected for weather: $selected');
-                          },
-                        ),
-                        Question(
-                          number: 3,
-                          title: 'What type of look do you desire?',
-                          options: [
-                            'natural',
-                            'glamorous',
-                            'bold',
-                            'soft',
-                            'classic',
-                            'minimalistic',
-                            'trendy'
-                          ], // Antworten zur Frage
-                          selectedOption: '', // TO DO
-                          onOptionSelected: (selected) {
-                            print('Selected for desired look: $selected');
-                          },
-                        ),
-                        Question(
-                          number: 4,
-                          title: 'What mood do you want to express?',
-                          options: [
-                            'confident',
-                            'romantic',
-                            'playful',
-                            'edgy',
-                            'mysterious',
-                            'elegant',
-                            'relaxed'
-                          ], // Antworten zur Frage
-                          selectedOption: '', // TO DO
-                          onOptionSelected: (selected) {
-                            print('Selected for desired mood: $selected');
-                          },
-                        ),
-                        Question(
-                          number: 5,
-                          title: 'What kind of vibe do you want to achieve?',
-                          options: [
-                            'soft & dreamy',
-                            'bold & daring',
-                            'energetic & fun',
-                            'minimalist & clean'
-                          ], // Antworten zur Frage
-                          selectedOption: '', // TO DO
-                          onOptionSelected: (selected) {
-                            print('Selected for desired vibe: $selected');
-                          },
-                        ),
-                        Question(
-                          number: 6,
-                          title: 'How much time do you have to get ready?',
-                          options: [
-                            '5 minutes',
-                            '15 minutes',
-                            '30 minutes',
-                            'as much as needed'
-                          ], // Antworten zur Frage
-                          selectedOption: '', // TO DO
-                          onOptionSelected: (selected) {
-                            print('Selected for available time: $selected');
-                          },
-                        ),
-                      ],
-                      onSave: (answersMap) {
-                        // Pop-Up ausblenden
-                        // TO DO: Antworten speichern!!!!!
-                        setState(() {
-                          showOccasionDescription = false;
-                          isLoading = false;
-                        });
+              // Anzeige des Pop-ups, wenn showOccasionDescription = true
+              if (showOccasionDescription)
+                OccasionDescription(
+                  popUpHeading: 'Your occasion for today',
+                  question: questions,
+                  onSave: (answersMap) {
+                    // Pop-up schließen, Filter anwenden und Antworten speichern
+                    setState(() {
+                      showOccasionDescription = false;
+                      isLoading = false;
+                      isLookCreated = true;
+                      savedOptions = answersMap;
+                    });
+                    print("User selections: $savedOptions");
+                    mapLookToFilter(savedOptions);
+                  },
+                ),
 
-                        // Auswertung der Antworten
-                        if (answersMap.isNotEmpty) {
-                          print("User selections: $answersMap");
-                          mapLookToFilter(answersMap);
-                        } else {
-                          print("Keine Auswahl oder Abbruch des Pop-ups");
-                        }
-                      }
-
-                      /* async {
-                      await stepsToGoToFeatureTwo(context);
-                    },*/
-
+              // Sobald der Look erstellt wurde, werden zwei Buttons angezeigt: "modify look" und "save look"
+              if (isLookCreated)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 70,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // CTA "modify look": öffnet das Pop-up erneut mit bereits selektierten Antworten
+                      PrimaryButton(
+                        buttonText: 'modify look',
+                        onPressed: () {
+                          // Aktualisieren/Check, sodass die bisherigen Auswahlen übernommen werden
+                          setState(() {
+                            questions = questions.map((question) {
+                              if (savedOptions.containsKey(question.number)) {
+                                return Question(
+                                  number: question.number,
+                                  title: question.title,
+                                  options: question.options,
+                                  selectedOption:
+                                      savedOptions[question.number]!,
+                                  onOptionSelected: question.onOptionSelected,
+                                );
+                              }
+                              return question;
+                            }).toList();
+                            showOccasionDescription = true;
+                            isLookCreated = false;
+                          });
+                        },
                       ),
-              ],
-            ),
+                      SizedBox(height: 15),
+                      // CTA "save look": speichert den Look durch einen Screenshot
+                      PrimaryButton(
+                        buttonText: 'save look',
+                        onPressed: saveLook,
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
+  // Mapping der Antworten zu fertigen Look-Filtern
   void mapLookToFilter(Map<int, String> selectedOptions) {
-    // Mapping der Antworten zu fertigen Look-Filtern
     if (selectedOptions.values
         .toSet()
-        .containsAll({'Casual', 'Sunny', 'Natural'})) {
+        .containsAll({'casual', 'sunny', 'natural'})) {
       deepArController.switchEffect('assets/filters/look_natural.deepar');
     } else if (selectedOptions.values
         .toSet()
-        .containsAll({'Party', 'Rainy', 'Bold'})) {
+        .containsAll({'party', 'rainy', 'bold'})) {
       deepArController.switchEffect('assets/filters/look_bold.deepar');
     } else if (selectedOptions.values
         .toSet()
-        .containsAll({'Wedding', 'Snowy', 'Soft'})) {
+        .containsAll({'wedding', 'snowy', 'soft'})) {
       deepArController.switchEffect('assets/filters/look_romantic.deepar');
     } else {
-      // Standard-Look, falls keine passende Kombination gefunden wird
       deepArController.switchEffect('assets/filters/look_default.deepar');
     }
   }
 
-  /*------------------------------------------ needed? ------------------------------------+*/
-
-  Future<void> stepsToGoToFeatureTwo(BuildContext context) async {
-    if (cameraController.value.isInitialized) {
-      await cameraController.dispose();
-    }
-    setState(() {
-      showOccasionDescription = true;
-      isCameraDisposed = true;
-    });
-    if (isGoingBackAllowedInLookNavigator) {
-      isGoingBackAllowedInLookNavigator = false;
-      Navigator.pop(context);
-    } else {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FeatureOne(), // TO DO
-        ),
-        (route) => false, // Entfernt alle vorherigen Routen
-      );
-    }
+  void saveLook() {
+    // TO DO
+    print('saveLook() aufgerufen – Screenshot wird erstellt.');
   }
 }
