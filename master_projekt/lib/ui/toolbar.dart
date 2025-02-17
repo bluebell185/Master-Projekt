@@ -16,13 +16,156 @@ import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/login_feedback.dart';
 import 'package:master_projekt/ui/save_look.dart';
 
-// Tool Bar rechts
-// muss noch für die Navigation mit den anderen Screens connected werden
-// verschiedene States:
-// --- für "Flash" und "Eye" einbauen -> On/Off
-// --- "active" Icons state? -> default/active
+// Zustandsbehaftetes Icon für die Toolbar
+class ToolbarIcon extends StatefulWidget {
+  final String iconPath;
+  final String activeIconPath;
+  final VoidCallback onTap;
+  final bool initialActive;
 
+  const ToolbarIcon({
+    super.key,
+    required this.iconPath,
+    required this.activeIconPath,
+    required this.onTap,
+    this.initialActive = false,
+  });
+
+  @override
+  State<ToolbarIcon> createState() => ToolbarIconState();
+}
+
+class ToolbarIconState extends State<ToolbarIcon> {
+  late bool isActive;
+
+  @override
+  void initState() {
+    super.initState();
+    isActive = widget.initialActive;
+  }
+
+  void _toggleActive() {
+    setState(() {
+      isActive = !isActive;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _toggleActive();
+        widget.onTap();
+      },
+      child: SizedBox(
+        width: 24,
+        height: 24,
+        child: SvgPicture.asset(
+          isActive ? widget.activeIconPath : widget.iconPath,
+          semanticsLabel: 'Toolbar Icon',
+        ),
+      ),
+    );
+  }
+}
+
+// Toolbar, welche die ToolbarIcon-Komponenten verwendet
 class Toolbar extends StatelessWidget {
+  final String widgetCallingToolbar;
+
+  const Toolbar({super.key, required this.widgetCallingToolbar});
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 75,
+      right: 15,
+      child: Column(
+        children: [
+          ToolbarIcon(
+            iconPath: 'assets/icons/user.svg',
+            activeIconPath: 'assets/icons/user_active.svg', // TO DO
+            onTap: () {
+              // Navigation zum User-Account
+              print("User icon tapped");
+            },
+          ),
+          const SizedBox(height: 25),
+          ToolbarIcon(
+            iconPath: 'assets/icons/flash.svg',
+            activeIconPath: 'assets/icons/flash_active.svg', // TO DO
+            onTap: () {
+              // Ein-/Ausschalten des Blitzes & Icon austauschen
+              deepArController.toggleFlash();
+              print("Flash icon tapped");
+            },
+          ),
+          const SizedBox(height: 25),
+          ToolbarIcon(
+            iconPath: 'assets/icons/analysis.svg',
+            activeIconPath: 'assets/icons/analysis_active.svg', // TO DO
+            onTap: () {
+              if (widgetCallingToolbar != startAnalysisWidgetName) {
+                shouldCalcRoiButtons = false;
+                isCameraDisposed = false;
+                if (widgetCallingToolbar == featureOneWidgetName) {
+                  isGoingBackAllowedInNavigator = true;
+                }
+                if (cameraController.value.isInitialized) {
+                  cameraController.dispose();
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartAnalysis(title: 'Analysis'),
+                  ),
+                );
+                print("Analysis icon tapped");
+              }
+            },
+          ),
+          const SizedBox(height: 25),
+          ToolbarIcon(
+            iconPath: 'assets/icons/create.svg',
+            activeIconPath: 'assets/icons/create_active.svg', // TO DO
+            onTap: () {
+              if (widgetCallingToolbar != startLookGeneratorWidgetName) {
+                isCameraDisposed = false;
+                if (widgetCallingToolbar == featureTwoWidgetName) {
+                  isGoingBackAllowedInLookNavigator = true;
+                }
+                if (cameraController.value.isInitialized) {
+                  cameraController.dispose();
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        StartLookGenerator(title: 'Look Generator'),
+                  ),
+                );
+                print("Create icon tapped");
+              }
+            },
+          ),
+          const SizedBox(height: 25),
+          ToolbarIcon(
+            iconPath: 'assets/icons/eye.svg',
+            activeIconPath: 'assets/icons/eye_close.svg',
+            onTap: () {
+              if (featureOneKey.currentState != null) {
+                featureOneKey.currentState!.toggleWidgetHiding();
+              }
+              print("Eye icon tapped");
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+  /*
   final String widgetCallingToolbar;
 
   const Toolbar({super.key, required this.widgetCallingToolbar});
@@ -132,7 +275,7 @@ class Toolbar extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 
 class AccountPopup extends StatelessWidget {
   const AccountPopup({super.key});
@@ -396,3 +539,4 @@ void showAccountPopup(BuildContext context) {
     builder: (context) => const AccountPopup(),
   );
 }
+
