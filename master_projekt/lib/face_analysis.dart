@@ -9,20 +9,24 @@ import 'package:master_projekt/analysis_results.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FaceAnalysis {
-  static Future<void> analyseColorsInFace(Face face) async {
+  static Future<bool> analyseColorsInFace(Face face) async {
     final Directory tempDir = await getTemporaryDirectory();
     final String pathToSave =
         '${tempDir.path}/captured_image_for_color_detection.jpg';
     File imageCacheFile = File(pathToSave);
 
-    final img.Image? decodedImage =
-        img.decodeImage(imageCacheFile.readAsBytesSync());
-    if (decodedImage == null) throw 'Bild konnte nicht geladen werden.';
+    try {
+      final img.Image? decodedImage =
+          img.decodeImage(imageCacheFile.readAsBytesSync());
+      if (decodedImage == null) return false;
 
-    getAverageEyeColor(decodedImage, face);
-    getAverageLipColor(decodedImage, face);
-    getAverageEyebrowColor(decodedImage, face);
-    getAverageFaceColor(decodedImage, face);
+      getAverageEyeColor(decodedImage, face);
+      getAverageLipColor(decodedImage, face);
+      getAverageEyebrowColor(decodedImage, face);
+      getAverageFaceColor(decodedImage, face);
+    } catch (e) {
+      return false;
+    }
 
     getEyeShape(face);
     getFaceShape(face);
@@ -31,6 +35,8 @@ class FaceAnalysis {
     browShapeCategory = BrowShapeCategory.straight;
 
     putDataIntoDb();
+
+    return true;
   }
 
   static void getEyeShape(Face face) {

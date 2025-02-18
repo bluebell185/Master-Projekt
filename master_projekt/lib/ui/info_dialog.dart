@@ -15,11 +15,18 @@ class InfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () {
+      backgroundColor: Color.fromARGB(255, 249, 224, 233),
+      title: Text(title,
+        textAlign: TextAlign.center,),
+      content: Text(content,
+        textAlign: TextAlign.center,),
+      actionsAlignment: MainAxisAlignment.center, // Aktionen zentrieren
+      actions: <Widget>[
+        ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[800]!,
+                    foregroundColor: Colors.white),
+                      onPressed: () {
             Navigator.of(context).pop();
           },
           child: Text(buttonText),

@@ -84,7 +84,8 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     if (scale < 1) scale = 1 / scale;
 
     if ((screenshotTimer == null ||
-        (screenshotTimer != null && !screenshotTimer!.isActive)) && currentFeature != 2) {
+            (screenshotTimer != null && !screenshotTimer!.isActive)) &&
+        currentFeature != 2) {
       startScreenshotTimer();
     }
 
@@ -106,10 +107,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                               ? DeepArPreview(
                                   key: ValueKey('DeepArPreview$currentFeature'),
                                   deepArController)
-                              : //deepArController.hasPermission ?
-                              CircularProgressIndicator()
-                      //: TODO Error Widget wegen Kamera/Mikrofon-Berechtigung
-                      ),
+                              : CircularProgressIndicator()),
                 ),
               ),
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild

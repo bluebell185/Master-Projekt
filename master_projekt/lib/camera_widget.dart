@@ -74,7 +74,6 @@ class _CameraWidgetState extends State<CameraWidget> {
 
       await cameraController.startImageStream((CameraImage image) async {
         // Das aktuelle Kamerabild muss nun in ein InputImage umgewandelt werden
-        // CameraDescription description = controller.description;
         final visionImage =
             inputImageFromCameraImage(image, selfieCam, cameraController);
 
@@ -112,9 +111,9 @@ class _CameraWidgetState extends State<CameraWidget> {
 
           File(pathToSave).writeAsBytesSync(img.encodeJpg(imgImage));
 
-          if (cameraController.value.isInitialized) {
-            cameraController.stopImageStream();
-          }
+          // if (cameraController.value.isInitialized) {
+          //   cameraController.stopImageStream();
+          // }
         }
       });
       setState(() {});

@@ -10,6 +10,7 @@ import 'package:master_projekt/main.dart';
 import 'package:master_projekt/results_check.dart';
 import 'package:master_projekt/scanning_animation.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/ui/info_dialog.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -21,6 +22,9 @@ final String startAnalysisWidgetName = 'StartAnalysis';
 bool isAnalysisStarted = false;
 late RoisData roiData;
 bool isGoingBackAllowedInNavigator = false;
+
+// TODO
+bool isFaceAnalysisDoneAtLeastOnce = false;
 
 class StartAnalysis extends StatefulWidget {
   StartAnalysis({super.key, required this.title});
@@ -96,17 +100,48 @@ class _StartAnalysisState extends State<StartAnalysis> {
                             },
                           );
 
+                          if (cameraController.value.isInitialized) {
+                            cameraController.stopImageStream();
+                          }
+
                           try {
-                            // Gesichtsanalyse starten
-                            await FaceAnalysis.analyseColorsInFace(
-                                faceForAnalysis);
                             roiData = await loadRoisData();
+
+                            // Gesichtsanalyse starten
+                            bool faceAnalysed =
+                                await FaceAnalysis.analyseColorsInFace(
+                                    faceForAnalysis);
+
+                            if (!faceAnalysed) {
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const InfoDialog(
+                                    title: 'analysis not successfull',
+                                    content:
+                                        'the analysis was not successfull.\nplease repeat it under good lighting conditions and keep the camera still before starting the analysis.',
+                                    buttonText: 'ok',
+                                  );
+                                },
+                              );
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      StartAnalysis(title: 'Analysis'),
+                                ),
+                              );
+                            } else {
+                              setState(() {
+                                showRecommendations = false;
+                              });
+                            }
                           } catch (e) {
                             print('Error during analysis: $e');
                           } finally {
                             setState(() {
                               isLoading = false;
-                              showRecommendations = false;
                             });
                           }
                         },
@@ -213,8 +248,10 @@ class _StartAnalysisState extends State<StartAnalysis> {
 
   Future<void> stepsToGoToFeatureOne(BuildContext context) async {
     if (cameraController.value.isInitialized) {
+      //cameraController.stopImageStream();
       await cameraController.dispose();
     }
+
     setState(() {
       showRecommendations = true;
       isCameraDisposed = true;

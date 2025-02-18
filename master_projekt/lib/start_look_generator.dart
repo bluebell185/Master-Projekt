@@ -14,9 +14,6 @@ import 'package:master_projekt/ui/buttons.dart';
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
 
-// TODO
-bool isFaceAnalysisDoneAtLeastOnce = false;
-
 bool hideWidgets = false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
 
 // GlobalKey für FeatureTwo

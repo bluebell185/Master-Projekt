@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/start_look_generator.dart';
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +15,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/login_feedback.dart';
 import 'package:master_projekt/ui/save_look.dart';
+import 'package:master_projekt/ui/info_dialog.dart';
 
 // Zustandsbehaftetes Icon für die Toolbar
 class ToolbarIcon extends StatefulWidget {
@@ -157,7 +159,8 @@ class Toolbar extends StatelessWidget {
             iconPath: 'assets/icons/create.svg',
             activeIconPath: 'assets/icons/create_active.svg', // TO DO
             onTap: () {
-              if (widgetCallingToolbar != startLookGeneratorWidgetName) {
+              if (widgetCallingToolbar != startLookGeneratorWidgetName &&
+                  eyeColorCategory != null) {
                 isCameraDisposed = false;
                 // if (widgetCallingToolbar == featureTwoWidgetName) {
                 //   isGoingBackAllowedInLookNavigator = true;
@@ -201,8 +204,20 @@ class Toolbar extends StatelessWidget {
                     //(route) => false, // Entfernt alle vorherigen Routen
                   );
                 }
-                print("Create icon tapped");
+              } else if (eyeColorCategory == null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const InfoDialog(
+                      title: 'analysis missing',
+                      content:
+                          'in order to create looks you need to have done an analysis at least once.\nplease start the analysis.',
+                      buttonText: 'ok',
+                    );
+                  },
+                );
               }
+              print("Create icon tapped");
             },
           ),
           const SizedBox(height: 25),
