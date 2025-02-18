@@ -40,43 +40,44 @@ class OccasionDescriptionState extends State<OccasionDescription> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      insetPadding: const EdgeInsets.all(20),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF1EADD),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Heading
-            Text(
-              widget.popUpHeading,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Chicle',
-              ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        insetPadding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1EADD),
+              borderRadius: BorderRadius.circular(20),
             ),
-            const SizedBox(height: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Heading
+                Text(
+                  widget.popUpHeading,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Chicle',
+                  ),
+                ),
+                const SizedBox(height: 20),
 
-            // Occasion-Questions
-            ...widget.question.map((question) => _buildQuestion(question)),
+                // Occasion-Questions
+                ...widget.question.map((question) => _buildQuestion(question)),
 
-            const SizedBox(height: 40),
+                const SizedBox(height: 20),
 
-            // Save Button
-            PrimaryButton(
-              buttonText: 'create look',
-              onPressed: () => widget.onSave(selectedOptions),
+                // Save Button
+                PrimaryButton(
+                  buttonText: 'create look',
+                  onPressed: () => widget.onSave(selectedOptions),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
 /* Question Element-Block:

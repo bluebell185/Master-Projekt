@@ -36,10 +36,6 @@ class _StartAnalysisState extends State<StartAnalysis> {
 
   @override
   Widget build(BuildContext context) {
-    // if (!deepArController.isInitialized) {
-    //   initializeDeepARController();
-    // }
-
     return PopScope(
         canPop: isGoingBackAllowedInNavigator,
         child: CameraWidget(

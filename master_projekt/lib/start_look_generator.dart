@@ -148,10 +148,6 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
   Widget build(BuildContext context) {
     currentFeature = 2;
 
-    // if (!deepArController.isInitialized) {
-    //   initializeDeepARController();
-    // }
-
     return PopScope(
         canPop: false,
         child: ScreenWithDeeparCamera(
