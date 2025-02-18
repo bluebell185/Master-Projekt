@@ -17,6 +17,7 @@ import 'package:master_projekt/ui/save_look.dart';
 
 // Zustandsbehaftetes Icon für die Toolbar
 class ToolbarIcon extends StatefulWidget {
+  final int id;
   final String iconPath;
   final String activeIconPath;
   final VoidCallback onTap;
@@ -24,6 +25,7 @@ class ToolbarIcon extends StatefulWidget {
 
   const ToolbarIcon({
     super.key,
+    required this.id,
     required this.iconPath,
     required this.activeIconPath,
     required this.onTap,
@@ -35,18 +37,21 @@ class ToolbarIcon extends StatefulWidget {
 }
 
 class ToolbarIconState extends State<ToolbarIcon> {
-  late bool isActive;
+  bool isActive = false;
 
   @override
   void initState() {
     super.initState();
-    isActive = widget.initialActive;
   }
 
   void _toggleActive() {
-    setState(() {
-      isActive = !isActive;
-    });
+    if (currentFeature == 0 || selectedToolbarIcons[2]!) {
+      setState(() {
+        isActive = !isActive;
+      });
+    } else {
+      selectedToolbarIcons[widget.id] = !selectedToolbarIcons[widget.id]!;
+    }
   }
 
   @override
@@ -60,7 +65,9 @@ class ToolbarIconState extends State<ToolbarIcon> {
         width: 24,
         height: 24,
         child: SvgPicture.asset(
-          isActive ? widget.activeIconPath : widget.iconPath,
+          selectedToolbarIcons[widget.id]! || isActive
+              ? widget.activeIconPath
+              : widget.iconPath,
           semanticsLabel: 'Toolbar Icon',
         ),
       ),
@@ -82,6 +89,7 @@ class Toolbar extends StatelessWidget {
       child: Column(
         children: [
           ToolbarIcon(
+            id: 0,
             iconPath: 'assets/icons/user.svg',
             activeIconPath: 'assets/icons/user_active.svg', // TO DO
             onTap: () {
@@ -91,6 +99,7 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           ToolbarIcon(
+            id: 1,
             iconPath: 'assets/icons/flash.svg',
             activeIconPath: 'assets/icons/flash_active.svg', // TO DO
             onTap: () {
@@ -101,9 +110,12 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           ToolbarIcon(
+            id: 2,
             iconPath: 'assets/icons/analysis.svg',
             activeIconPath: 'assets/icons/analysis_active.svg', // TO DO
             onTap: () {
+              currentFeature = 0;
+
               if (widgetCallingToolbar != startAnalysisWidgetName) {
                 shouldCalcRoiButtons = false;
                 isCameraDisposed = false;
@@ -113,6 +125,22 @@ class Toolbar extends StatelessWidget {
                 if (cameraController.value.isInitialized) {
                   cameraController.dispose();
                 }
+                if (screenshotTimer != null && screenshotTimer!.isActive) {
+                  screenshotTimer!.cancel();
+                }
+
+                // Toolbar zurücksetzen
+                selectedToolbarIcons = {
+                  0: false,
+                  1: false,
+                  2: true,
+                  3: false,
+                  4: false
+                };
+
+                // Filter zurücksetzen
+                deepArController.switchEffect(null);
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -125,6 +153,7 @@ class Toolbar extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           ToolbarIcon(
+            id: 3,
             iconPath: 'assets/icons/create.svg',
             activeIconPath: 'assets/icons/create_active.svg', // TO DO
             onTap: () {
@@ -136,23 +165,53 @@ class Toolbar extends StatelessWidget {
                 if (cameraController.value.isInitialized) {
                   cameraController.dispose();
                 }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        StartLookGenerator(title: 'Look Generator'),
-                  ),
-                );
+                if (screenshotTimer != null && screenshotTimer!.isActive) {
+                  screenshotTimer!.cancel();
+                }
+
+                // Toolbar zurücksetzen
+                selectedToolbarIcons = {
+                  0: false,
+                  1: false,
+                  2: false,
+                  3: true,
+                  4: false
+                };
+
+                // Filter zurücksetzen
+                deepArController.switchEffect(null);
+
+                // Navigieren zur StartLookGenerator-Seite
+                if (currentFeature == 1) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          StartLookGenerator(title: 'Look Generator'), // TO DO
+                    ),
+                    (route) => false, // Entfernt alle vorherigen Routen
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          StartLookGenerator(title: 'Look Generator'),
+                    ),
+                    //(route) => false, // Entfernt alle vorherigen Routen
+                  );
+                }
                 print("Create icon tapped");
               }
             },
           ),
           const SizedBox(height: 25),
           ToolbarIcon(
+            id: 4,
             iconPath: 'assets/icons/eye.svg',
             activeIconPath: 'assets/icons/eye_close.svg',
             onTap: () {
-             if (featureOneKey.currentState != null) {
+              if (featureOneKey.currentState != null) {
                 featureOneKey.currentState!.toggleWidgetHiding();
               }
               if (featureTwoKey.currentState != null) {

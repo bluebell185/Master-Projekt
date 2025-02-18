@@ -36,7 +36,6 @@ class _StartAnalysisState extends State<StartAnalysis> {
 
   @override
   Widget build(BuildContext context) {
-
     // if (!deepArController.isInitialized) {
     //   initializeDeepARController();
     // }
@@ -227,7 +226,10 @@ class _StartAnalysisState extends State<StartAnalysis> {
     });
 
     updateDataInDb();
-    
+
+    // Toolbar zurücksetzen
+    selectedToolbarIcons = {0: false, 1: false, 2: false, 3: false, 4: false};
+
     if (isGoingBackAllowedInNavigator) {
       isGoingBackAllowedInNavigator = false;
       Navigator.pop(context);
