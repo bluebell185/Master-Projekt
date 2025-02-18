@@ -14,6 +14,8 @@ import 'firebase_options.dart';
 late List<CameraDescription> camerasOfPhone;
 final DeepArController deepArController = DeepArController();
 
+int currentFeature = 0;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,12 +23,7 @@ Future<void> main() async {
   camerasOfPhone = await availableCameras();
 
   // Initialisierung DeepAR Kamera
-  deepArController.initialize(
-      androidLicenseKey:
-          "1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
-      iosLicenseKey:
-          "bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
-      resolution: Resolution.high);
+  initializeDeepARController();
 
   // Initialisierung Firebase
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +32,15 @@ Future<void> main() async {
   );
 
   runApp(const MyApp());
+}
+
+initializeDeepARController() {
+  deepArController.initialize(
+      androidLicenseKey:
+          "1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
+      iosLicenseKey:
+          "bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
+      resolution: Resolution.high);
 }
 
 class MyApp extends StatelessWidget {
@@ -194,7 +200,9 @@ class HomeScreen extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  "just one moment - we're checking if you have saved analysis results", style: TextStyle(color: Colors.grey[900]),),
+                                "just one moment - we're checking if you have saved analysis results",
+                                style: TextStyle(color: Colors.grey[900]),
+                              ),
                               duration: const Duration(seconds: 3),
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: Colors.pink[50],
@@ -215,6 +223,21 @@ class HomeScreen extends StatelessWidget {
                           });
                         },
                       ),
+// TODO ? =======
+//           // CTA Button unten, führt zu StartAnalysis()
+//           Positioned(
+//             left: 0,
+//             right: 0,
+//             bottom: 70,
+//             child: Center(
+//               child: PrimaryButton(
+//                 buttonText: 'continue',
+//                 onPressed: () {
+//                   Navigator.pushAndRemoveUntil(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) => StartAnalysis(title: 'Analysis'),
+// >>>>>>> dd57d1e (DeepAR-Kamera für Feature2 einbinden und Navigation anpassen, Bugfixing, Aufräumen)
                     ),
                   );
                 }

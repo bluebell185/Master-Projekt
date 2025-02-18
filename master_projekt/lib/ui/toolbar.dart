@@ -7,7 +7,6 @@ import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/feature_one.dart';
-import 'package:master_projekt/feature_two.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
@@ -131,9 +130,9 @@ class Toolbar extends StatelessWidget {
             onTap: () {
               if (widgetCallingToolbar != startLookGeneratorWidgetName) {
                 isCameraDisposed = false;
-                if (widgetCallingToolbar == featureTwoWidgetName) {
-                  isGoingBackAllowedInLookNavigator = true;
-                }
+                // if (widgetCallingToolbar == featureTwoWidgetName) {
+                //   isGoingBackAllowedInLookNavigator = true;
+                // }
                 if (cameraController.value.isInitialized) {
                   cameraController.dispose();
                 }
@@ -153,8 +152,11 @@ class Toolbar extends StatelessWidget {
             iconPath: 'assets/icons/eye.svg',
             activeIconPath: 'assets/icons/eye_close.svg',
             onTap: () {
-              if (featureOneKey.currentState != null) {
+             if (featureOneKey.currentState != null) {
                 featureOneKey.currentState!.toggleWidgetHiding();
+              }
+              if (featureTwoKey.currentState != null) {
+                featureTwoKey.currentState!.toggleWidgetHidingFeature2();
               }
               print("Eye icon tapped");
             },
@@ -194,6 +196,8 @@ class Toolbar extends StatelessWidget {
           _buildToolbarIcon(
             iconPath: 'assets/icons/analysis.svg',
             onTap: () {
+              currentFeature = 0;
+
               if (widgetCallingToolbar != startAnalysisWidgetName) {
                 shouldCalcRoiButtons = false;
                 isCameraDisposed = false;
@@ -204,6 +208,13 @@ class Toolbar extends StatelessWidget {
                 if (cameraController.value.isInitialized) {
                   cameraController.dispose();
                 }
+
+                // Filter zurücksetzen
+                deepArController.switchEffect(null);
+                
+                // if (currentFeature == 2 && deepArController.isInitialized){
+                //   deepArController.destroy();
+                // }
                 // Navigieren zur StartAnalysis-Seite
                 Navigator.push(
                   context,
@@ -212,6 +223,13 @@ class Toolbar extends StatelessWidget {
                   ),
                   //(route) => false, // Entfernt alle vorherigen Routen
                 );
+                // Navigator.pushAndRemoveUntil(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => StartAnalysis(title: 'Analysis'),
+                //   ),
+                //   (route) => false, // Entfernt alle vorherigen Routen
+                // );
                 print("Analysis icon tapped");
               }
             },
@@ -224,21 +242,39 @@ class Toolbar extends StatelessWidget {
               if (widgetCallingToolbar != startLookGeneratorWidgetName) {
                 isCameraDisposed = false;
 
-                if (widgetCallingToolbar == featureTwoWidgetName) {
-                  isGoingBackAllowedInLookNavigator = true;
-                }
+                // if (widgetCallingToolbar == featureTwoWidgetName) {
+                //   isGoingBackAllowedInLookNavigator = true;
+                // }
                 if (cameraController.value.isInitialized) {
                   cameraController.dispose();
                 }
+                // if (currentFeature != 2 && deepArController.isInitialized){
+                //   deepArController.destroy();
+                // }
+
+                // Filter zurücksetzen
+                deepArController.switchEffect(null);
+
                 // Navigieren zur StartLookGenerator-Seite
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        StartLookGenerator(title: 'Look Generator'),
-                  ),
-                  //(route) => false, // Entfernt alle vorherigen Routen
-                );
+                if (currentFeature == 1) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          StartLookGenerator(title: 'Look Generator'), // TO DO
+                    ),
+                    (route) => false, // Entfernt alle vorherigen Routen
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          StartLookGenerator(title: 'Look Generator'),
+                    ),
+                    //(route) => false, // Entfernt alle vorherigen Routen
+                  );
+                }
                 print("Create icon tapped");
               }
             },
@@ -250,8 +286,9 @@ class Toolbar extends StatelessWidget {
               if (featureOneKey.currentState != null) {
                 featureOneKey.currentState!.toggleWidgetHiding();
               }
-
-              // saveLook();
+              if (featureTwoKey.currentState != null) {
+                featureTwoKey.currentState!.toggleWidgetHidingFeature2();
+              }
               print("Eye icon tapped");
             },
           ),

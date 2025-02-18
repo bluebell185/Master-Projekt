@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
@@ -25,7 +26,8 @@ final GlobalKey<AnalysisResultsState> analysisResultsKey =
 
 bool showRecommendations =
     true; // boolean zum Anzeigen von Frame mit Box 2 und 3
-bool hideWidgets = false;
+bool hideWidgets =
+    false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
 
 final DraggableScrollableController draggableController =
     DraggableScrollableController();
@@ -109,11 +111,14 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   Widget build(BuildContext context) {
+    currentFeature = 1;
+
     return PopScope(
         canPop: false, // Verhindert das Zurücknavigieren
         child: ScreenWithDeeparCamera(
           deepArPreviewKey: GlobalKey(),
           isAfterAnalysis: true,
+          isFeatureOne: true,
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Stack(
@@ -169,7 +174,7 @@ class FeatureOneState extends State<FeatureOne> {
                       );
                     },
                   ),
-                if (showRecommendationList)
+                if (showRecommendationList && !hideWidgets)
                   ImageRecommendationsList(
                     images: imageLinks, // Preview-Images
                     filters: filterPaths, // Filter-Pfade

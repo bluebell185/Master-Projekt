@@ -6,6 +6,7 @@ import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
 import 'package:master_projekt/json_parse.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/results_check.dart';
 import 'package:master_projekt/scanning_animation.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
@@ -35,6 +36,11 @@ class _StartAnalysisState extends State<StartAnalysis> {
 
   @override
   Widget build(BuildContext context) {
+
+    // if (!deepArController.isInitialized) {
+    //   initializeDeepARController();
+    // }
+
     return PopScope(
         canPop: isGoingBackAllowedInNavigator,
         child: CameraWidget(

@@ -21,10 +21,12 @@ class ScreenWithDeeparCamera extends StatefulWidget {
   const ScreenWithDeeparCamera(
       {required this.child,
       required this.deepArPreviewKey,
-      required this.isAfterAnalysis});
+      required this.isAfterAnalysis,
+      required this.isFeatureOne});
   final Widget child;
   final GlobalKey deepArPreviewKey;
   final bool isAfterAnalysis;
+  final bool isFeatureOne;
 
   @override
   State<ScreenWithDeeparCamera> createState() => _ScreenWithDeeparCamera();
@@ -56,7 +58,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
         performanceMode: FaceDetectorMode.accurate);
     faceDetector = FaceDetector(options: detectorOptions);
 
-    if (widget.isAfterAnalysis && shouldCalcRoiButtons) {
+    if (widget.isAfterAnalysis && shouldCalcRoiButtons && currentFeature != 2) {
       // Starte regelmäßige Screenshots zur Erkennung der Features
       if (!Platform.isIOS) {
         startScreenshotTimer();
@@ -68,7 +70,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     faceDetector.close();
-    deepArController.destroy();
+    //deepArController.destroy();
     screenshotTimer?.cancel();
     super.dispose();
   }
@@ -81,10 +83,15 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     double scale = screenSize.aspectRatio * deepArController.aspectRatio;
     if (scale < 1) scale = 1 / scale;
 
+    if ((screenshotTimer == null ||
+        (screenshotTimer != null && !screenshotTimer!.isActive)) && currentFeature != 2) {
+      startScreenshotTimer();
+    }
+
     return RepaintBoundary(
         key: widget.deepArPreviewKey,
         child: Scaffold(
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.transparent,
           body: Stack(
             children: [
               // Hintergrund: CameraWidget
@@ -97,7 +104,7 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                           (deepArController.isInitialized || Platform.isIOS) &&
                                   runDeeparCamera
                               ? DeepArPreview(
-                                  key: ValueKey('DeepArPreview'),
+                                  key: ValueKey('DeepArPreview$currentFeature'),
                                   deepArController)
                               : //deepArController.hasPermission ?
                               CircularProgressIndicator()
@@ -106,13 +113,13 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                 ),
               ),
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild
-              if (showRecommendations)
+              if (showRecommendations && widget.isFeatureOne)
                 CustomPaint(
                   foregroundPainter: FacePainter(null, faces),
                 ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
-              if (showRecommendations)
+              if (showRecommendations && widget.isFeatureOne)
                 Offstage(
                   offstage: roiRectangles
                       .isEmpty, // Buttons nicht erstellen, wenn die Liste mit Rectangles leer ist

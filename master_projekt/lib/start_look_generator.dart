@@ -1,3 +1,4 @@
+import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/main.dart';
@@ -13,11 +14,16 @@ import 'package:master_projekt/ui/buttons.dart';
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
 
-// steuert, ob man zurück navigieren darf
-bool isGoingBackAllowedInLookNavigator = false; // hinzugefügt: LOOK Navigator
+// TODO
+bool isFaceAnalysisDoneAtLeastOnce = false;
+
+bool hideWidgets = false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
+
+// GlobalKey für FeatureTwo
+final GlobalKey<StartLookGeneratorState> featureTwoKey = GlobalKey<StartLookGeneratorState>();
 
 class StartLookGenerator extends StatefulWidget {
-  StartLookGenerator({super.key, required this.title});
+  StartLookGenerator({Key? key, required this.title}) : super(key: featureTwoKey);
 
   final String title;
 
@@ -132,42 +138,56 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
     isLookCreated = false;
   }
 
+  void toggleWidgetHidingFeature2() {
+    setState(() {
+      hideWidgets = !hideWidgets;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    currentFeature = 2;
+
+    // if (!deepArController.isInitialized) {
+    //   initializeDeepARController();
+    // }
+
     return PopScope(
-      canPop: isGoingBackAllowedInLookNavigator,
-      child: CameraWidget(
-        title: 'Kamerabild 1',
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              // Main content background container
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Title oben
-                    ScreenTitle(
-                      titleText: 'Look Generator',
-                      titleColor: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
+        canPop: false,
+        child: ScreenWithDeeparCamera(
+          deepArPreviewKey: GlobalKey(),
+          isAfterAnalysis: false,
+          isFeatureOne: false,
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: [
+                // Main content background container
+                !hideWidgets ? Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Title oben
+                      ScreenTitle(
+                        titleText: 'Look Generator',
+                        titleColor: Colors.white,
+                      ),
+                    ],
+                  ),
+                ) : Container(),
 
               Toolbar(
                 widgetCallingToolbar: startLookGeneratorWidgetName,
               ),
 
               // Falls noch kein Look erstellt wurde und das Pop-up nicht sichtbar ist, wird der erste CTA "create look" angezeigt
-              if (!showOccasionDescription && !isLookCreated)
-                Positioned(
+              if (!showOccasionDescription && !isLookCreated && !hideWidgets)
+                 Positioned(
                   left: 0,
                   right: 0,
                   bottom: 70,
@@ -203,7 +223,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                 ),
 
               // Sobald der Look erstellt wurde, werden zwei Buttons angezeigt: "modify look" und "save look"
-              if (isLookCreated)
+              if (isLookCreated && !hideWidgets)
                 Positioned(
                   left: 0,
                   right: 0,
