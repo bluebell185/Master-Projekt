@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/face_analysis.dart';
 import 'package:master_projekt/feature_one.dart';
 import 'package:master_projekt/json_parse.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/results_check.dart';
 import 'package:master_projekt/scanning_animation.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/ui/info_dialog.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -18,6 +22,9 @@ final String startAnalysisWidgetName = 'StartAnalysis';
 bool isAnalysisStarted = false;
 late RoisData roiData;
 bool isGoingBackAllowedInNavigator = false;
+
+// TODO
+bool isFaceAnalysisDoneAtLeastOnce = false;
 
 class StartAnalysis extends StatefulWidget {
   StartAnalysis({super.key, required this.title});
@@ -93,17 +100,48 @@ class _StartAnalysisState extends State<StartAnalysis> {
                             },
                           );
 
+                          if (cameraController.value.isInitialized) {
+                            cameraController.stopImageStream();
+                          }
+
                           try {
-                            // Gesichtsanalyse starten
-                            await FaceAnalysis.analyseColorsInFace(
-                                faceForAnalysis);
                             roiData = await loadRoisData();
+
+                            // Gesichtsanalyse starten
+                            bool faceAnalysed =
+                                await FaceAnalysis.analyseColorsInFace(
+                                    faceForAnalysis);
+
+                            if (!faceAnalysed) {
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const InfoDialog(
+                                    title: 'analysis not successfull',
+                                    content:
+                                        'the analysis was not successfull.\nplease repeat it under good lighting conditions and keep the camera still before starting the analysis.',
+                                    buttonText: 'ok',
+                                  );
+                                },
+                              );
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      StartAnalysis(title: 'Analysis'),
+                                ),
+                              );
+                            } else {
+                              setState(() {
+                                showRecommendations = false;
+                              });
+                            }
                           } catch (e) {
                             print('Error during analysis: $e');
                           } finally {
                             setState(() {
                               isLoading = false;
-                              showRecommendations = false;
                             });
                           }
                         },
@@ -119,6 +157,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
                           child: PrimaryButton(
                         buttonText: 'skip analysis',
                         onPressed: () async {
+                          roiData = await loadRoisData();
                           await stepsToGoToFeatureOne(context);
                         },
                       ))),
@@ -209,13 +248,21 @@ class _StartAnalysisState extends State<StartAnalysis> {
 
   Future<void> stepsToGoToFeatureOne(BuildContext context) async {
     if (cameraController.value.isInitialized) {
+      //cameraController.stopImageStream();
       await cameraController.dispose();
     }
+
     setState(() {
       showRecommendations = true;
       isCameraDisposed = true;
       shouldCalcRoiButtons = true;
     });
+
+    updateDataInDb();
+
+    // Toolbar zurücksetzen
+    selectedToolbarIcons = {0: false, 1: false, 2: false, 3: false, 4: false};
+
     if (isGoingBackAllowedInNavigator) {
       isGoingBackAllowedInNavigator = false;
       Navigator.pop(context);
@@ -227,6 +274,25 @@ class _StartAnalysisState extends State<StartAnalysis> {
         ),
         (route) => false, // Entfernt alle vorherigen Routen
       );
+    }
+  }
+
+  void updateDataInDb() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String useruid = user.uid;
+      final roiData = {
+        'blushCategory': blushCategory!.name,
+        'blushShapeCategory': blushShapeCategory!.name,
+        'browCategory': browCategory!.name,
+        'browShapeCategory': browShapeCategory!.name,
+        'eyeColorCategory': eyeColorCategory!.name,
+        'eyeShapeCategory': eyeShapeCategory!.name,
+        'lipCategory': lipCategory!.name,
+        'userId': useruid,
+      };
+      final userTable = FirebaseFirestore.instance.collection('roiData');
+      userTable.doc(useruid).set(roiData);
     }
   }
 }

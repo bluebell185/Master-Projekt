@@ -1,8 +1,10 @@
+import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/main.dart';
 import 'package:master_projekt/occasion_description.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/ui/save_look.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -13,11 +15,16 @@ import 'package:master_projekt/ui/buttons.dart';
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
 
-// steuert, ob man zurück navigieren darf
-bool isGoingBackAllowedInLookNavigator = false; // hinzugefügt: LOOK Navigator
+bool hideWidgets =
+    false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
+
+// GlobalKey für FeatureTwo
+final GlobalKey<StartLookGeneratorState> featureTwoKey =
+    GlobalKey<StartLookGeneratorState>();
 
 class StartLookGenerator extends StatefulWidget {
-  StartLookGenerator({super.key, required this.title});
+  StartLookGenerator({Key? key, required this.title})
+      : super(key: featureTwoKey);
 
   final String title;
 
@@ -27,6 +34,8 @@ class StartLookGenerator extends StatefulWidget {
 
 class StartLookGeneratorState extends State<StartLookGenerator> {
   bool isLoading = false; // Ladezustand
+
+  bool takeScreenshotAnimation = false;
 
   // steuert, ob Pop-Up im Stack angezeigt wird
   bool showOccasionDescription = false;
@@ -132,41 +141,53 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
     isLookCreated = false;
   }
 
+  void toggleWidgetHidingFeature2() {
+    setState(() {
+      hideWidgets = !hideWidgets;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    currentFeature = 2;
+
     return PopScope(
-      canPop: isGoingBackAllowedInLookNavigator,
-      child: CameraWidget(
-        title: 'Kamerabild 1',
+      canPop: false,
+      child: ScreenWithDeeparCamera(
+        deepArPreviewKey: GlobalKey(),
+        isAfterAnalysis: false,
+        isFeatureOne: false,
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: takeScreenshotAnimation ? Colors.white.withOpacity(0.4) :Colors.transparent,
           body: Stack(
             children: [
               // Main content background container
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Title oben
-                    ScreenTitle(
-                      titleText: 'Look Generator',
-                      titleColor: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
+              !hideWidgets
+                  ? Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 70),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Title oben
+                          ScreenTitle(
+                            titleText: 'Look Generator',
+                            titleColor: Colors.white,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
 
               Toolbar(
                 widgetCallingToolbar: startLookGeneratorWidgetName,
               ),
 
               // Falls noch kein Look erstellt wurde und das Pop-up nicht sichtbar ist, wird der erste CTA "create look" angezeigt
-              if (!showOccasionDescription && !isLookCreated)
+              if (!showOccasionDescription && !isLookCreated && !hideWidgets)
                 Positioned(
                   left: 0,
                   right: 0,
@@ -203,7 +224,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                 ),
 
               // Sobald der Look erstellt wurde, werden zwei Buttons angezeigt: "modify look" und "save look"
-              if (isLookCreated)
+              if (isLookCreated && !hideWidgets)
                 Positioned(
                   left: 0,
                   right: 0,
@@ -239,7 +260,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                       // CTA "save look": speichert den Look durch einen Screenshot
                       PrimaryButton(
                         buttonText: 'save look',
-                        onPressed: saveLook,
+                        onPressed: saveCreatedLook,
                       ),
                     ],
                   ),
@@ -270,8 +291,27 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
     }
   }
 
-  void saveLook() {
-    // TO DO
+  Future<void> saveCreatedLook() async {
     print('saveLook() aufgerufen – Screenshot wird erstellt.');
+
+    setState(() {
+      takeScreenshotAnimation = true;
+    });
+
+    await saveLook();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'screenshot successfully saved in gallery',
+          style: TextStyle(color: Colors.grey[800]!),
+        ),
+        backgroundColor: Color.fromARGB(255, 174, 214, 200),
+      ),
+    );
+
+     setState(() {
+      takeScreenshotAnimation = false;
+    });
   }
 }

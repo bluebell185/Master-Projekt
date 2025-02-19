@@ -1,26 +1,54 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:master_projekt/analysis_results.dart';
+import 'package:master_projekt/auth_widget.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 late List<CameraDescription> camerasOfPhone;
 final DeepArController deepArController = DeepArController();
 
+int currentFeature = 0;
+
+Map<int, bool> selectedToolbarIcons = {
+  0: false,
+  1: false,
+  2: false,
+  3: false,
+  4: false
+};
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Identifizieren der verbauten Kameras im Gerät
   camerasOfPhone = await availableCameras();
 
+  // Initialisierung DeepAR Kamera
+  initializeDeepARController();
+
+  // Initialisierung Firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MyApp());
+}
+
+initializeDeepARController() {
   deepArController.initialize(
       androidLicenseKey:
           "1d81a1e3d04ae4f558fb6cea2af08afbe173c8e660ce68c2be2a0ca981bce3c02703ded82b8cc3f9",
       iosLicenseKey:
           "bd36fd6e5b55bf93100f8a4188e1a16f797be4c07b102eb5a29c577511836491b050cf80020512f9",
       resolution: Resolution.high);
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +58,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Name TBD',
+      title: 'aissistant',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -42,6 +70,8 @@ class MyApp extends StatelessWidget {
 
 // Diese Klasse ruft den Homescreen auf, über den man durch den CTA-Button "continue" weitergeleitet wird
 class HomeScreen extends StatelessWidget {
+  final db = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,29 +142,196 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+                if (!snapshot.hasData) {
+                  // CTA Button unten, führt zu StartAnalysis()
+                  return Stack(children: [
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 140,
+                      child: Center(
+                        child: PrimaryButton(
+                          buttonText: 'continue',
+                          onPressed: () {
+                            // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
+                            getUserAnalysisData().then((roiData) {
+                              if (roiData != null) {
+                                fillAnalysisResultsIntoApp(roiData);
+                              }
+                            });
 
-          // CTA Button unten, führt zu StartAnalysis()
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 70,
-            child: Center(
-              child: PrimaryButton(
-                buttonText: 'continue',
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil (
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StartAnalysis(title: 'Analysis'),
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    StartAnalysis(title: 'Analysis'),
+                              ),
+                              (route) => false,
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                    (route) => false,
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 70,
+                      child: Center(
+                        child: PrimaryButton(
+                          buttonText: 'sign in',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AuthWidget(db),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  ]);
+                } else {
+                  return Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 70,
+                    child: Center(
+                      child: PrimaryButton(
+                        buttonText: 'continue',
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "just one moment - we're checking if you have saved analysis results",
+                                style: TextStyle(color: Colors.grey[900]),
+                              ),
+                              duration: const Duration(seconds: 3),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.pink[50],
+                            ),
+                          );
+                          // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
+                          getUserAnalysisData().then((roiData) {
+                            if (roiData != null) {
+                              fillAnalysisResultsIntoApp(roiData);
+                            }
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    StartAnalysis(title: 'Analysis'),
+                              ),
+                              (route) => false,
+                            );
+                          });
+                        },
+                      ),
+// TODO ? =======
+//           // CTA Button unten, führt zu StartAnalysis()
+//           Positioned(
+//             left: 0,
+//             right: 0,
+//             bottom: 70,
+//             child: Center(
+//               child: PrimaryButton(
+//                 buttonText: 'continue',
+//                 onPressed: () {
+//                   Navigator.pushAndRemoveUntil(
+//                     context,
+//                     MaterialPageRoute(
+//                       builder: (context) => StartAnalysis(title: 'Analysis'),
+// >>>>>>> dd57d1e (DeepAR-Kamera für Feature2 einbinden und Navigation anpassen, Bugfixing, Aufräumen)
+                    ),
                   );
-                },
-              ),
-            ),
-          ),
+                }
+              }),
         ],
       ),
     );
+  }
+
+  void fillAnalysisResultsIntoApp(DocumentSnapshot<Object?> roiData) {
+    String eyeColor = roiData.get('eyeColorCategory');
+    for (EyeColorCategory category in EyeColorCategory.values) {
+      if (category.name == eyeColor) {
+        eyeColorCategory = category;
+        break;
+      }
+    }
+
+    String eyeShape = roiData.get('eyeShapeCategory');
+    for (EyeShapeCategory category in EyeShapeCategory.values) {
+      if (category.name == eyeShape) {
+        eyeShapeCategory = category;
+        break;
+      }
+    }
+
+    String blushColor = roiData.get('blushCategory');
+    for (BlushCategory category in BlushCategory.values) {
+      if (category.name == blushColor) {
+        blushCategory = category;
+        break;
+      }
+    }
+
+    String blushShape = roiData.get('blushShapeCategory');
+    for (BlushShapeCategory category in BlushShapeCategory.values) {
+      if (category.name == blushShape) {
+        blushShapeCategory = category;
+        break;
+      }
+    }
+
+    String lipColor = roiData.get('lipCategory');
+    for (LipCategory category in LipCategory.values) {
+      if (category.name == lipColor) {
+        lipCategory = category;
+        break;
+      }
+    }
+
+    String browColor = roiData.get('browCategory');
+    for (BrowCategory category in BrowCategory.values) {
+      if (category.name == browColor) {
+        browCategory = category;
+        break;
+      }
+    }
+
+    String browShape = roiData.get('browShapeCategory');
+    for (BrowShapeCategory category in BrowShapeCategory.values) {
+      if (category.name == browShape) {
+        browShapeCategory = category;
+        break;
+      }
+    }
+  }
+
+  Future<DocumentSnapshot<Object?>?> getUserAnalysisData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String useruid = user.uid;
+      try {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('roiData')
+            .doc(useruid)
+            .get();
+
+        if (documentSnapshot.exists) {
+          return documentSnapshot;
+        } else {}
+      } catch (error) {
+        // TODO????
+      }
+    } else {}
+    return null;
   }
 }

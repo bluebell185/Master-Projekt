@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:master_projekt/main.dart';
+import 'package:master_projekt/ui/info_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
 String eyeColor = 'Augenfarbe noch nicht gefunden';
@@ -73,7 +74,6 @@ class _CameraWidgetState extends State<CameraWidget> {
 
       await cameraController.startImageStream((CameraImage image) async {
         // Das aktuelle Kamerabild muss nun in ein InputImage umgewandelt werden
-        // CameraDescription description = controller.description;
         final visionImage =
             inputImageFromCameraImage(image, selfieCam, cameraController);
 
@@ -87,9 +87,9 @@ class _CameraWidgetState extends State<CameraWidget> {
         if (!gotFaceForAnalysis &&
             detectedFaces.isNotEmpty &&
             detectedFaces.first.landmarks[FaceLandmarkType.leftEye] != null &&
-            detectedFaces.first.contours[FaceContourType.face] != null
-            && detectedFaces.first.leftEyeOpenProbability! > 0.6
-            && detectedFaces.first.rightEyeOpenProbability! > 0.6) {
+            detectedFaces.first.contours[FaceContourType.face] != null &&
+            detectedFaces.first.leftEyeOpenProbability! > 0.6 &&
+            detectedFaces.first.rightEyeOpenProbability! > 0.6) {
           gotFaceForAnalysis = true;
 
           faceForAnalysis = detectedFaces.first;
@@ -111,9 +111,9 @@ class _CameraWidgetState extends State<CameraWidget> {
 
           File(pathToSave).writeAsBytesSync(img.encodeJpg(imgImage));
 
-          if (cameraController.value.isInitialized) {
-            cameraController.stopImageStream();
-          }
+          // if (cameraController.value.isInitialized) {
+          //   cameraController.stopImageStream();
+          // }
         }
       });
       setState(() {});
@@ -122,8 +122,17 @@ class _CameraWidgetState extends State<CameraWidget> {
         switch (e.code) {
           case 'CameraAccessDenied':
             print("Access Camera Denied");
-            // TODO Error-Widget/-Anzeige -> Kamera wird benötigt
-            break;
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const InfoDialog(
+                  title: 'missing permissions',
+                  content:
+                      'you need to give permission for camera and microphone in order to use this app and its features. \n in order to give the permissions, close the app and open it again or open it in your settings and grant the permissions there.',
+                  buttonText: 'ok',
+                );
+              },
+            );
           default:
             print("Problem with permissions: $e");
             break;
@@ -178,7 +187,17 @@ class _CameraWidgetState extends State<CameraWidget> {
         return camera;
       }
     }
-    // TODO Error-Screen weil keine Front-Kamera erlaubt ist
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const InfoDialog(
+          title: 'no front camera detected',
+          content: 'you need to use a device with a front camera in order to use the app with all its features!',
+          buttonText: 'ok',
+        );
+      },
+    );
+
     return camerasOfPhone[0];
   }
 

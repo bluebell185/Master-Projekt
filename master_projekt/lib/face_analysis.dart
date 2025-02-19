@@ -1,29 +1,42 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:master_projekt/analysis_results.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FaceAnalysis {
-  static Future<void> analyseColorsInFace(Face face) async {
+  static Future<bool> analyseColorsInFace(Face face) async {
     final Directory tempDir = await getTemporaryDirectory();
     final String pathToSave =
         '${tempDir.path}/captured_image_for_color_detection.jpg';
     File imageCacheFile = File(pathToSave);
 
-    final img.Image? decodedImage =
-        img.decodeImage(imageCacheFile.readAsBytesSync());
-    if (decodedImage == null) throw 'Bild konnte nicht geladen werden.';
+    try {
+      final img.Image? decodedImage =
+          img.decodeImage(imageCacheFile.readAsBytesSync());
+      if (decodedImage == null) return false;
 
-    getAverageEyeColor(decodedImage, face);
-    getAverageLipColor(decodedImage, face);
-    getAverageEyebrowColor(decodedImage, face);
-    getAverageFaceColor(decodedImage, face);
+      getAverageEyeColor(decodedImage, face);
+      getAverageLipColor(decodedImage, face);
+      getAverageEyebrowColor(decodedImage, face);
+      getAverageFaceColor(decodedImage, face);
+    } catch (e) {
+      return false;
+    }
 
     getEyeShape(face);
     getFaceShape(face);
+
+// Form der Brauen wird (noch) nicht ermittelt/angezeigt - wird der Vollständigkeit halber aber trotzdem gefüllt
+    browShapeCategory = BrowShapeCategory.straight;
+
+    putDataIntoDb();
+
+    return true;
   }
 
   static void getEyeShape(Face face) {
@@ -271,6 +284,25 @@ class FaceAnalysis {
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit
         }
         return "beige"; // Im Zweifelsfall zurückgeben
+    }
+  }
+
+  static void putDataIntoDb() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String useruid = user.uid;
+      final roiData = {
+        'blushCategory': blushCategory!.name,
+        'blushShapeCategory': blushShapeCategory!.name,
+        'browCategory': browCategory!.name,
+        'browShapeCategory': browShapeCategory!.name,
+        'eyeColorCategory': eyeColorCategory!.name,
+        'eyeShapeCategory': eyeShapeCategory!.name,
+        'lipCategory': lipCategory!.name,
+        'userId': useruid,
+      };
+      final userTable = FirebaseFirestore.instance.collection('roiData');
+      userTable.doc(useruid).set(roiData);
     }
   }
 }
