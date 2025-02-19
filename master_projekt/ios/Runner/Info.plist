@@ -46,10 +46,12 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Die Kamera wird benötigt, um Make-up-Looks empfehlen und anzeigen zu können</string>
+	<string>The camera is required to recommend and display make-up looks</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Das Mikrofon wird für das Plugin benötigt.</string>
+	<string>The microphone is required for the DeepAR plugin but won't be really used.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Diese Berechtigung wird benötigt, um Bilder vom erstellten Look in der Gallerie speichern zu können.</string>
+	<string>This authorization is required to be able to save images of the created look in the gallery.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This authorization is required to be able to save images of the created look in the gallery.</string>
 </dict>
 </plist>

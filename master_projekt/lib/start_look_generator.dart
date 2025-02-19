@@ -4,6 +4,7 @@ import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/main.dart';
 import 'package:master_projekt/occasion_description.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
+import 'package:master_projekt/ui/save_look.dart';
 
 // UI-Elemente
 import 'package:master_projekt/ui/toolbar.dart';
@@ -14,13 +15,16 @@ import 'package:master_projekt/ui/buttons.dart';
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
 
-bool hideWidgets = false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
+bool hideWidgets =
+    false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
 
 // GlobalKey für FeatureTwo
-final GlobalKey<StartLookGeneratorState> featureTwoKey = GlobalKey<StartLookGeneratorState>();
+final GlobalKey<StartLookGeneratorState> featureTwoKey =
+    GlobalKey<StartLookGeneratorState>();
 
 class StartLookGenerator extends StatefulWidget {
-  StartLookGenerator({Key? key, required this.title}) : super(key: featureTwoKey);
+  StartLookGenerator({Key? key, required this.title})
+      : super(key: featureTwoKey);
 
   final String title;
 
@@ -146,33 +150,36 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
     currentFeature = 2;
 
     return PopScope(
-        canPop: false,
-        child: ScreenWithDeeparCamera(
-          deepArPreviewKey: GlobalKey(),
-          isAfterAnalysis: false,
-          isFeatureOne: false,
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Stack(
-              children: [
-                // Main content background container
-                !hideWidgets ? Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 70),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Title oben
-                      ScreenTitle(
-                        titleText: 'Look Generator',
-                        titleColor: Colors.white,
+      canPop: false,
+      child: ScreenWithDeeparCamera(
+        deepArPreviewKey: GlobalKey(),
+        isAfterAnalysis: false,
+        isFeatureOne: false,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            // hierrrrrr
+            children: [
+              // Main content background container
+              !hideWidgets
+                  ? Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 70),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Title oben
+                          ScreenTitle(
+                            titleText: 'Look Generator',
+                            titleColor: Colors.white,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ) : Container(),
+                    )
+                  : Container(),
 
               Toolbar(
                 widgetCallingToolbar: startLookGeneratorWidgetName,
@@ -180,7 +187,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
 
               // Falls noch kein Look erstellt wurde und das Pop-up nicht sichtbar ist, wird der erste CTA "create look" angezeigt
               if (!showOccasionDescription && !isLookCreated && !hideWidgets)
-                 Positioned(
+                Positioned(
                   left: 0,
                   right: 0,
                   bottom: 70,
@@ -252,7 +259,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                       // CTA "save look": speichert den Look durch einen Screenshot
                       PrimaryButton(
                         buttonText: 'save look',
-                        onPressed: saveLook,
+                        onPressed: saveCreatedLook,
                       ),
                     ],
                   ),
@@ -283,8 +290,19 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
     }
   }
 
-  void saveLook() {
-    // TO DO
+  Future<void> saveCreatedLook() async {
     print('saveLook() aufgerufen – Screenshot wird erstellt.');
+
+    await saveLook();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'screenshot successfully saved in gallery',
+          style: TextStyle(color: Colors.grey[800]!),
+        ),
+        backgroundColor: Color.fromARGB(255, 174, 214, 200),
+      ),
+    );
   }
 }
