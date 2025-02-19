@@ -103,7 +103,7 @@ class Toolbar extends StatelessWidget {
           const SizedBox(height: 25),
           ToolbarIcon(
             id: 1,
-            iconPath: 'assets/icons/flash.svg',
+            iconPath: 'assets/icons/flash_off.svg',
             activeIconPath: 'assets/icons/flash_active.svg', // TO DO
             onTap: () {
               // Ein-/Ausschalten des Blitzes & Icon austauschen
@@ -225,7 +225,7 @@ class Toolbar extends StatelessWidget {
           ToolbarIcon(
             id: 4,
             iconPath: 'assets/icons/eye.svg',
-            activeIconPath: 'assets/icons/eye_close.svg',
+            activeIconPath: 'assets/icons/eye_hidden.svg',
             onTap: () {
               if (featureOneKey.currentState != null) {
                 featureOneKey.currentState!.toggleWidgetHiding();
