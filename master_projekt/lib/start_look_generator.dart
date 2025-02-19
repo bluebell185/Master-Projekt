@@ -35,6 +35,8 @@ class StartLookGenerator extends StatefulWidget {
 class StartLookGeneratorState extends State<StartLookGenerator> {
   bool isLoading = false; // Ladezustand
 
+  bool takeScreenshotAnimation = false;
+
   // steuert, ob Pop-Up im Stack angezeigt wird
   bool showOccasionDescription = false;
 
@@ -156,9 +158,8 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
         isAfterAnalysis: false,
         isFeatureOne: false,
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: takeScreenshotAnimation ? Colors.white.withOpacity(0.4) :Colors.transparent,
           body: Stack(
-            // hierrrrrr
             children: [
               // Main content background container
               !hideWidgets
@@ -293,6 +294,10 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
   Future<void> saveCreatedLook() async {
     print('saveLook() aufgerufen – Screenshot wird erstellt.');
 
+    setState(() {
+      takeScreenshotAnimation = true;
+    });
+
     await saveLook();
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -304,5 +309,9 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
         backgroundColor: Color.fromARGB(255, 174, 214, 200),
       ),
     );
+
+     setState(() {
+      takeScreenshotAnimation = false;
+    });
   }
 }
