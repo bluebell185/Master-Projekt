@@ -16,7 +16,13 @@ final DeepArController deepArController = DeepArController();
 
 int currentFeature = 0;
 
-Map<int, bool> selectedToolbarIcons = {0: false, 1: false, 2: false, 3: false, 4: false};
+Map<int, bool> selectedToolbarIcons = {
+  0: false,
+  1: false,
+  2: false,
+  3: false,
+  4: false
+};
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -160,12 +166,13 @@ class HomeScreen extends StatelessWidget {
                               }
                             });
 
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
                                     StartAnalysis(title: 'Analysis'),
                               ),
+                              (route) => false,
                             );
                           },
                         ),
@@ -215,12 +222,13 @@ class HomeScreen extends StatelessWidget {
                             if (roiData != null) {
                               fillAnalysisResultsIntoApp(roiData);
                             }
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
                                     StartAnalysis(title: 'Analysis'),
                               ),
+                              (route) => false,
                             );
                           });
                         },

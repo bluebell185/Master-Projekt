@@ -95,8 +95,9 @@ class Toolbar extends StatelessWidget {
             iconPath: 'assets/icons/user.svg',
             activeIconPath: 'assets/icons/user_active.svg', // TO DO
             onTap: () {
-              // Navigation zum User-Account
               print("User icon tapped");
+              // Navigation zum User-Account-Management
+              showAccountPopup(context);
             },
           ),
           const SizedBox(height: 25),
@@ -241,7 +242,7 @@ class Toolbar extends StatelessWidget {
   }
 }
 
-  /*
+/*
   final String widgetCallingToolbar;
 
   const Toolbar({super.key, required this.widgetCallingToolbar});
@@ -503,15 +504,16 @@ class AccountPopup extends StatelessWidget {
               // Anzeige: Hinterlegte Email
               Text('e-mail: ${user.email ?? "not available"}'),
               const SizedBox(height: 16.0),
-              IntrinsicWidth( // https://stackoverflow.com/a/68431507
+              IntrinsicWidth(
+                  // https://stackoverflow.com/a/68431507
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                     // Passwort ändern
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[800]!,
-                    foregroundColor: Colors.white),
+                          backgroundColor: Colors.grey[800]!,
+                          foregroundColor: Colors.white),
                       onPressed: () {
                         Navigator.of(context).pop();
                         showDialog(
@@ -525,8 +527,8 @@ class AccountPopup extends StatelessWidget {
                     // Logout
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[800]!,
-                    foregroundColor: Colors.white),
+                          backgroundColor: Colors.grey[800]!,
+                          foregroundColor: Colors.white),
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
                         // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
@@ -539,8 +541,9 @@ class AccountPopup extends StatelessWidget {
 
                     // Account löschen - Der einzige Text mit Großbuchstaben, da das Thema ernst ist
                     ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom( backgroundColor: Colors.grey[800]!, foregroundColor: Colors.red),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[800]!,
+                          foregroundColor: Colors.red),
                       onPressed: () async {
                         final confirm = await showDialog<bool>(
                           context: context,
@@ -580,7 +583,12 @@ class AccountPopup extends StatelessWidget {
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text('Error deleting account: $e')),
+                                  content: Text(
+                                    'Error deleting account: $e',
+                                    style: TextStyle(color: Colors.grey[800]!),
+                                  ),
+                                  backgroundColor:
+                                      Color.fromARGB(255, 232, 147, 136)),
                             );
                           }
                         }
@@ -631,7 +639,11 @@ class PasswordResetDialog extends StatelessWidget {
               await FirebaseAuth.instance
                   .sendPasswordResetEmail(email: user!.email!);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('password reset e-mail sent')),
+                SnackBar(
+                  content: Text('password reset e-mail sent'),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.pink[50],
+                ),
               );
             }
             Navigator.of(context).pop();
@@ -650,4 +662,3 @@ void showAccountPopup(BuildContext context) {
     builder: (context) => const AccountPopup(),
   );
 }
-
