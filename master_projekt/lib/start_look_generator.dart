@@ -1,6 +1,4 @@
-import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/main.dart';
 import 'package:master_projekt/occasion_description.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
@@ -158,7 +156,9 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
         isAfterAnalysis: false,
         isFeatureOne: false,
         child: Scaffold(
-          backgroundColor: takeScreenshotAnimation ? Colors.white.withOpacity(0.4) :Colors.transparent,
+          backgroundColor: takeScreenshotAnimation
+              ? Colors.white.withOpacity(0.4)
+              : Colors.transparent,
           body: Stack(
             children: [
               // Main content background container
@@ -310,7 +310,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
       ),
     );
 
-     setState(() {
+    setState(() {
       takeScreenshotAnimation = false;
     });
   }
