@@ -242,9 +242,9 @@ class FaceAnalysis {
       case RoiColorTypes.eye:
         if (saturation < 0.5 && value > 0.8) {
           return "grey"; // Helle Farben mit geringer Sättigung
-        } else if (hue >= 60 && hue < 180) {
+        } else if (hue >= 60 && hue < 175) {
           return "green";
-        } else if (hue >= 180 && hue < 300) {
+        } else if (hue >= 175 && hue < 270) {
           return "blue";
         } // else if (hue >= 5 && hue < 60) {
         return "brown"; // Im Zweifelsfall die häufigste Augenfarbe zurückgeben
@@ -262,11 +262,11 @@ class FaceAnalysis {
       case RoiColorTypes.lip:
         if (saturation < 0.3 && value > 0.7) {
           return "pink"; // Dezente, blasse Lippen
-        } else if (hue >= 0 && hue < 30) {
+        } else if (hue >= 0 && hue < 21) {
           return "red"; // Rote Töne
-        } else if (hue >= 30 && hue < 60) {
+        } else if (hue >= 21 && hue < 41) {
           return "coral"; // Warme Korall- und Orangetöne
-        } else if (hue >= 60 && hue < 100 && saturation > 0.5) {
+        } else if (hue >= 41 && hue < 100 && saturation > 0.5) {
           return "nude"; // Dunklere Brauntöne
         }
         return "red"; // Im Zweifelsfall zurückgeben
@@ -274,13 +274,13 @@ class FaceAnalysis {
       case RoiColorTypes.face:
         if (saturation < 0.3 && value > 0.8) {
           return "light"; // Sehr helle Haut
-        } else if (hue >= 20 && hue < 50 && saturation < 0.7) {
+        } else if (hue >= 20 && hue < 45 && saturation < 0.7) {
           return "beige"; // Neutrale bis leicht gelbliche Haut
-        } else if (hue >= 15 && hue < 30 && saturation > 0.4) {
+        } else if (hue >= 45 && hue < 56 && saturation > 0.4) {
           return "olive"; // Haut mit olivfarbenen Untertönen
         } else if (hue >= 9 && hue < 30 && saturation > 0.6) {
           return "tanned"; // Dunklere Haut
-        } else if (saturation < 0.2 && value < 0.5) {
+        } else if (saturation > 0.4 && value < 0.5) { 
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit
         }
         return "beige"; // Im Zweifelsfall zurückgeben

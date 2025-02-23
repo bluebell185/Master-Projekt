@@ -174,11 +174,11 @@ class FeatureOneState extends State<FeatureOne> {
                       );
                     },
                   ),
-                if (showRecommendationList && !hideWidgets)
+                if (showRecommendationList && !hideWidgets && newSelectedTab != 'blush' && newSelectedTab != 'brows')
                   ImageRecommendationsList(
                     images: imageLinks, // Preview-Images
                     filters: filterPaths, // Filter-Pfade
-                    activeFilter: activeFilter, // Filter, der active ist
+                    initialActiveFilter: activeFilter, // Filter, der active ist
                     onTileTap: toggleFilter, // Callback für Tap-Event
                   ),
               ],

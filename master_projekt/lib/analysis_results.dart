@@ -59,7 +59,7 @@ LipCategory? lipCategory;
 BrowCategory? browCategory;
 BrowShapeCategory? browShapeCategory;
 
-List<String>  imageLinks = [];
+List<String> imageLinks = [];
 List<String> filterPaths = [];
 String? activeFilter; // Speichert den aktuell aktiven Filter
 
@@ -336,7 +336,7 @@ class AnalysisResultsState extends State<AnalysisResults> {
   Widget build(BuildContext context) {
     imageLinks = getImageLinks(widget.selectedTab);
     filterPaths = getFilters(widget.selectedTab);
-    
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -365,8 +365,6 @@ class AnalysisResultsState extends State<AnalysisResults> {
       ),
     );
   }
-
-  
 
   // ------------------------------- Content Box 1 ------------------------------->
   // -------------- enthält auswählbare Tabs für ROIs 'eyes' etc. ---------------->
@@ -490,18 +488,38 @@ class AnalysisResultsState extends State<AnalysisResults> {
             ),
           ),
           const SizedBox(height: 10),
-          const BodyText(
-            bodyText:
-                'Here is the content for Box 3...Tap on the look you desire to see it applied on your face.',
-          ),
+          if (widget.selectedTab != 'blush' && widget.selectedTab != 'brows')
+            const BodyText(
+              bodyText:
+                  'Here are some recommended looks. Tap on the look you desire to see it applied on your face.',
+            ),
 
-          ImageRecommendationsGrid(
-            images: imageLinks, // Preview-Images
-            filters: filterPaths, // Filter-Pfade
-            activeFilter: activeFilter, // Filter, der active ist
-            onTileTap: toggleFilter, // Callback für Tap-Event
-          ),
-
+          if (!showRecommendationList &&
+              widget.selectedTab != 'blush' &&
+              widget.selectedTab != 'brows')
+            ImageRecommendationsGrid(
+              images: imageLinks, // Preview-Images
+              filters: filterPaths, // Filter-Pfade
+              activeFilter: activeFilter, // Filter, der active ist
+              onTileTap: toggleFilter, // Callback für Tap-Event
+            ),
+          if (showRecommendationList &&
+              widget.selectedTab != 'blush' &&
+              widget.selectedTab != 'brows')
+            const SizedBox(height: 24),
+          if (showRecommendationList &&
+              widget.selectedTab != 'blush' &&
+              widget.selectedTab != 'brows')
+            const BodyText(
+              bodyText:
+                  'The recommendations are shown in the recommendations list on the top. \nChoose a look there!',
+            ),
+          if (widget.selectedTab == 'blush' || widget.selectedTab == 'brows')
+            const BodyText(
+              bodyText:
+                  'Here are some recommendations.\n\nThere are no looks yet for you to apply.',
+            ),
+          const SizedBox(height: 10),
           // Navigation zu Box 2
           Align(
             alignment: Alignment.bottomLeft,
@@ -517,71 +535,71 @@ class AnalysisResultsState extends State<AnalysisResults> {
 }
 
 // Extrahiert die Preview-Images
-  List<String> getImageLinks(String? selectedTab) {
-    switch (selectedTab) {
-      case 'lips':
-        return roiData.rois[0].lipColors
-            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
-                orElse: () =>
-                    emptyColorOrShapeDetail()) // sonst wird leeres Objekt zurückgegeben
-            .imageLinks; // greift auf imageLinks zu, nachdem das richtige Objekt gefunden wurde
-      case 'eyes':
-        return roiData.rois[0].eyeColors
-            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .imageLinks;
-      case 'blush':
-        return roiData.rois[0].faceColors
-            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .imageLinks;
-      case 'brows':
-        return roiData.rois[0].browColors
-            .firstWhere((item) => item.colorOrShape == browCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .imageLinks;
-      default:
-        return [];
-    }
+List<String> getImageLinks(String? selectedTab) {
+  switch (selectedTab) {
+    case 'lips':
+      return roiData.rois[0].lipColors
+          .firstWhere((item) => item.colorOrShape == lipCategory!.name,
+              orElse: () =>
+                  emptyColorOrShapeDetail()) // sonst wird leeres Objekt zurückgegeben
+          .imageLinks; // greift auf imageLinks zu, nachdem das richtige Objekt gefunden wurde
+    case 'eyes':
+      return roiData.rois[0].eyeColors
+          .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .imageLinks;
+    case 'blush':
+      return roiData.rois[0].faceColors
+          .firstWhere((item) => item.colorOrShape == blushCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .imageLinks;
+    case 'brows':
+      return roiData.rois[0].browColors
+          .firstWhere((item) => item.colorOrShape == browCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .imageLinks;
+    default:
+      return [];
   }
+}
 
 // Extrahiert die Filter-Pfade
-  List<String> getFilters(String? selectedTab) {
-    switch (selectedTab) {
-      case 'lips':
-        return roiData.rois[0].lipColors
-            .firstWhere((item) => item.colorOrShape == lipCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .filters;
-      case 'eyes':
-        return roiData.rois[0].eyeColors
-            .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .filters;
-      case 'blush':
-        return roiData.rois[0].faceColors
-            .firstWhere((item) => item.colorOrShape == blushCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .filters;
-      case 'brows':
-        return roiData.rois[0].browColors
-            .firstWhere((item) => item.colorOrShape == browCategory!.name,
-                orElse: () => emptyColorOrShapeDetail())
-            .filters;
-      default:
-        return [];
-    }
+List<String> getFilters(String? selectedTab) {
+  switch (selectedTab) {
+    case 'lips':
+      return roiData.rois[0].lipColors
+          .firstWhere((item) => item.colorOrShape == lipCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .filters;
+    case 'eyes':
+      return roiData.rois[0].eyeColors
+          .firstWhere((item) => item.colorOrShape == eyeColorCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .filters;
+    case 'blush':
+      return roiData.rois[0].faceColors
+          .firstWhere((item) => item.colorOrShape == blushCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .filters;
+    case 'brows':
+      return roiData.rois[0].browColors
+          .firstWhere((item) => item.colorOrShape == browCategory!.name,
+              orElse: () => emptyColorOrShapeDetail())
+          .filters;
+    default:
+      return [];
   }
+}
 
 // leere Rückgabewerte, falls keine ROI-Results gefunden wurde
-  ColorOrShapeDetail emptyColorOrShapeDetail() {
-    return ColorOrShapeDetail(
-      colorOrShape: '',
-      contentDescription: '',
-      goal: '',
-      recommendations: [],
-      techniques: [],
-      imageLinks: [],
-      filters: [],
-    );
-  }
+ColorOrShapeDetail emptyColorOrShapeDetail() {
+  return ColorOrShapeDetail(
+    colorOrShape: '',
+    contentDescription: '',
+    goal: '',
+    recommendations: [],
+    techniques: [],
+    imageLinks: [],
+    filters: [],
+  );
+}

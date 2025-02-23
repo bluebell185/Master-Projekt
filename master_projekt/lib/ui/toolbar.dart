@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:master_projekt/ui/login_feedback.dart';
 import 'package:master_projekt/ui/info_dialog.dart';
+import 'package:master_projekt/ui/tabs.dart';
 
 // Zustandsbehaftetes Icon für die Toolbar
 class ToolbarIcon extends StatefulWidget {
@@ -36,16 +37,18 @@ class ToolbarIcon extends StatefulWidget {
   State<ToolbarIcon> createState() => ToolbarIconState();
 }
 
-class ToolbarIconState extends State<ToolbarIcon> {
-  bool isActive = false;
+bool test = false;
+bool isActive = false;
 
+class ToolbarIconState extends State<ToolbarIcon> {
   @override
   void initState() {
     super.initState();
   }
 
   void _toggleActive() {
-    if (currentFeature == 0 || selectedToolbarIcons[2]!) {
+    if (currentFeature == 0 ||
+        (selectedToolbarIcons[2]! && currentFeature != 1)) {
       setState(() {
         isActive = !isActive;
       });
@@ -60,6 +63,9 @@ class ToolbarIconState extends State<ToolbarIcon> {
       onTap: () {
         _toggleActive();
         widget.onTap();
+        setState(() {
+          test = !test;
+        });
       },
       child: SizedBox(
         width: 24,
@@ -171,6 +177,10 @@ class Toolbar extends StatelessWidget {
                   screenshotTimer!.cancel();
                 }
 
+                showRecommendationList = false;
+                activeFilter = null;
+                selectedIndex = 5;
+
                 // Toolbar zurücksetzen
                 selectedToolbarIcons = {
                   0: false,
@@ -268,7 +278,10 @@ class AccountPopup extends StatelessWidget {
                 // Popup verlassen
                 IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    selectedToolbarIcons[0] = false;
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             ),
@@ -291,6 +304,8 @@ class AccountPopup extends StatelessWidget {
                     if (user != null) {
                       // Benutzer ist eingeloggt, SignInScreen schließen
                       authSubscription.cancel(); // Listener entfernen
+
+                      selectedToolbarIcons[0] = false;
 
                       Navigator.of(context).pop(); // Schließt den SignInScreen
                       Navigator.of(context).pop(); // Popup schließen
@@ -457,7 +472,10 @@ class AccountPopup extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[800]!,
                     textStyle: TextStyle(color: Colors.white)),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  selectedToolbarIcons[0] = false;
+                  Navigator.of(context).pop();
+                },
                 child:
                     const Text('cancel', style: TextStyle(color: Colors.white)),
               ),
