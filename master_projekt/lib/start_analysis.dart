@@ -31,9 +31,6 @@ bool isAnalysisStarted = false;
 late RoisData roiData;
 bool isGoingBackAllowedInNavigator = false;
 
-// TODO
-bool isFaceAnalysisDoneAtLeastOnce = false;
-
 class StartAnalysis extends StatefulWidget {
   StartAnalysis({super.key, required this.title});
 
@@ -43,13 +40,26 @@ class StartAnalysis extends StatefulWidget {
   State<StartAnalysis> createState() => _StartAnalysisState();
 }
 
+//bool isLoading = false; // Ladezustand Analyse
+bool faceAnalysed = false;
+
 class _StartAnalysisState extends State<StartAnalysis> {
-  bool isLoading = false; // Ladezustand
+  bool isLoadingForSkip = false; // Ladezustand Skip Analyse
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
         canPop: isGoingBackAllowedInNavigator,
+        // onPopInvokedWithResult: (bool didPop, Object? result) {
+        //   if (didPop) {
+        //     // Aktion, wenn das Pop-Ereignis erfolgreich war
+        //     final state =
+        //         context.findAncestorStateOfType<ScreenWithDeeparCameraState>();
+        //     state?.setState(() {});
+        //   } else {
+        //     print('Pop-Ereignis wurde blockiert.');
+        //   }
+        // },
         child: CameraWidget(
           title: 'Kamerabild 1',
           child: Scaffold(
@@ -90,69 +100,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
                         buttonText: eyeColorCategory == null
                             ? 'start analysis'
                             : 'repeat analysis',
-                        onPressed: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          // ScannerWidget in einem Overlay anzeigen
-                          await showDialog(
-                            context: context,
-                            barrierDismissible:
-                                false, // nicht manuell schließbar
-                            builder: (BuildContext context) {
-                              return Scaffold(
-                                backgroundColor: Colors.transparent,
-                                body: ScannerWidget(),
-                              );
-                            },
-                          );
-
-                          if (cameraController.value.isInitialized) {
-                            cameraController.stopImageStream();
-                          }
-
-                          try {
-                            roiData = await loadRoisData();
-
-                            // Gesichtsanalyse starten
-                            bool faceAnalysed =
-                                await FaceAnalysis.analyseColorsInFace(
-                                    faceForAnalysis);
-
-                            if (!faceAnalysed) {
-                              await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const InfoDialog(
-                                    title: 'analysis not successful',
-                                    content:
-                                        'the analysis was not successful.\nplease repeat it under good lighting conditions and keep the camera still before starting the analysis.',
-                                    buttonText: 'okay',
-                                  );
-                                },
-                              );
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      StartAnalysis(title: 'Analysis'),
-                                ),
-                              );
-                            } else {
-                              setState(() {
-                                showRecommendations = false;
-                              });
-                            }
-                          } catch (e) {
-                            print('Error during analysis: $e');
-                          } finally {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                        },
+                        onPressed: _performAnalysis,
                       ),
                     ),
                   ),
@@ -163,17 +111,40 @@ class _StartAnalysisState extends State<StartAnalysis> {
                       bottom: 70,
                       child: Center(
                           child: PrimaryButton(
-                        buttonText: 'skip analysis',
-                        onPressed: () async {
-                          roiData = await loadRoisData();
-                          await stepsToGoToFeatureOne(context);
-                        },
-                      ))),
+                              buttonText: 'skip analysis',
+                              onPressed: !isLoadingForSkip
+                                  ? () async {
+                                      setState(() {
+                                        isLoadingForSkip = true;
+                                      });
+                                      roiData = await loadRoisData();
+
+                                      setState(() {
+                                        isLoadingForSkip = false;
+                                      });
+
+                                      if (cameraController
+                                          .value.isStreamingImages) {
+                                        cameraController.stopImageStream();
+                                      }
+
+                                      await stepsToGoToFeatureOne(context);
+                                    }
+                                  : () {
+                                      print('Nicht am Laden');
+                                    }))),
+                if (isLoadingForSkip)
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 10,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      )),
                 if (!showRecommendations)
                   ResultsCheckPopUp(
                     popUpHeading: 'your analysis results',
                     analysisElements: [
-                      // TO DO: ROI-Analyse-Ergebnis aus den Tabs rausnehmen? Drinlassen, aber als default selected?
                       AnalysisElement(
                         number: 1,
                         title: 'Eye color',
@@ -254,10 +225,77 @@ class _StartAnalysisState extends State<StartAnalysis> {
         ));
   }
 
+  Future<void> _performAnalysis() async {
+    int minAnimationDuration = 3;
+
+    // Zeige den Lade-Dialog mit ScannerWidget an
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Verhindert das Schließen durch Tippen außerhalb
+      builder: (BuildContext context) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: ScannerWidget(), // Dein benutzerdefiniertes Widget
+          ),
+        );
+      },
+    );
+
+    try {
+      // Warte entweder auf die Mindestdauer oder den Abschluss der Operation, je nachdem, was länger dauert
+      await Future.wait([
+        test(),
+        Future.delayed(Duration(seconds: minAnimationDuration)),
+      ]);
+
+      final scannerWidgetState =
+          context.findAncestorStateOfType<ScannerWidgetState>();
+      scannerWidgetState?.setLoadingFalse();
+
+      if (!faceAnalysed) {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const InfoDialog(
+              title: 'analysis not successful',
+              content:
+                  'the analysis was not successful.\nplease repeat it under good lighting conditions and keep the camera still before starting the analysis.',
+              buttonText: 'okay',
+            );
+          },
+        );
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StartAnalysis(title: 'Analysis'),
+          ),
+        );
+      } else {
+        // Analyse war erfolgreich
+        setState(() {
+          showRecommendations = false;
+        });
+      }
+    } catch (e) {
+      print('Fehler während der Analyse: $e');
+    } finally {
+      // Schließe den Lade-Dialog
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> test() async {
+    roiData = await loadRoisData();
+    // Gesichtsanalyse starten
+    faceAnalysed = await FaceAnalysis.analyseColorsInFace(faceForAnalysis);
+  }
+
   Future<void> stepsToGoToFeatureOne(BuildContext context) async {
-    if (cameraController.value.isInitialized) {
-      //cameraController.stopImageStream();
-      await cameraController.dispose();
+    if (cameraController.value.isStreamingImages) {
+      cameraController.stopImageStream();
     }
 
     setState(() {

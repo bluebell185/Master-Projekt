@@ -159,6 +159,8 @@ class HomeScreen extends StatelessWidget {
                         child: PrimaryButton(
                           buttonText: 'continue',
                           onPressed: () {
+                            selectedToolbarIcons[2] = true;
+                            
                             // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
                             getUserAnalysisData().then((roiData) {
                               if (roiData != null) {
@@ -217,6 +219,9 @@ class HomeScreen extends StatelessWidget {
                               backgroundColor: Colors.pink[50],
                             ),
                           );
+
+                          selectedToolbarIcons[2] = true;
+
                           // Nutzerdaten holen und falls Analyse-Ergebnis vorhanden, einziehen
                           getUserAnalysisData().then((roiData) {
                             if (roiData != null) {

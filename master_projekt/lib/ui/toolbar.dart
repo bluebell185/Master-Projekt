@@ -60,14 +60,16 @@ class ToolbarIconState extends State<ToolbarIcon> {
   }
 
   void _toggleActive() {
-    if (currentFeature == 0 ||
-        (selectedToolbarIcons[2]! && currentFeature != 1)) {
-      setState(() {
-        isActive = !isActive;
-      });
-    } else {
+    // if (currentFeature == 0 ||
+    //     (selectedToolbarIcons[2]! && currentFeature != 1)) {
+    //   setState(() {
+    //     isActive = !isActive;
+    //   });
+    // } else {
+    if (!(widget.id == 2 && selectedToolbarIcons[2] == true)) {
       selectedToolbarIcons[widget.id] = !selectedToolbarIcons[widget.id]!;
     }
+    // }
   }
 
   @override
@@ -110,7 +112,7 @@ class Toolbar extends StatelessWidget {
           ToolbarIcon(
             id: 0,
             iconPath: 'assets/icons/user.svg',
-            activeIconPath: 'assets/icons/user_active.svg',
+            activeIconPath: 'assets/icons/user.svg',
             onTap: () {
               print("User icon tapped");
               // Navigation zum User-Account-Management
@@ -235,6 +237,7 @@ class Toolbar extends StatelessWidget {
                     );
                   },
                 );
+                selectedToolbarIcons[3] = false;
               }
               print("Create icon tapped");
             },
@@ -293,7 +296,7 @@ class AccountPopup extends StatelessWidget {
                 ),
                 const Center(
                   child: Heading(
-                    headingText: 'user account management',
+                    headingText: 'account management',
                   ),
                 ),
               ],
@@ -317,8 +320,6 @@ class AccountPopup extends StatelessWidget {
                     if (user != null) {
                       // Benutzer ist eingeloggt, SignInScreen schließen
                       authSubscription.cancel(); // Listener entfernen
-
-                      selectedToolbarIcons[0] = false;
 
                       Navigator.of(context).pop(); // Schließt den SignInScreen
                       Navigator.of(context).pop(); // Popup schließen
@@ -494,7 +495,6 @@ class AccountPopup extends StatelessWidget {
                     backgroundColor: Color(0xFF342C32),
                     textStyle: TextStyle(color: Colors.white)),
                 onPressed: () {
-                  selectedToolbarIcons[0] = false;
                   Navigator.of(context).pop();
                 },
                 child:

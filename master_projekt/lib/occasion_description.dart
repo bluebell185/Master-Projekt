@@ -117,17 +117,23 @@ class OccasionDescriptionState extends State<OccasionDescription> {
             const SizedBox(width: 10),
 
             // Question zur Occasion
-            RichText(
-              text: TextSpan(
-                style: const TextStyle(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: question.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
+            Expanded(
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Scrollbar(
+                      child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: question.title,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )))
           ],
         ),
         const SizedBox(height: 10),

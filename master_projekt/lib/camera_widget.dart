@@ -114,11 +114,15 @@ class _CameraWidgetState extends State<CameraWidget> {
             imgImage = convertBGRA8888(image);
           }
 
-          File(pathToSave).writeAsBytesSync(img.encodeJpg(imgImage));
+          File(pathToSave).writeAsBytes(img.encodeJpg(imgImage));
 
-          // if (cameraController.value.isInitialized) {
-          //   cameraController.stopImageStream();
-          // }
+          if (cameraController.value.isInitialized) {
+            Future.delayed(Duration(milliseconds: 100), () {
+              if (cameraController.value.isInitialized) {
+                cameraController.stopImageStream();
+              }
+            });
+          }
         }
       });
       setState(() {});
