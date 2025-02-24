@@ -1,6 +1,3 @@
-// Widget nach Willkommensbildschirm mit Login und Registrierung
-// Nutzt Firebase UI Elemente
-
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +7,12 @@ import 'package:master_projekt/start_analysis.dart';
 import 'dart:async';
 
 import 'package:master_projekt/verification_email.dart';
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Auth Widget: 
+                                  - Widget nach Willkommensbildschirm mit Login und Registrierung
+                                  - nutzt Firebase UI Elemente
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class AuthWidget extends StatefulWidget {
   const AuthWidget(FirebaseFirestore db, {super.key});

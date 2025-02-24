@@ -129,3 +129,5 @@ flutter:
     - family: Chicle
       fonts:
         - asset: assets/font/Chicle-Regular.ttf
+        - asset: assets/font/OpenSans-Italic-VariableFont_wdth,wght.ttf
+        - asset: assets/font/OpenSans-VariableFont_wdth,wght.ttf

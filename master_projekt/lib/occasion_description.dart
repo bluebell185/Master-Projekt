@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/ui/buttons.dart';
 import 'package:master_projekt/ui/tabs_for_occasion.dart';
 
-// Das Pop-Up zur Beschreibung der gewünschten Occasion
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Occasion Description: 
+                                  - Pop-Up zur Beschreibung der gewünschten Occasion bzw. des gewünschten Looks
+                                  - Speicherung der ausgewählten Antworten
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 // Pop Up
 class OccasionDescription extends StatefulWidget {
@@ -121,7 +125,6 @@ class OccasionDescriptionState extends State<OccasionDescription> {
                     text: question.title,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  // const TextSpan(text: '  '),
                 ],
               ),
             ),

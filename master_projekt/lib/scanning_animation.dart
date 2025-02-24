@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Scanning Animation: 
+                                  - eine grüne "Scanning-Linie", die über den Display travelled
+                                  - optisches Feedback für den User, während im Hintergrund die Gesichtsanalyse läuft
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class ScannerWidget extends StatefulWidget {
   const ScannerWidget({super.key});
 

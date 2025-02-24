@@ -231,7 +231,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                   },
                 ),
 
-              // Sobald der Look erstellt wurde, werden zwei Buttons angezeigt: "modify look" und "save look"
+              // Sobald der Look erstellt wurde, werden zwei Buttons angezeigt: "save look" und "modify look"
               if (isLookCreated && !hideWidgets)
                 Positioned(
                   left: 0,
@@ -240,8 +240,14 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // CTA "modify look": öffnet das Pop-up erneut mit bereits selektierten Antworten
+                      // CTA "save look": speichert den Look durch einen Screenshot
                       PrimaryButton(
+                        buttonText: 'save look',
+                        onPressed: saveCreatedLook,
+                      ),
+                      SizedBox(height: 15),
+                      // CTA "modify look": öffnet das Pop-up erneut mit bereits selektierten Antworten
+                      SecondaryButtonLight(
                         buttonText: 'modify look',
                         onPressed: () {
                           // Aktualisieren/Check, sodass die bisherigen Auswahlen übernommen werden
@@ -263,12 +269,6 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
                             isLookCreated = false;
                           });
                         },
-                      ),
-                      SizedBox(height: 15),
-                      // CTA "save look": speichert den Look durch einen Screenshot
-                      PrimaryButton(
-                        buttonText: 'save look',
-                        onPressed: saveCreatedLook,
                       ),
                     ],
                   ),

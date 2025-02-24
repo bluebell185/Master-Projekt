@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Recommendation Tile: 
+                                  - Kacheln, über die man einen Filter auswählen kann
+                                  - beinhalten Preview (ein Bild) des Looks/Filters
+                                  - Kacheln genutzt in Form eines Grids für die Galerie in Content-Box 3
+                                  - Kacheln genutzt in Form einer Liste, erscheint bei Tap auf ROI-Kästchen
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class RecommendationTile extends StatefulWidget {
   final String imageLink;
   final String label;
@@ -119,42 +127,14 @@ class ImageRecommendationsGrid extends StatelessWidget {
         return RecommendationTile(
           imageLink: imagePath,
           label: 'Look ${index + 1}',
-          isActive: activeFilter == filterPath.substring(0, filterPath.indexOf(".deep")),
+          isActive: activeFilter ==
+              filterPath.substring(0, filterPath.indexOf(".deep")),
           onTap: () => onTileTap(filterPath), // Filter-Logik auslösen
         );
       },
     );
   }
 }
-
-/*@override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // zwei Kacheln pro Zeile als Default
-        mainAxisSpacing: 10, // Vertikaler Abstand zwischen Kacheln
-        crossAxisSpacing: 10, // Horizontaler Abstand zwischen Kacheln
-        childAspectRatio: 4 / 3, // Seitenverhältnis
-      ),
-      itemCount: images.length,
-      itemBuilder: (context, index) {
-        final filterName = images[index]
-            .split('/')
-            .last
-            .split('_img')
-            .first; // aus Filterpfad den Filternamen extrahieren
-        return RecommendationTile(
-          imagePath: images[index],
-          label: filterName.replaceAll('_', ' '), // Kachel-Name
-          isActive: activeFilter == filterName, // Prüfen, ob Filter active ist
-          onTap: () => onTileTap(filterName), // Filter-Logik auslösen
-        );
-      },
-    );
-  }
-}*/
 
 class ImageRecommendationsList extends StatefulWidget {
   final List<String> images; // Preview-Images
@@ -212,7 +192,9 @@ class _ImageRecommendationsListState extends State<ImageRecommendationsList> {
                   child: RecommendationTile(
                     imageLink: imagePath,
                     label: 'Look ${index + 1}',
-                    isActive: activeFilter == filterPath.substring(0, filterPath.indexOf(".deep")), // Prüfen, ob aktiv
+                    isActive: activeFilter ==
+                        filterPath.substring(
+                            0, filterPath.indexOf(".deep")), // Prüfen, ob aktiv
                     onTap: () => handleTileTap(filterPath),
                   ),
                 ),

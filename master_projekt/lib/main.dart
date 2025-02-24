@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:deepar_flutter/deepar_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:master_projekt/analysis_results.dart';
@@ -10,6 +9,12 @@ import 'package:master_projekt/start_analysis.dart';
 import 'package:master_projekt/ui/buttons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Main Screen: 
+                                  - Initialisierung DeepAR und Firebase
+                                  - Willkommensscreen, der weiter zum Analyse-Screen führt
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 late List<CameraDescription> camerasOfPhone;
 final DeepArController deepArController = DeepArController();
@@ -75,12 +80,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(title: Text('Home')),
       body: Stack(
         children: [
           // Background Image
           Positioned.fill(
-            //
             child: Image(
               image: AssetImage('assets/images/homescreen_background.png'),
               fit: BoxFit.fill,
@@ -93,7 +96,6 @@ class HomeScreen extends StatelessWidget {
             left: 40,
             child: SizedBox(
               width: 240,
-              //height: 192,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -104,15 +106,14 @@ class HomeScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Sans Serif Collection',
-                      fontWeight: FontWeight.w400,
+                      fontSize: 24,
+                      fontFamily: 'Open Sans',
+                      fontWeight: FontWeight.w700,
                       height: 0,
                       letterSpacing: 0.40,
                     ),
                   ),
-                  SizedBox(height: 25), // 25px vertical gap
-
+                  SizedBox(height: 25),
                   Container(
                     width: 238,
                     height: 104,
@@ -122,8 +123,7 @@ class HomeScreen extends StatelessWidget {
                       'assets/logo.png',
                     ),
                   ),
-                  SizedBox(height: 10), // 25px vertical gap
-
+                  SizedBox(height: 25),
                   Text(
                     '- your personal make up guide',
                     textAlign: TextAlign.center,
@@ -132,8 +132,8 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
-                      fontFamily: 'Sans Serif Collection',
-                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Open Sans',
+                      fontWeight: FontWeight.w700,
                       height: 0,
                       letterSpacing: 0.32,
                     ),

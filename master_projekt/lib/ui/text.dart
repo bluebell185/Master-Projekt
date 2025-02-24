@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Typografie Elemente : 
+                                  - Screen Titel oben zentriert zum Anzeigen des Feature-Namens
+                                  - Heading und BodyText Definitionen für Content-Abbildung
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class ScreenTitle extends StatelessWidget {
   final String titleText;
   final Color titleColor;

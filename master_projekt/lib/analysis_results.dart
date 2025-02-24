@@ -9,6 +9,17 @@ import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
 import 'package:master_projekt/ui/text.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Analysis Results: 
+                                  - Regelwerk bzw. Festlegen der einzelnen ROI-Kategorien
+                                  - beinhaltet die textlichen und bildichen Reommendations
+                                    * Content-Box 1: ROI Auswahl
+                                    * Content-Box 2a/b: ROI Color/Shape
+                                    * Content-Box 3: Galerie der Looks
+                                  - Content-Logik
+                                  - Filter-Logik
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 // ---------------- Definition der verschiedenen Kategorien --------------->
 enum RoiColorTypes { eye, eyebrow, lip, face }
 
@@ -63,7 +74,7 @@ List<String> imageLinks = []; // Pfad der Preview-Bilder
 List<String> filterPaths = []; // Pfad der DeepAR-Filter
 String? activeFilter; // speichert den aktuell aktiven Filter
 
-// ------------------------------- Logik für Augenfarbe-Kategorie ------------------------------->
+// ------------------------------- Augenfarbe-Kategorie ------------------------------->
 void setEyeColorCategory(String colorValue) {
   switch (colorValue) {
     case 'blue':
@@ -77,7 +88,7 @@ void setEyeColorCategory(String colorValue) {
   }
 }
 
-// ------------------------------- Logik für Augenform-Kategorie ------------------------------->
+// ------------------------------- Augenform-Kategorie ------------------------------->
 void setEyeShapeCategory(String shapeValue) {
   switch (shapeValue) {
     case 'almond':
@@ -93,7 +104,7 @@ void setEyeShapeCategory(String shapeValue) {
   }
 }
 
-// ------------------------------- Logik für Blush-Farbe-Kategorie ------------------------------->
+// ------------------------------- Blush-Farbe-Kategorie ------------------------------->
 void setBlushCategory(String blushValue) {
   switch (blushValue) {
     case 'beige':
@@ -109,7 +120,7 @@ void setBlushCategory(String blushValue) {
   }
 }
 
-// ------------------------------- Logik für Blush-Form-Kategorie ------------------------------->
+// ------------------------------- Blush-Form-Kategorie ------------------------------->
 void setBlushShapeCategory(String blushShapeValue) {
   switch (blushShapeValue) {
     case 'oval':
@@ -121,7 +132,7 @@ void setBlushShapeCategory(String blushShapeValue) {
   }
 }
 
-// ------------------------------- Logik für Lippenfarbe-Kategorie ------------------------------->
+// ------------------------------- Lippenfarbe-Kategorie ------------------------------->
 void setLipCategory(String lipValue) {
   switch (lipValue) {
     case 'red':
@@ -135,7 +146,7 @@ void setLipCategory(String lipValue) {
   }
 }
 
-// ------------------------------- Logik für Augenbrauenfarbe-Kategorie ------------------------------->
+// ------------------------------- Augenbrauenfarbe-Kategorie ------------------------------->
 void setBrowCategory(String browValue) {
   switch (browValue) {
     case 'black':
@@ -147,7 +158,7 @@ void setBrowCategory(String browValue) {
   }
 }
 
-// ------------------------------- Logik für Augenbrauenform-Kategorie ------------------------------->
+// ------------------------------- Augenbrauenform-Kategorie ------------------------------->
 void setBrowShapeCategory(String browValue) {
   switch (browValue) {
     case 'thin':

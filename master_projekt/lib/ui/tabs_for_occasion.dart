@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Occasion Tabs: 
+                                  - interaktive Tabs für das Occasion-Description Pop-Up
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 // INTERACTIVE TABS
 class ScrollableTabsPopup extends StatefulWidget {
   final List<String> labels; // Liste der Tab Labels

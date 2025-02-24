@@ -171,7 +171,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
                       ))),
                 if (!showRecommendations)
                   ResultsCheckPopUp(
-                    popUpHeading: 'Your analysis results',
+                    popUpHeading: 'your analysis results',
                     analysisElements: [
                       // TO DO: ROI-Analyse-Ergebnis aus den Tabs rausnehmen? Drinlassen, aber als default selected?
                       AnalysisElement(

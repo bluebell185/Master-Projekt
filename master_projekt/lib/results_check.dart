@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:master_projekt/ui/buttons.dart';
 import 'package:master_projekt/ui/tabs_for_popup.dart';
 
-// Das Pop-Up zur Überprüfung der Analysis Results und möglicher Modifikation des Users
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Results Check: 
+                                  - Pop-Up mit den Ergebnissen der Analyse
+                                  - mögliche Modifikation durch User
+                                  - ggf. Speicherung der angepassten Key Facts
+                                  - CTA weiter zu den Recommendations
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 // Pop Up
 class ResultsCheckPopUp extends StatefulWidget {
@@ -56,7 +62,7 @@ class ResultsCheckPopUpState extends State<ResultsCheckPopUp> {
               widget.popUpHeading,
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 18,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Chicle',
               ),

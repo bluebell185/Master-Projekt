@@ -8,6 +8,11 @@ import 'package:image/image.dart' as img;
 import 'package:master_projekt/analysis_results.dart';
 import 'package:path_provider/path_provider.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Face Analysis: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class FaceAnalysis {
   static Future<bool> analyseColorsInFace(Face face) async {
     final Directory tempDir = await getTemporaryDirectory();
@@ -280,7 +285,7 @@ class FaceAnalysis {
           return "olive"; // Haut mit olivfarbenen Untertönen
         } else if (hue >= 9 && hue < 30 && saturation > 0.6) {
           return "tanned"; // Dunklere Haut
-        } else if (saturation > 0.4 && value < 0.5) { 
+        } else if (saturation > 0.4 && value < 0.5) {
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit
         }
         return "beige"; // Im Zweifelsfall zurückgeben

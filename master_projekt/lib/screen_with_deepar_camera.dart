@@ -17,6 +17,11 @@ import 'dart:ui' as ui;
 
 import 'package:master_projekt/ui/tabs.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Screen with DeepAR Camera: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class ScreenWithDeeparCamera extends StatefulWidget {
   const ScreenWithDeeparCamera(
       {required this.child,

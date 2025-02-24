@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Results Pop-Up Tabs: 
+                                  - interaktive Tabs für das Results-Check Pop-Up
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 // INTERACTIVE TABS
 class ScrollableTabsPopup extends StatefulWidget {
   final List<String> labels; // Liste der Tab Labels
@@ -12,7 +17,7 @@ class ScrollableTabsPopup extends StatefulWidget {
     super.key,
     required this.labels,
     required this.onTabSelected,
-    this.selectedTab, 
+    this.selectedTab,
   });
 
   @override

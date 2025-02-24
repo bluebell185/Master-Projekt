@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Info Dialog: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class InfoDialog extends StatelessWidget {
   final String title;
   final String content;
@@ -16,17 +21,21 @@ class InfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Color.fromARGB(255, 249, 224, 233),
-      title: Text(title,
-        textAlign: TextAlign.center,),
-      content: Text(content,
-        textAlign: TextAlign.center,),
+      title: Text(
+        title,
+        textAlign: TextAlign.center,
+      ),
+      content: Text(
+        content,
+        textAlign: TextAlign.center,
+      ),
       actionsAlignment: MainAxisAlignment.center, // Aktionen zentrieren
       actions: <Widget>[
         ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[800]!,
-                    foregroundColor: Colors.white),
-                      onPressed: () {
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey[800]!,
+              foregroundColor: Colors.white),
+          onPressed: () {
             Navigator.of(context).pop();
           },
           child: Text(buttonText),

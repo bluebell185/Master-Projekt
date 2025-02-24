@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Content Box 1 Tabs: 
+                                  - interaktive Tabs für die Content-Box 1 zur Auswahl von ROI
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 // INTERACTIVE TABS
 class ScrollableTabs extends StatefulWidget {
   final List<String> labels; // Liste der Tab Labels

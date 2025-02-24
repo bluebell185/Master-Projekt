@@ -9,6 +9,11 @@ import 'analysis_results.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/toolbar.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Feature One: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 final String featureOneWidgetName = 'FeatureOne';
 
 // GlobalKey für FeatureOne
@@ -174,7 +179,10 @@ class FeatureOneState extends State<FeatureOne> {
                       );
                     },
                   ),
-                if (showRecommendationList && !hideWidgets && newSelectedTab != 'blush' && newSelectedTab != 'brows')
+                if (showRecommendationList &&
+                    !hideWidgets &&
+                    newSelectedTab != 'blush' &&
+                    newSelectedTab != 'brows')
                   ImageRecommendationsList(
                     images: imageLinks, // Preview-Images
                     filters: filterPaths, // Filter-Pfade

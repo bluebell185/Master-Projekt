@@ -5,7 +5,11 @@ import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/json_parse.dart';
 import 'package:master_projekt/start_analysis.dart';
 
-// Accordion Widget, das die verschiedenen textlichen Recommendations in Analysis-Results darstellt.
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Accordion Widget: 
+                                  - aus-/einklappbares Element
+                                  - stellt die verschiedenen textlichen Recommendations in Analysis-Results dar
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class AccordionElement extends AccordionSection {
   AccordionElement({

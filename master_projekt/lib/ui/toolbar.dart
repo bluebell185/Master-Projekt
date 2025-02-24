@@ -274,7 +274,7 @@ class AccountPopup extends StatelessWidget {
       surfaceTintColor: Colors.transparent,
       insetPadding: const EdgeInsets.all(25.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -293,7 +293,7 @@ class AccountPopup extends StatelessWidget {
                 ),
                 const Center(
                   child: Heading(
-                    headingText: 'account management',
+                    headingText: 'user account management',
                   ),
                 ),
               ],
@@ -303,7 +303,7 @@ class AccountPopup extends StatelessWidget {
             if (user == null) ...[
               const Text(
                   'you are not logged in - please log in or register to store and retrieve your analysis results'),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 40),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF342C32),
@@ -425,15 +425,20 @@ class AccountPopup extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     // Account löschen - Der einzige Text mit Großbuchstaben, da das Thema ernst ist
-                    PrimaryButton(
-                      buttonText: 'DELETE ACCOUNT',
+                    SecondaryButtonDark(
+                      buttonText: 'delete account',
                       onPressed: () async {
                         final confirm = await showDialog<bool>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text('Confirm Account Deletion'),
+                            title: Align(
+                              alignment: Alignment.centerLeft,
+                              child: const Heading(
+                                  headingText: 'Confirm Account Deletion'),
+                            ),
                             content: const Text(
                                 'Are you sure you want to delete your account and the belonging stored analysis data? This action cannot be undone!'),
+                            actionsAlignment: MainAxisAlignment.center,
                             actions: [
                               TextButton(
                                 onPressed: () =>
@@ -510,13 +515,17 @@ class PasswordResetDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('change password'),
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: const Heading(headingText: 'change password'),
+      ),
       content:
           const Text('password reset instructions will be sent to your e-mail'),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: const Text('cancel'),
         ),
         TextButton(
           onPressed: () async {

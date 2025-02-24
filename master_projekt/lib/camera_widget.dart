@@ -10,6 +10,11 @@ import 'package:master_projekt/main.dart';
 import 'package:master_projekt/ui/info_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Camera Widget: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 String eyeColor = 'Augenfarbe noch nicht gefunden';
 String lipColor = 'Lippenfarbe noch nicht gefunden';
 String eyebrowColor = 'Augenbrauenfarbe noch nicht gefunden';
@@ -192,7 +197,8 @@ class _CameraWidgetState extends State<CameraWidget> {
       builder: (BuildContext context) {
         return const InfoDialog(
           title: 'no front camera detected',
-          content: 'you need to use a device with a front camera in order to use the app with all its features!',
+          content:
+              'you need to use a device with a front camera in order to use the app with all its features!',
           buttonText: 'ok',
         );
       },
