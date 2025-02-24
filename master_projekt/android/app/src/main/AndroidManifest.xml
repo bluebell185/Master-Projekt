@@ -7,7 +7,7 @@
                  android:maxSdkVersion="29" />
 
     <application
-        android:label="master_projekt"
+        android:label="aissistant"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"> <!-- Gal: For saving to album in API 29 :Gal-->

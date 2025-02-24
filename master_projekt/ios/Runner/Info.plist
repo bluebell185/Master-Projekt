@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Master Projekt</string>
+	<string>aissistant</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -48,7 +48,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>The camera is required to recommend and display make-up looks</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>The microphone is required for the DeepAR plugin but won't be really used.</string>
+	<string>The microphone is required for the DeepAR plugin but won't be used.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This authorization is required to be able to save images of the created look in the gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
