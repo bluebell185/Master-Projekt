@@ -20,7 +20,7 @@ class ScreenTitle extends StatelessWidget {
           style: TextStyle(
             color: titleColor,
             fontSize: 24,
-            fontFamily: 'Chicle', // TO DO: installieren
+            fontFamily: 'Chicle',
             fontWeight: FontWeight.w400,
             letterSpacing: 0.48,
           ),
@@ -49,7 +49,7 @@ class Heading extends StatelessWidget {
         style: TextStyle(
           color: headingColor,
           fontSize: 24,
-          fontFamily: 'Chicle', // TO DO: installieren
+          fontFamily: 'Chicle',
           fontWeight: FontWeight.w400,
           letterSpacing: 0.48,
         ),

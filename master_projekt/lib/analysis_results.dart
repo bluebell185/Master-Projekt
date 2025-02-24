@@ -426,9 +426,9 @@ class AnalysisResultsState extends State<AnalysisResults> {
           Text(
             '${widget.selectedTab} - your color',
             style: const TextStyle(
+              fontFamily: 'Chicle',
               color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontSize: 24,
             ),
           ),
           const SizedBox(height: 10), _getTabContentColor(widget.selectedTab!),
@@ -441,9 +441,9 @@ class AnalysisResultsState extends State<AnalysisResults> {
             Text(
               '${widget.selectedTab} - your shape',
               style: const TextStyle(
+                fontFamily: 'Chicle',
                 color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 24,
               ),
             ),
             const SizedBox(height: 10),
@@ -481,10 +481,10 @@ class AnalysisResultsState extends State<AnalysisResults> {
         children: [
           const Text(
             'recommendations',
-            style: TextStyle(
+            style: const TextStyle(
+              fontFamily: 'Chicle',
               color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontSize: 24,
             ),
           ),
           const SizedBox(height: 10),
