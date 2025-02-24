@@ -77,7 +77,7 @@ class BodyText extends StatelessWidget {
         style: TextStyle(
           color: bodyTextColor,
           fontSize: 14,
-          //fontFamily: 'Sans Serif', // TO DO: installieren
+          fontFamily: 'Sans Serif Collection',
           fontWeight: FontWeight.w400,
           letterSpacing: 0.48,
         ),

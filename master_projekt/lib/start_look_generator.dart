@@ -9,7 +9,13 @@ import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
-/*-------------- Look Generator: ruft das Pop-Up (OccasionDescrption) auf----------------*/
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Look Generator: 
+                                  - ruft das Pop-Up (OccasionDescrption) auf für Input zur passenden Filterauswahl
+                                  - Anwendung des Filters
+                                  - ermöglicht Modifikation des gegebenen Inputs
+                                  - ermöglicht Speichern des Looks durch einen Screenshot
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 final String startLookGeneratorWidgetName = 'StartLookGenerator';
 
@@ -31,8 +37,10 @@ class StartLookGenerator extends StatefulWidget {
 }
 
 class StartLookGeneratorState extends State<StartLookGenerator> {
-  bool isLoading = false; // Ladezustand
+  // Ladezustand
+  bool isLoading = false;
 
+  // Animation, wenn ein Screenshot gemacht wird
   bool takeScreenshotAnimation = false;
 
   // steuert, ob Pop-Up im Stack angezeigt wird
@@ -44,7 +52,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
   // um die selektierten Antworten zu speichern (zur Modifikation des Looks)
   Map<int, String> savedOptions = {};
 
-  // Questions im Pop-Up
+  // Questions im Pop-Up mit dazugehörigen Antwortmöglichkeiten "options"
   List<Question> questions = [
     Question(
       number: 1,

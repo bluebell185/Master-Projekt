@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/start_analysis.dart';
-import 'package:master_projekt/ui/login_feedback.dart';
 import 'dart:async';
 
 import 'package:master_projekt/verification_email.dart';
 
 class AuthWidget extends StatefulWidget {
-  const AuthWidget(FirebaseFirestore db, {Key? key}) : super(key: key);
+  const AuthWidget(FirebaseFirestore db, {super.key});
 
   @override
   _AuthWidgetState createState() => _AuthWidgetState();

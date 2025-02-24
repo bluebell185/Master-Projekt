@@ -59,13 +59,11 @@ LipCategory? lipCategory;
 BrowCategory? browCategory;
 BrowShapeCategory? browShapeCategory;
 
-List<String> imageLinks = [];
-List<String> filterPaths = [];
-String? activeFilter; // Speichert den aktuell aktiven Filter
+List<String> imageLinks = []; // Pfad der Preview-Bilder
+List<String> filterPaths = []; // Pfad der DeepAR-Filter
+String? activeFilter; // speichert den aktuell aktiven Filter
 
-// Beispielgerüst: Logik für die Augenfarbe-Kategorien?
-// 'colorValue' bestimmt die Farbkategorie
-// 'eyeColorCategory'
+// ------------------------------- Logik für Augenfarbe-Kategorie ------------------------------->
 void setEyeColorCategory(String colorValue) {
   switch (colorValue) {
     case 'blue':
@@ -79,6 +77,7 @@ void setEyeColorCategory(String colorValue) {
   }
 }
 
+// ------------------------------- Logik für Augenform-Kategorie ------------------------------->
 void setEyeShapeCategory(String shapeValue) {
   switch (shapeValue) {
     case 'almond':
@@ -94,7 +93,7 @@ void setEyeShapeCategory(String shapeValue) {
   }
 }
 
-// Beispielgerüst: Logik für die Blush-Kategorie?
+// ------------------------------- Logik für Blush-Farbe-Kategorie ------------------------------->
 void setBlushCategory(String blushValue) {
   switch (blushValue) {
     case 'beige':
@@ -110,6 +109,7 @@ void setBlushCategory(String blushValue) {
   }
 }
 
+// ------------------------------- Logik für Blush-Form-Kategorie ------------------------------->
 void setBlushShapeCategory(String blushShapeValue) {
   switch (blushShapeValue) {
     case 'oval':
@@ -121,7 +121,7 @@ void setBlushShapeCategory(String blushShapeValue) {
   }
 }
 
-// Beispielgerüst: Logik für die Lippen-Kategorie?
+// ------------------------------- Logik für Lippenfarbe-Kategorie ------------------------------->
 void setLipCategory(String lipValue) {
   switch (lipValue) {
     case 'red':
@@ -135,7 +135,7 @@ void setLipCategory(String lipValue) {
   }
 }
 
-// Beispielgerüst: Logik für die Augenbrauen-Kategorie?
+// ------------------------------- Logik für Augenbrauenfarbe-Kategorie ------------------------------->
 void setBrowCategory(String browValue) {
   switch (browValue) {
     case 'black':
@@ -147,6 +147,7 @@ void setBrowCategory(String browValue) {
   }
 }
 
+// ------------------------------- Logik für Augenbrauenform-Kategorie ------------------------------->
 void setBrowShapeCategory(String browValue) {
   switch (browValue) {
     case 'thin':
@@ -298,10 +299,8 @@ class AnalysisResultsState extends State<AnalysisResults> {
   }
 
   // -------------------------------- FILTER ANZEIGEN -------------------------------->
-  // Approach nach
-  // String? activeFilter; // Speichert den aktuell aktiven Filter
 
-// Toggle-Logik für Filter bei Kachel-Tap
+  // Toggle-Logik für Filter bei Kachel-Tap
   void toggleFilter(String filterPath) {
     setState(() {
       final filterName =
@@ -318,14 +317,13 @@ class AnalysisResultsState extends State<AnalysisResults> {
     });
   }
 
+  // Applikation eines DeepAR-Filters durch Aufrufen des Filterpfades in switchEffect()
   void _applyFilter(String filterPath) {
-    // String slot
     print("Applying filter: $filterPath");
     deepArController.switchEffect(filterPath);
-    // deepArController.switchEffect(filterPath, slot: slot);
-    // deepArController.switchEffect(withSlot: "lips", path: "assets/filters/$filterName.deepar");
   }
 
+  // Löschen eines DeepAR-Filters durch Aufrufen von "null" in switchEffect()
   void _clearFilter() {
     print("Removing filter");
     deepArController.switchEffect(null);

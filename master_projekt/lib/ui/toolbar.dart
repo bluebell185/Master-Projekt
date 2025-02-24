@@ -12,9 +12,22 @@ import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/start_analysis.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:master_projekt/ui/buttons.dart';
 import 'package:master_projekt/ui/login_feedback.dart';
 import 'package:master_projekt/ui/info_dialog.dart';
 import 'package:master_projekt/ui/tabs.dart';
+import 'package:master_projekt/ui/text.dart';
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Toolbar: 
+                                  - befindet sich oben rechts und dient auch zur Navigation
+                                  - enthält 5 Icons:
+                                    * user: öffnet den User-Account-Pop-Up
+                                    * flash: soll das Ein- und Ausschalten eines Blitzlichts ermöglichen
+                                    * analysis: Feature 1 -> führt die Gesichtsanalyse durch und gibt passende Recommendations + Filterapplikation
+                                    * create: Feature 2 -> ermöglicht die "Kreation" eines Looks durch Auswahl von Optionen + Filterapplikation
+                                    * eye: blendet nach Bedarf vorhandene Widgets ein/aus
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 // Zustandsbehaftetes Icon für die Toolbar
 class ToolbarIcon extends StatefulWidget {
@@ -97,7 +110,7 @@ class Toolbar extends StatelessWidget {
           ToolbarIcon(
             id: 0,
             iconPath: 'assets/icons/user.svg',
-            activeIconPath: 'assets/icons/user_active.svg', // TO DO
+            activeIconPath: 'assets/icons/user_active.svg',
             onTap: () {
               print("User icon tapped");
               // Navigation zum User-Account-Management
@@ -108,7 +121,7 @@ class Toolbar extends StatelessWidget {
           ToolbarIcon(
             id: 1,
             iconPath: 'assets/icons/flash_off.svg',
-            activeIconPath: 'assets/icons/flash_active.svg', // TO DO
+            activeIconPath: 'assets/icons/flash_active.svg',
             onTap: () {
               // Ein-/Ausschalten des Blitzes & Icon austauschen
               deepArController.toggleFlash();
@@ -119,7 +132,7 @@ class Toolbar extends StatelessWidget {
           ToolbarIcon(
             id: 2,
             iconPath: 'assets/icons/analysis.svg',
-            activeIconPath: 'assets/icons/analysis_active.svg', // TO DO
+            activeIconPath: 'assets/icons/analysis_active.svg',
             onTap: () {
               currentFeature = 0;
 
@@ -162,14 +175,11 @@ class Toolbar extends StatelessWidget {
           ToolbarIcon(
             id: 3,
             iconPath: 'assets/icons/create.svg',
-            activeIconPath: 'assets/icons/create_active.svg', // TO DO
+            activeIconPath: 'assets/icons/create_active.svg',
             onTap: () {
               if (widgetCallingToolbar != startLookGeneratorWidgetName &&
                   eyeColorCategory != null) {
                 isCameraDisposed = false;
-                // if (widgetCallingToolbar == featureTwoWidgetName) {
-                //   isGoingBackAllowedInLookNavigator = true;
-                // }
                 if (cameraController.value.isInitialized) {
                   cameraController.dispose();
                 }
@@ -199,7 +209,7 @@ class Toolbar extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          StartLookGenerator(title: 'Look Generator'), // TO DO
+                          StartLookGenerator(title: 'Look Generator'),
                     ),
                     (route) => false, // Entfernt alle vorherigen Routen
                   );
@@ -257,7 +267,7 @@ class AccountPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-// Popup für das User Account Management
+// Pop-Up für das User Account Management
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       backgroundColor: Color.fromARGB(255, 249, 224, 233),
@@ -268,24 +278,27 @@ class AccountPopup extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'account management',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      selectedToolbarIcons[0] = false;
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
-                // Popup verlassen
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    selectedToolbarIcons[0] = false;
-                    Navigator.of(context).pop();
-                  },
+                const Center(
+                  child: Heading(
+                    headingText: 'account management',
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 20),
 // Nutzer NICHT eingeloggt -> Login/Register-Option
             if (user == null) ...[
               const Text(
@@ -293,7 +306,7 @@ class AccountPopup extends StatelessWidget {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[800]!,
+                    backgroundColor: Color(0xFF342C32),
                     textStyle: TextStyle(color: Colors.white)),
                 onPressed: () async {
                   // Listener für Authentifizierungsstatus, damit sich der Login-Screen nach Login/Registrierung wieder schließt
@@ -368,18 +381,28 @@ class AccountPopup extends StatelessWidget {
 // User eingeloggt -> versch. Account-Optionen
             ] else ...[
               // Anzeige: Hinterlegte Email
-              Text('e-mail: ${user.email ?? "not available"}'),
-              const SizedBox(height: 16.0),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'e-mail: ',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: user.email ?? "not available",
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
               IntrinsicWidth(
                   // https://stackoverflow.com/a/68431507
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                     // Passwort ändern
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[800]!,
-                          foregroundColor: Colors.white),
+                    PrimaryButton(
+                      buttonText: 'change password',
                       onPressed: () {
                         Navigator.of(context).pop();
                         showDialog(
@@ -387,14 +410,11 @@ class AccountPopup extends StatelessWidget {
                           builder: (context) => const PasswordResetDialog(),
                         );
                       },
-                      child: const Text('change password'),
                     ),
-
+                    SizedBox(height: 20),
                     // Logout
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[800]!,
-                          foregroundColor: Colors.white),
+                    PrimaryButton(
+                      buttonText: 'log out',
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
                         // SnackBar-Nachricht anzeigen für visuelle Rückmeldung
@@ -402,14 +422,11 @@ class AccountPopup extends StatelessWidget {
                             'you successfully logged out', context);
                         Navigator.of(context).pop();
                       },
-                      child: const Text('log out'),
                     ),
-
+                    SizedBox(height: 20),
                     // Account löschen - Der einzige Text mit Großbuchstaben, da das Thema ernst ist
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[800]!,
-                          foregroundColor: Colors.red),
+                    PrimaryButton(
+                      buttonText: 'DELETE ACCOUNT',
                       onPressed: () async {
                         final confirm = await showDialog<bool>(
                           context: context,
@@ -451,7 +468,7 @@ class AccountPopup extends StatelessWidget {
                               SnackBar(
                                   content: Text(
                                     'Error deleting account: $e',
-                                    style: TextStyle(color: Colors.grey[800]!),
+                                    style: TextStyle(color: Color(0xFF342C32)),
                                   ),
                                   backgroundColor:
                                       Color.fromARGB(255, 232, 147, 136)),
@@ -459,18 +476,17 @@ class AccountPopup extends StatelessWidget {
                           }
                         }
                       },
-                      child: const Text('delete account'),
                     ),
                   ]))
             ],
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 40),
 
-            // Popup verlassen
+            // Pop-Up verlassen
             Align(
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[800]!,
+                    backgroundColor: Color(0xFF342C32),
                     textStyle: TextStyle(color: Colors.white)),
                 onPressed: () {
                   selectedToolbarIcons[0] = false;
@@ -480,6 +496,7 @@ class AccountPopup extends StatelessWidget {
                     const Text('cancel', style: TextStyle(color: Colors.white)),
               ),
             ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -524,7 +541,7 @@ class PasswordResetDialog extends StatelessWidget {
   }
 }
 
-// Popup triggern
+// Pop-Up triggern
 void showAccountPopup(BuildContext context) {
   showDialog(
     context: context,

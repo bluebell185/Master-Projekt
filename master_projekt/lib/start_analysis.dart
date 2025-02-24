@@ -17,6 +17,14 @@ import 'package:master_projekt/ui/toolbar.dart';
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/buttons.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Start Analysis: 
+                                  - führt Gesichtanalyse im Background durch
+                                  - Scanning-Animation
+                                  - ruft das Pop-Up mit Analyseergebnissen(ResulstsCheckPopUp) auf zum Check & Modifikation
+                                  - führt durch CTA weiter zu den Recommendations
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 final String startAnalysisWidgetName = 'StartAnalysis';
 
 bool isAnalysisStarted = false;
@@ -117,10 +125,10 @@ class _StartAnalysisState extends State<StartAnalysis> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return const InfoDialog(
-                                    title: 'analysis not successfull',
+                                    title: 'analysis not successful',
                                     content:
-                                        'the analysis was not successfull.\nplease repeat it under good lighting conditions and keep the camera still before starting the analysis.',
-                                    buttonText: 'ok',
+                                        'the analysis was not successful.\nplease repeat it under good lighting conditions and keep the camera still before starting the analysis.',
+                                    buttonText: 'okay',
                                   );
                                 },
                               );
