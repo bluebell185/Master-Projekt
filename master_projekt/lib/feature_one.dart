@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/ui/recomm_tiles.dart';
 import 'package:master_projekt/ui/tabs.dart';
@@ -7,6 +9,11 @@ import 'analysis_results.dart';
 // UI-Elemente
 import 'package:master_projekt/ui/text.dart';
 import 'package:master_projekt/ui/toolbar.dart';
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Feature One: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 final String featureOneWidgetName = 'FeatureOne';
 
@@ -22,10 +29,15 @@ class FeatureOne extends StatefulWidget {
 
 final GlobalKey<AnalysisResultsState> analysisResultsKey =
     GlobalKey<AnalysisResultsState>();
+// final GlobalKey<ScreenWithDeeparCameraState> screenWithDeeparKey =
+//     GlobalKey<ScreenWithDeeparCameraState>();
+
+bool setRebuild = false;
 
 bool showRecommendations =
     true; // boolean zum Anzeigen von Frame mit Box 2 und 3
-bool hideWidgets = false;
+bool hideWidgets =
+    false; // boolean, der vom Auge-Icon in der Toolbar angesprochen wird und die Sichtbarkeit der Komponenten bestimmt
 
 final DraggableScrollableController draggableController =
     DraggableScrollableController();
@@ -100,7 +112,7 @@ class FeatureOneState extends State<FeatureOne> {
         // Box 2/3 ist nicht (mehr) sichtbar, sobald ein Tab deselected wurde
         isBox2Or3Visible = false;
         showRecommendationList = false;
-      } else {
+      } else if (newSelectedTab != null) {
         // Box 2/3 ist sichtbar, sobald ein Tab ausgewählt wurde
         isBox2Or3Visible = true;
       }
@@ -109,11 +121,23 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   Widget build(BuildContext context) {
+    // int previousFeature = currentFeature;
+    // Future.delayed(Duration(seconds: 5), () {
+    //   if (previousFeature != 1) {
+    //     final state =
+    //         context.findAncestorStateOfType<ScreenWithDeeparCameraState>();
+    //     state?.setState(() {});
+    //   }
+    // });
+
+    currentFeature = 1;
+
     return PopScope(
         canPop: false, // Verhindert das Zurücknavigieren
         child: ScreenWithDeeparCamera(
           deepArPreviewKey: GlobalKey(),
           isAfterAnalysis: true,
+          isFeatureOne: true,
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Stack(
@@ -169,11 +193,14 @@ class FeatureOneState extends State<FeatureOne> {
                       );
                     },
                   ),
-                if (showRecommendationList)
+                if (showRecommendationList &&
+                    !hideWidgets &&
+                    newSelectedTab != 'blush' &&
+                    newSelectedTab != 'brows')
                   ImageRecommendationsList(
                     images: imageLinks, // Preview-Images
                     filters: filterPaths, // Filter-Pfade
-                    activeFilter: activeFilter, // Filter, der active ist
+                    initialActiveFilter: activeFilter, // Filter, der active ist
                     onTileTap: toggleFilter, // Callback für Tap-Event
                   ),
               ],
@@ -184,7 +211,7 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   void dispose() {
-    draggableController.dispose();
+    //draggableController.dispose();
     super.dispose();
   }
 

@@ -48,11 +48,14 @@ dependencies:
       ref: main
   path_provider: ^2.1.5
   flutter_svg: ^2.0.16
+
   firebase_core: ^3.9.0
   firebase_auth: ^5.3.4
   cloud_firestore: ^5.6.0
   firebase_ui_auth: ^1.16.0
   permission_handler: ^10.4.5
+
+  gal: ^2.3.1 
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +67,17 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: 5.0.0
+
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon_1.png"  # Pfad zu deinem Icon
+  #adaptive_icon_background: "#ffffff"  # Nur für Android (optional)
+  #adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"  # Optional
+  remove_alpha_ios: true # Icons with alpha channel are not allowed in the Apple App Store.
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -110,3 +124,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: Chicle
+      fonts:
+        - asset: assets/font/Chicle-Regular.ttf
+        - asset: assets/font/OpenSans-Italic-VariableFont_wdth,wght.ttf
+        - asset: assets/font/OpenSans-VariableFont_wdth,wght.ttf

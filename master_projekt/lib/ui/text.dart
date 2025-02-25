@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Typografie Elemente : 
+                                  - Screen Titel oben zentriert zum Anzeigen des Feature-Namens
+                                  - Heading und BodyText Definitionen für Content-Abbildung
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class ScreenTitle extends StatelessWidget {
   final String titleText;
   final Color titleColor;
@@ -20,7 +26,7 @@ class ScreenTitle extends StatelessWidget {
           style: TextStyle(
             color: titleColor,
             fontSize: 24,
-            fontFamily: 'Chicle', // TO DO: installieren
+            fontFamily: 'Chicle',
             fontWeight: FontWeight.w400,
             letterSpacing: 0.48,
           ),
@@ -49,7 +55,7 @@ class Heading extends StatelessWidget {
         style: TextStyle(
           color: headingColor,
           fontSize: 24,
-          fontFamily: 'Chicle', // TO DO: installieren
+          fontFamily: 'Chicle',
           fontWeight: FontWeight.w400,
           letterSpacing: 0.48,
         ),
@@ -77,7 +83,7 @@ class BodyText extends StatelessWidget {
         style: TextStyle(
           color: bodyTextColor,
           fontSize: 14,
-          //fontFamily: 'Sans Serif', // TO DO: installieren
+          fontFamily: 'Sans Serif Collection',
           fontWeight: FontWeight.w400,
           letterSpacing: 0.48,
         ),

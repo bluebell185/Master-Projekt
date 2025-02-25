@@ -7,7 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:master_projekt/main.dart';
+import 'package:master_projekt/ui/info_dialog.dart';
 import 'package:path_provider/path_provider.dart';
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Camera Widget: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 String eyeColor = 'Augenfarbe noch nicht gefunden';
 String lipColor = 'Lippenfarbe noch nicht gefunden';
@@ -73,7 +79,6 @@ class _CameraWidgetState extends State<CameraWidget> {
 
       await cameraController.startImageStream((CameraImage image) async {
         // Das aktuelle Kamerabild muss nun in ein InputImage umgewandelt werden
-        // CameraDescription description = controller.description;
         final visionImage =
             inputImageFromCameraImage(image, selfieCam, cameraController);
 
@@ -87,9 +92,9 @@ class _CameraWidgetState extends State<CameraWidget> {
         if (!gotFaceForAnalysis &&
             detectedFaces.isNotEmpty &&
             detectedFaces.first.landmarks[FaceLandmarkType.leftEye] != null &&
-            detectedFaces.first.contours[FaceContourType.face] != null
-            && detectedFaces.first.leftEyeOpenProbability! > 0.6
-            && detectedFaces.first.rightEyeOpenProbability! > 0.6) {
+            detectedFaces.first.contours[FaceContourType.face] != null &&
+            detectedFaces.first.leftEyeOpenProbability! > 0.6 &&
+            detectedFaces.first.rightEyeOpenProbability! > 0.6) {
           gotFaceForAnalysis = true;
 
           faceForAnalysis = detectedFaces.first;
@@ -109,10 +114,14 @@ class _CameraWidgetState extends State<CameraWidget> {
             imgImage = convertBGRA8888(image);
           }
 
-          File(pathToSave).writeAsBytesSync(img.encodeJpg(imgImage));
+          File(pathToSave).writeAsBytes(img.encodeJpg(imgImage));
 
           if (cameraController.value.isInitialized) {
-            cameraController.stopImageStream();
+            Future.delayed(Duration(milliseconds: 100), () {
+              if (cameraController.value.isInitialized) {
+                cameraController.stopImageStream();
+              }
+            });
           }
         }
       });
@@ -122,8 +131,17 @@ class _CameraWidgetState extends State<CameraWidget> {
         switch (e.code) {
           case 'CameraAccessDenied':
             print("Access Camera Denied");
-            // TODO Error-Widget/-Anzeige -> Kamera wird benötigt
-            break;
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const InfoDialog(
+                  title: 'missing permissions',
+                  content:
+                      'you need to give permission for camera and microphone in order to use this app and its features. \n in order to give the permissions, close the app and open it again or open it in your settings and grant the permissions there.',
+                  buttonText: 'ok',
+                );
+              },
+            );
           default:
             print("Problem with permissions: $e");
             break;
@@ -178,7 +196,18 @@ class _CameraWidgetState extends State<CameraWidget> {
         return camera;
       }
     }
-    // TODO Error-Screen weil keine Front-Kamera erlaubt ist
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const InfoDialog(
+          title: 'no front camera detected',
+          content:
+              'you need to use a device with a front camera in order to use the app with all its features!',
+          buttonText: 'ok',
+        );
+      },
+    );
+
     return camerasOfPhone[0];
   }
 
@@ -257,9 +286,9 @@ img.Image convertNV21(CameraImage image) {
   final height = image.height.toInt();
   Uint8List yuv420sp = image.planes[0].bytes;
 
-  // Initial conversion from NV21 to RGB
+  // Konversion: NV21 zu RGB
   final outImg =
-      img.Image(width: height, height: width); // Note the swapped dimensions
+      img.Image(width: height, height: width); // Width und Height vertauscht!
   final int frameSize = width * height;
 
   for (int j = 0, yp = 0; j < height; j++) {
@@ -291,8 +320,6 @@ img.Image convertNV21(CameraImage image) {
     }
   }
   return outImg;
-  // Rotate the image by 90 degrees (or 270 degrees if needed)
-  // return imglib.copyRotate(outImg, -90); // Use -90 for a 270 degrees rotation
 }
 
 void doFaceAnalysis() async {}

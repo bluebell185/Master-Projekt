@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:master_projekt/start_analysis.dart';
+
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Scanning Animation: 
+                                  - eine grüne "Scanning-Linie", die über den Display travelled
+                                  - optisches Feedback für den User, während im Hintergrund die Gesichtsanalyse läuft
+------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class ScannerWidget extends StatefulWidget {
   const ScannerWidget({super.key});
 
   @override
-  State<ScannerWidget> createState() => _ScannerWidgetState();
+  State<ScannerWidget> createState() => ScannerWidgetState();
 }
 
-class _ScannerWidgetState extends State<ScannerWidget>
+bool isLoading = false;
+
+class ScannerWidgetState extends State<ScannerWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
@@ -15,6 +24,8 @@ class _ScannerWidgetState extends State<ScannerWidget>
   void initState() {
     super.initState();
     print("Initializing AnimationController");
+
+    isLoading = true;
 
     // AnimationController initialisieren
     _animationController = AnimationController(
@@ -27,14 +38,20 @@ class _ScannerWidgetState extends State<ScannerWidget>
     _startAnimationSequence();
   }
 
+  void setLoadingFalse() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   Future<void> _startAnimationSequence() async {
     try {
-      print("Starting forward animation");
-      await _animationController.forward(from: 0.0);
-      print("Starting reverse animation");
-      await _animationController.reverse(from: 1.0);
-      print("Starting forward animation again");
-      await _animationController.forward(from: 0.0);
+      while (isLoading) {
+        print("Starting forward animation");
+        await _animationController.forward(from: 0.0);
+        print("Starting reverse animation");
+        await _animationController.reverse(from: 1.0);
+      }
 
       print("Animation sequence completed");
       if (mounted) {

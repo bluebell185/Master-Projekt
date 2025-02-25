@@ -2,6 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    JSON Parse: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 Future<RoisData> loadRoisData() async {
   final String response = await rootBundle.loadString('assets/data/rois.json');
   final Map<String, dynamic> jsonData = json.decode(response);

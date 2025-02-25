@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:deepar_flutter_lib/deepar_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/analysis_results.dart';
 import 'package:master_projekt/feature_one.dart';
@@ -17,17 +18,25 @@ import 'dart:ui' as ui;
 
 import 'package:master_projekt/ui/tabs.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Screen with DeepAR Camera: 
+                                  - TO DO
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class ScreenWithDeeparCamera extends StatefulWidget {
   const ScreenWithDeeparCamera(
-      {required this.child,
+      {super.key,
+      required this.child,
       required this.deepArPreviewKey,
-      required this.isAfterAnalysis});
+      required this.isAfterAnalysis,
+      required this.isFeatureOne});
   final Widget child;
   final GlobalKey deepArPreviewKey;
   final bool isAfterAnalysis;
+  final bool isFeatureOne;
 
   @override
-  State<ScreenWithDeeparCamera> createState() => _ScreenWithDeeparCamera();
+  State<ScreenWithDeeparCamera> createState() => ScreenWithDeeparCameraState();
 }
 
 Map<int, bool> selectedButtonsRois = {0: false, 1: false, 2: false, 3: false};
@@ -35,12 +44,18 @@ bool shouldCalcRoiButtons = true;
 
 Timer? screenshotTimer;
 
-class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
+class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
     with WidgetsBindingObserver {
   int i = 0;
   List<Face> faces = [];
   late FaceDetector faceDetector;
   bool runDeeparCamera = true;
+
+  void rebuildDeepArKamera() {
+    setState(() {
+      runDeeparCamera = true;
+    });
+  }
 
   @override
   void initState() {
@@ -56,10 +71,25 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
         performanceMode: FaceDetectorMode.accurate);
     faceDetector = FaceDetector(options: detectorOptions);
 
-    if (widget.isAfterAnalysis && shouldCalcRoiButtons) {
+    if ( //widget.isAfterAnalysis &&
+        shouldCalcRoiButtons &&
+            (screenshotTimer == null ||
+                (screenshotTimer != null && !screenshotTimer!.isActive)) &&
+            currentFeature != 2 &&
+            currentFeature != 0) {
       // Starte regelmäßige Screenshots zur Erkennung der Features
       if (!Platform.isIOS) {
         startScreenshotTimer();
+
+// Falls Widget nicht neu gebaut wurde
+        Future.delayed(Duration(seconds: 2), () {
+          if ((screenshotTimer == null ||
+                  (screenshotTimer != null && !screenshotTimer!.isActive)) &&
+              currentFeature != 2 &&
+              currentFeature != 0) {
+            startScreenshotTimer();
+          }
+        });
       }
     }
   }
@@ -68,7 +98,6 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     faceDetector.close();
-    deepArController.destroy();
     screenshotTimer?.cancel();
     super.dispose();
   }
@@ -81,10 +110,17 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     double scale = screenSize.aspectRatio * deepArController.aspectRatio;
     if (scale < 1) scale = 1 / scale;
 
+    if ((screenshotTimer == null ||
+            (screenshotTimer != null && !screenshotTimer!.isActive)) &&
+        currentFeature != 2 &&
+        currentFeature != 0) {
+      startScreenshotTimer();
+    }
+
     return RepaintBoundary(
         key: widget.deepArPreviewKey,
         child: Scaffold(
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.transparent,
           body: Stack(
             children: [
               // Hintergrund: CameraWidget
@@ -97,22 +133,19 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
                           (deepArController.isInitialized || Platform.isIOS) &&
                                   runDeeparCamera
                               ? DeepArPreview(
-                                  key: ValueKey('DeepArPreview'),
+                                  key: ValueKey('DeepArPreview$currentFeature'),
                                   deepArController)
-                              : //deepArController.hasPermission ?
-                              CircularProgressIndicator()
-                      //: TODO Error Widget wegen Kamera/Mikrofon-Berechtigung
-                      ),
+                              : CircularProgressIndicator()),
                 ),
               ),
               // CustomPaint für das Malen von Kästchen um ROIs auf das Bild
-              if (showRecommendations)
+              if (showRecommendations && widget.isFeatureOne)
                 CustomPaint(
                   foregroundPainter: FacePainter(null, faces),
                 ),
               // Vordergrund-Inhalt: UI-Features
               widget.child,
-              if (showRecommendations)
+              if (showRecommendations && widget.isFeatureOne)
                 Offstage(
                   offstage: roiRectangles
                       .isEmpty, // Buttons nicht erstellen, wenn die Liste mit Rectangles leer ist
@@ -178,9 +211,14 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
   }
 
   void startScreenshotTimer() {
+    screenshotTimer?.cancel();
     screenshotTimer =
-        Timer.periodic(const Duration(milliseconds: 800), (timer) {
-      takeScreenshot();
+        Timer.periodic(const Duration(milliseconds: 850), (timer) {
+      try {
+        takeScreenshot();
+      } catch (e) {
+        print("Screenshot fehlgeschlagen: $e");
+      }
     });
   }
 
@@ -188,13 +226,13 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     try {
       final boundary = widget.deepArPreviewKey.currentContext
           ?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) {
-        print("RepaintBoundary nicht gefunden");
+      if (boundary == null || boundary.debugNeedsPaint) {
+        print("RepaintBoundary nicht gefunden oder noch nicht fertig");
         return;
       }
 
       // Nimm das Bild als ui.Image
-      final ui.Image image = await boundary.toImage(pixelRatio: 1.0);
+      final ui.Image image = await boundary.toImage(pixelRatio: 1);
 
       // Wandle ui.Image in Byte-Daten um (PNG-Format)
       final ByteData? byteData =
@@ -206,28 +244,26 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
       final nv21Bytes =
           convertPngToNv21(pngBytes, image.width.toInt(), image.height.toInt());
 
-      // TODO iOS -> convertPngToBgra8888
+      // Hier wäre Konvertierung für iOS angedacht -> convertPngToBgra8888
 
       InputImage inputImage = InputImage.fromBytes(
         bytes: nv21Bytes,
         metadata: InputImageMetadata(
           size: Size(boundary.size.width, boundary.size.height),
           rotation: InputImageRotation
-              .rotation0deg, // TODO Passe je nach Kameraposition an
+              .rotation0deg, // Passe je nach Kameraposition an
           format: InputImageFormat.nv21,
-          bytesPerRow: boundary.size.width.toInt() *
-              4, // 4 Bytes pro Pixel bei RGBA/BGRA
+          bytesPerRow: boundary.size.width.toInt() * 
+              4, // 4 Bytes pro Pixel bei RGBA/BGRA (https://stackoverflow.com/a/52740776)
         ),
       );
 
       // Gesichtskonturen rausziehen
       if (inputImage.bytes != null && shouldCalcRoiButtons) {
         final detectedFaces = await faceDetector.processImage(inputImage);
-        //if (detectedFaces.isNotEmpty) {
         setState(() {
           faces = detectedFaces;
         });
-        //}
       }
     } catch (e) {
       print("Error bei der Aufnahme von Screenshot: $e");
@@ -235,20 +271,20 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
   }
 
   Uint8List convertPngToNv21(Uint8List pngBytes, int width, int height) {
-    // Schritt 1: PNG in RGBA umwandeln
+    // PNG in RGBA umwandeln
     final decodedImage = img.decodePng(pngBytes);
     if (decodedImage == null) {
       throw Exception("Failed to decode PNG");
     }
 
-    // Schritt 2: RGBA-Daten extrahieren
+    // RGBA-Daten extrahieren
     final rgbaBytes = decodedImage.getBytes();
 
-    // Schritt 3: NV21 initialisieren
+    // NV21 initialisieren
     final yuvSize = width * height + (width * height / 2).round();
     final nv21Bytes = Uint8List(yuvSize);
 
-    // Schritt 4: Konvertierung RGBA zu YUV (Y, U, V)
+    // Konvertierung RGBA zu YUV (Y, U, V) -> https://answers.opencv.org/question/207593/how-to-convert-rgb-to-yuvnv21/
     int yIndex = 0;
     int uvIndex = width * height;
 
@@ -259,11 +295,12 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
         final g = rgbaBytes[rgbaIndex + 1];
         final b = rgbaBytes[rgbaIndex + 2];
 
-        // YUV-Werte berechnen
+        // YUV-Werte berechnen 
         final y = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16;
         final u = ((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128;
         final v = ((112 * r - 94 * g - 18 * b + 128) >> 8) + 128;
 
+        // https://stackoverflow.com/a/52740776
         // Y in NV21 speichern
         nv21Bytes[yIndex++] = y.clamp(0, 255);
 
@@ -285,13 +322,14 @@ class _ScreenWithDeeparCamera extends State<ScreenWithDeeparCamera>
     if (state == AppLifecycleState.inactive ||
         state == AppLifecycleState.paused) {
       // App geht in den Hintergrund
-      //deepArController.stop(); // Pausieren des Kamera-Feeds
-      runDeeparCamera = false;
+      runDeeparCamera = false; // Pausieren des Kamera-Feeds
       print("Pause");
     } else if (state == AppLifecycleState.resumed) {
       // App kehrt zurück in den Vordergrund
-      //deepArController.start(); // Wiederaufnahme des Kamera-Feeds
-      runDeeparCamera = true;
+      runDeeparCamera = true; // Wiederaufnahme des Kamera-Feeds
+      if (screenshotTimer != null && !screenshotTimer!.isActive) {
+        startScreenshotTimer();
+      }
       print("Weiter");
     }
   }

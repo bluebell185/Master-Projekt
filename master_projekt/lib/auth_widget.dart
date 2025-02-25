@@ -1,19 +1,22 @@
-// Widget nach Willkommensbildschirm mit Login und Registrierung
-// Nutzt Firebase UI Elemente
-
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:master_projekt/analysis_results.dart';
+import 'package:master_projekt/main.dart';
 import 'package:master_projekt/start_analysis.dart';
-import 'package:master_projekt/ui/login_feedback.dart';
 import 'dart:async';
 
 import 'package:master_projekt/verification_email.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Auth Widget: 
+                                  - Widget nach Willkommensbildschirm mit Login und Registrierung
+                                  - nutzt Firebase UI Elemente
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 class AuthWidget extends StatefulWidget {
-  const AuthWidget(FirebaseFirestore db, {Key? key}) : super(key: key);
+  const AuthWidget(FirebaseFirestore db, {super.key});
 
   @override
   _AuthWidgetState createState() => _AuthWidgetState();
@@ -73,20 +76,42 @@ class _AuthWidgetState extends State {
               }
             });
 
-            // Falls der Nutzer angemeldet und verifiziert ist, gehe weiter zum Analysis-Screen
-            WidgetsBinding.instance.addPostFrameCallback(
-              (_) => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StartAnalysis(title: 'Analysis'),
+            selectedToolbarIcons[2] = true;
+
+            Future.delayed(Duration(seconds: 2), () {
+              // Falls der Nutzer angemeldet und verifiziert ist, gehe weiter zum Analysis-Screen
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StartAnalysis(title: 'Analysis'),
+                  ),
+                  (route) => false,
                 ),
-                (route) => false,
-              ),
-            );
+              );
+            });
           }
         }
 
-        return Container();
+        return Scaffold(
+            //appBar: AppBar(title: Text('Home')),
+            body: Stack(children: [
+          // Background Image
+          Positioned.fill(
+            //
+            child: Image(
+              image: AssetImage('assets/images/homescreen_background.png'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          Center(
+            child: SizedBox(
+              width: 50.0, // Breite des Indikators
+              height: 50.0, // Höhe des Indikators
+              child: CircularProgressIndicator(),
+            ),
+          )
+        ]));
       },
     );
   }
