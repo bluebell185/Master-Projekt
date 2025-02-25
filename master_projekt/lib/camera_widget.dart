@@ -286,9 +286,9 @@ img.Image convertNV21(CameraImage image) {
   final height = image.height.toInt();
   Uint8List yuv420sp = image.planes[0].bytes;
 
-  // Initial conversion from NV21 to RGB
+  // Konversion: NV21 zu RGB
   final outImg =
-      img.Image(width: height, height: width); // Note the swapped dimensions
+      img.Image(width: height, height: width); // Width und Height vertauscht!
   final int frameSize = width * height;
 
   for (int j = 0, yp = 0; j < height; j++) {
@@ -320,8 +320,6 @@ img.Image convertNV21(CameraImage image) {
     }
   }
   return outImg;
-  // Rotate the image by 90 degrees (or 270 degrees if needed)
-  // return imglib.copyRotate(outImg, -90); // Use -90 for a 270 degrees rotation
 }
 
 void doFaceAnalysis() async {}

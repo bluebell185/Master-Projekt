@@ -254,7 +254,7 @@ class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
               .rotation0deg, // Passe je nach Kameraposition an
           format: InputImageFormat.nv21,
           bytesPerRow: boundary.size.width.toInt() * 
-              4, // 4 Bytes pro Pixel bei RGBA/BGRA
+              4, // 4 Bytes pro Pixel bei RGBA/BGRA (https://stackoverflow.com/a/52740776)
         ),
       );
 
@@ -271,20 +271,20 @@ class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
   }
 
   Uint8List convertPngToNv21(Uint8List pngBytes, int width, int height) {
-    // Schritt 1: PNG in RGBA umwandeln
+    // PNG in RGBA umwandeln
     final decodedImage = img.decodePng(pngBytes);
     if (decodedImage == null) {
       throw Exception("Failed to decode PNG");
     }
 
-    // Schritt 2: RGBA-Daten extrahieren
+    // RGBA-Daten extrahieren
     final rgbaBytes = decodedImage.getBytes();
 
-    // Schritt 3: NV21 initialisieren
+    // NV21 initialisieren
     final yuvSize = width * height + (width * height / 2).round();
     final nv21Bytes = Uint8List(yuvSize);
 
-    // Schritt 4: Konvertierung RGBA zu YUV (Y, U, V)
+    // Konvertierung RGBA zu YUV (Y, U, V) -> https://answers.opencv.org/question/207593/how-to-convert-rgb-to-yuvnv21/
     int yIndex = 0;
     int uvIndex = width * height;
 
@@ -295,11 +295,12 @@ class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
         final g = rgbaBytes[rgbaIndex + 1];
         final b = rgbaBytes[rgbaIndex + 2];
 
-        // YUV-Werte berechnen
+        // YUV-Werte berechnen 
         final y = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16;
         final u = ((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128;
         final v = ((112 * r - 94 * g - 18 * b + 128) >> 8) + 128;
 
+        // https://stackoverflow.com/a/52740776
         // Y in NV21 speichern
         nv21Bytes[yIndex++] = y.clamp(0, 255);
 
