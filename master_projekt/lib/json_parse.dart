@@ -4,15 +4,18 @@ import 'package:flutter/services.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     JSON Parse: 
-                                  - TO DO
+                                  - Parsed die rois.json aus den Assets -> Das Regelwerk
+                                  - Speist Daten in untere Klassenstruktur, damit mit Objekten gearbeitet werden kann
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+// Ladevorgang
 Future<RoisData> loadRoisData() async {
   final String response = await rootBundle.loadString('assets/data/rois.json');
   final Map<String, dynamic> jsonData = json.decode(response);
   return RoisData.fromJson(jsonData);
 }
 
+// Klassenstruktur
 class RoisData {
   final List<Roi> rois;
 

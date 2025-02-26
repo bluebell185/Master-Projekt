@@ -20,7 +20,10 @@ import 'package:master_projekt/ui/tabs.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Screen with DeepAR Camera: 
-                                  - TO DO
+                                  - Beinhaltet die Anzeige der DeepAR-Preview
+                                  - child-Elemente von FeatureOne sind als "child" eingebunden, um die build-Prozesse zu entkoppeln
+                                  - Regelmäßig Aufnahme von Screenshots für Anzeige der ROI-Buttons (-> Konvertierung)
+                                  - Anzeige ROI-Buttons
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class ScreenWithDeeparCamera extends StatefulWidget {
@@ -81,7 +84,7 @@ class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
       if (!Platform.isIOS) {
         startScreenshotTimer();
 
-// Falls Widget nicht neu gebaut wurde
+      // Falls Widget nicht neu gebaut wurde
         Future.delayed(Duration(seconds: 2), () {
           if ((screenshotTimer == null ||
                   (screenshotTimer != null && !screenshotTimer!.isActive)) &&
@@ -178,7 +181,7 @@ class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
                                 case 3:
                                   tabToSelect = "brows";
                               }
-                              // Diese Methode wird verwendet, um auf den Zustand der übergeordneten StatefulWidget-Klasse (FeatureOne) zuzugreifen, da FeatureOne die Methode updateSelectedTab enthält.
+                              // Auf den Zustand der übergeordneten StatefulWidget-Klasse FeatureOne zugreifen, um State dort zu abzuändern
                               final featureOneState = context
                                   .findAncestorStateOfType<FeatureOneState>();
                               if (featureOneState != null) {

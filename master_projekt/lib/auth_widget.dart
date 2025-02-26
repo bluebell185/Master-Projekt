@@ -12,7 +12,7 @@ import 'package:master_projekt/verification_email.dart';
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Auth Widget: 
                                   - Widget nach Willkommensbildschirm mit Login und Registrierung
-                                  - nutzt Firebase UI Elemente
+                                  - Nutzt Firebase UI Elemente
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class AuthWidget extends StatefulWidget {
@@ -93,8 +93,8 @@ class _AuthWidgetState extends State {
           }
         }
 
+        // Übergangshintergrund bis alles vollständig geladen wurde
         return Scaffold(
-            //appBar: AppBar(title: Text('Home')),
             body: Stack(children: [
           // Background Image
           Positioned.fill(

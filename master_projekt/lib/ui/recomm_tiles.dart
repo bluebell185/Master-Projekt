@@ -123,12 +123,13 @@ class ImageRecommendationsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final imagePath = images[index];
         final filterPath = filters[index];
+        final filterPathShortened = filterPath.substring(0, filterPath.indexOf(".deep"));
 
         return RecommendationTile(
           imageLink: imagePath,
           label: 'Look ${index + 1}',
           isActive: activeFilter ==
-              filterPath.substring(0, filterPath.indexOf(".deep")),
+              filterPathShortened,
           onTap: () => onTileTap(filterPath), // Filter-Logik auslösen
         );
       },
@@ -193,8 +194,7 @@ class _ImageRecommendationsListState extends State<ImageRecommendationsList> {
                     imageLink: imagePath,
                     label: 'Look ${index + 1}',
                     isActive: activeFilter ==
-                        filterPath.substring(
-                            0, filterPath.indexOf(".deep")), // Prüfen, ob aktiv
+                        filterPath, // Prüfen, ob aktiv
                     onTap: () => handleTileTap(filterPath),
                   ),
                 ),
@@ -204,68 +204,3 @@ class _ImageRecommendationsListState extends State<ImageRecommendationsList> {
         ));
   }
 }
-
-// gerade auskommentiert
-//   @override
-//   Widget build(BuildContext context) {
-//     return SingleChildScrollView(
-//       padding: const EdgeInsets.only(top: 40),
-//       scrollDirection: Axis.horizontal, // Horizontal scrollen
-//       child: Container(
-//       height: 150,
-//        child:
-//       Row(
-//         mainAxisSize: MainAxisSize.min, // Row passt sich der Kindergröße an
-//         children: List.generate(images.length, (index) {
-//           final imagePath = images[index]; // aktuelles Preview-Image
-//           final filterPath = filters[index]; // dazu passender Filter-Pfad
-
-//           return Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 5.0),
-//             child: SizedBox(
-//               width: 150,
-//               child: RecommendationTile(
-//                 imageLink: imagePath,
-//                 label: 'Look ${index + 1}',
-//                 isActive: activeFilter == filterPath,
-//                 onTap: () => onTileTap(filterPath),
-//               ),
-//             ),
-//           );
-//         }),
-//       ),
-//       ),
-//     );
-//   }
-// }
-
-/*
-class ImageRecommendationsList extends StatelessWidget {
-  final List<String> images;
-
-  const ImageRecommendationsList({
-    super.key,
-    required this.images,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: images.map((image) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-            child: SizedBox(
-              width: 150, // Fixed width for horizontal tiles
-              child: RecommendationTile(
-                imagePath: image,
-                label: 'Look ${images.indexOf(image) + 1}',
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}*/

@@ -5,6 +5,14 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:master_projekt/camera_widget.dart';
 import 'package:master_projekt/feature_one.dart';
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------
+                    Face Painter: 
+                                  - Berechnet aus Gesichtskoordinaten die Rechtecke um die ROIs rechtes Auge, linke Wange, linke Augenbraue und Mund
+                                  - Fügt Rechteckdaten der Liste für die Buttons hinzu
+                                  - Triggert Rebuild für jeden neuen Gesichtsdatensatz
+                                  - Steuert das Verweinden der Buttons, wenn das DraggableSheet hoch gezogen wird
+------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 List<Rect> roiRectangles = [];
 
 class FacePainter extends CustomPainter {
@@ -17,17 +25,7 @@ class FacePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint contourPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
-      ..color = Colors.grey[600]!;
-
-    // TODO Farbe benutzen, wenn Box selected wird
-    final Paint contourPaintSelected = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
-      ..color = Color(0xFFFFDCE8);
-
+    // Ermitteln der aktuellen Höhe des Draggable Sheet mit den Recommendations
     double draggedHeightOfDraggableSheet = draggableController.size;
     double draggableSheetHeightInPixels = draggableController.sizeToPixels(draggedHeightOfDraggableSheet);
 
@@ -91,7 +89,7 @@ class FacePainter extends CustomPainter {
       // Rechteck erstellen
       Rect mouthRect = Rect.fromLTRB(
           mouthLeftPos.x.toDouble() - 10,
-          mouthBottomPos.y.toDouble() - 40,
+          mouthBottomPos.y.toDouble() - 45,
           mouthRightPos.x.toDouble() + 10,
           mouthBottomPos.y.toDouble() + 10);
       //canvas.drawRect(mouthRect, contourPaint);
@@ -114,8 +112,6 @@ class FacePainter extends CustomPainter {
       //canvas.drawRect(leftEyebrow, contourPaint);
       roiRectangles.add(leftEyebrow);
     }
-
-    // TODO: was zeichnen, wenn else? -> sonst gerade nichts - leeres Bild - "flackern"
   }
 
   @override

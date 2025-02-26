@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:master_projekt/analysis_results.dart';
-import 'package:master_projekt/start_look_generator.dart';
+import 'package:master_projekt/start_look_generator.dart' as feature2;
 import 'package:master_projekt/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:master_projekt/camera_widget.dart';
@@ -60,16 +60,9 @@ class ToolbarIconState extends State<ToolbarIcon> {
   }
 
   void _toggleActive() {
-    // if (currentFeature == 0 ||
-    //     (selectedToolbarIcons[2]! && currentFeature != 1)) {
-    //   setState(() {
-    //     isActive = !isActive;
-    //   });
-    // } else {
     if (!(widget.id == 2 && selectedToolbarIcons[2] == true)) {
       selectedToolbarIcons[widget.id] = !selectedToolbarIcons[widget.id]!;
     }
-    // }
   }
 
   @override
@@ -79,7 +72,7 @@ class ToolbarIconState extends State<ToolbarIcon> {
         _toggleActive();
         widget.onTap();
         setState(() {
-          test = !test;
+          test = !test; // TODO
         });
       },
       child: SizedBox(
@@ -151,6 +144,12 @@ class Toolbar extends StatelessWidget {
                   screenshotTimer!.cancel();
                 }
 
+                if (hideWidgets) {
+                  hideWidgets = false;
+                }
+
+                selectedIndex = null;
+
                 // Toolbar zurücksetzen
                 selectedToolbarIcons = {
                   0: false,
@@ -179,7 +178,8 @@ class Toolbar extends StatelessWidget {
             iconPath: 'assets/icons/create.svg',
             activeIconPath: 'assets/icons/create_active.svg',
             onTap: () {
-              if (widgetCallingToolbar != startLookGeneratorWidgetName &&
+              if (widgetCallingToolbar !=
+                      feature2.startLookGeneratorWidgetName &&
                   eyeColorCategory != null) {
                 isCameraDisposed = false;
                 if (cameraController.value.isInitialized) {
@@ -191,7 +191,7 @@ class Toolbar extends StatelessWidget {
 
                 showRecommendationList = false;
                 activeFilter = null;
-                selectedIndex = 5;
+                selectedIndex = null;
 
                 // Toolbar zurücksetzen
                 selectedToolbarIcons = {
@@ -202,6 +202,10 @@ class Toolbar extends StatelessWidget {
                   4: false
                 };
 
+                if (feature2.hideWidgets) {
+                  feature2.hideWidgets = false;
+                }
+
                 // Filter zurücksetzen
                 deepArController.switchEffect(null);
 
@@ -211,7 +215,7 @@ class Toolbar extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          StartLookGenerator(title: 'Look Generator'),
+                          feature2.StartLookGenerator(title: 'Look Generator'),
                     ),
                     (route) => false, // Entfernt alle vorherigen Routen
                   );
@@ -220,9 +224,8 @@ class Toolbar extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          StartLookGenerator(title: 'Look Generator'),
+                          feature2.StartLookGenerator(title: 'Look Generator'),
                     ),
-                    //(route) => false, // Entfernt alle vorherigen Routen
                   );
                 }
               } else if (eyeColorCategory == null) {
@@ -251,8 +254,9 @@ class Toolbar extends StatelessWidget {
               if (featureOneKey.currentState != null) {
                 featureOneKey.currentState!.toggleWidgetHiding();
               }
-              if (featureTwoKey.currentState != null) {
-                featureTwoKey.currentState!.toggleWidgetHidingFeature2();
+              if (feature2.featureTwoKey.currentState != null) {
+                feature2.featureTwoKey.currentState!
+                    .toggleWidgetHidingFeature2();
               }
               print("Eye icon tapped");
             },

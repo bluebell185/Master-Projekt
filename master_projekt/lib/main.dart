@@ -238,21 +238,6 @@ class HomeScreen extends StatelessWidget {
                           });
                         },
                       ),
-// TODO ? =======
-//           // CTA Button unten, führt zu StartAnalysis()
-//           Positioned(
-//             left: 0,
-//             right: 0,
-//             bottom: 70,
-//             child: Center(
-//               child: PrimaryButton(
-//                 buttonText: 'continue',
-//                 onPressed: () {
-//                   Navigator.pushAndRemoveUntil(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) => StartAnalysis(title: 'Analysis'),
-// >>>>>>> dd57d1e (DeepAR-Kamera für Feature2 einbinden und Navigation anpassen, Bugfixing, Aufräumen)
                     ),
                   );
                 }

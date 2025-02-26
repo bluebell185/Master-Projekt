@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Login Feedback: 
-                                  - TO DO
+                                  - Gibt eine Snackbar mit Infos über den erfolgreichen Login zurück
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 giveLoginFeedback(String feedbackText, BuildContext context) {

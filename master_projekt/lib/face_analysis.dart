@@ -10,7 +10,9 @@ import 'package:path_provider/path_provider.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Face Analysis: 
-                                  - TO DO
+                                  - Farbe bestimmen von Auge, Lippen, Augenbraue und Haut
+                                  - Form bestimmen von Auge und Gesicht
+                                  - Speichern der Ergebnisse in Datenbank
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class FaceAnalysis {
@@ -57,20 +59,21 @@ class FaceAnalysis {
     final width = (outerCorner.x - innerCorner.x).abs();
     final height = minPoint.y - maxPoint.y;
 
+    // Augenwinkel berechnen
     final angleCorners =
         (outerCorner.y - innerCorner.y) / (outerCorner.x - innerCorner.x).abs();
 
     // Klassifikation
+     setEyeShapeCategory(
+        "almond"); // im Zweifelsfall häufigste Augenform zurückgeben -> Quelle Lashadora (s. Ausarbeitung) TODO
+
     if (height / width > 0.5) setEyeShapeCategory("round");
 
     if (angleCorners < -0.05) setEyeShapeCategory("downturned");
 
     if (angleCorners > 0.05) setEyeShapeCategory("upturned");
 
-    // TODO setEyeShapeCategory("monolid";
-
-    setEyeShapeCategory(
-        "almond"); // häufigste Augenform zurückgeben -> Quelle Lashadora (s. Ausarbeitung)
+    // Zukunft: setEyeShapeCategory("monolid";
   }
 
   static void getFaceShape(Face face) {
@@ -104,11 +107,12 @@ class FaceAnalysis {
   }
 
   static double calculateJawCurve(List<Point> faceContour) {
-    // Berechnet die Krümmung der Kieferlinie (unterer Teil der Gesichtskontur)
+    // Berechnet die Krümmung der Kieferlinie (Punkte unterer Teil der Gesichtskontur)
     List<Point> jawPoints = faceContour.sublist(7, 29);
 
     double totalCurve = 0.0;
     for (int i = 1; i < jawPoints.length - 1; i++) {
+      // 3 Punkte: Aktueller, der davor und der danach
       Point previous = jawPoints[i - 1];
       Point current = jawPoints[i];
       Point next = jawPoints[i + 1];
@@ -118,14 +122,18 @@ class FaceAnalysis {
       totalCurve += angle;
     }
 
+    // Normalisierter Wert
     return totalCurve / jawPoints.length;
   }
 
   static double _angleBetween(Point a, Point b, Point c) {
-    // Berechne den Winkel zwischen drei Punkten
+    // Berechne den Winkel zwischen drei Punkten 
+    // Zuerst Vektoren ausrechnen
     double ab = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
     double bc = sqrt(pow(c.x - b.x, 2) + pow(c.y - b.y, 2));
     double ac = sqrt(pow(c.x - a.x, 2) + pow(c.y - a.y, 2));
+
+    // Winkel zwischen Vektoren
     return acos((pow(ab, 2) + pow(bc, 2) - pow(ac, 2)) / (2 * ab * bc));
   }
 
@@ -144,29 +152,31 @@ class FaceAnalysis {
 
   static void getAverageLipColor(img.Image image, Face face) {
     Point<int> lipUpperBorder =
-        face.contours[FaceContourType.lowerLipTop]!.points[4];
+        face.contours[FaceContourType.lowerLipTop]!.points[4]; // Höchster Punkt Unterlippe
     Point<int> lipLowerBorder =
-        face.contours[FaceContourType.lowerLipBottom]!.points[4];
+        face.contours[FaceContourType.lowerLipBottom]!.points[4]; // Niedrigster Punkt Unterlippe
     int lipHeight = (lipLowerBorder.y - lipUpperBorder.y);
     Point<int> lipMiddlePoint =
-        Point(lipUpperBorder.x, lipUpperBorder.y + (lipHeight / 2).round());
+        Point(lipUpperBorder.x, lipUpperBorder.y + (lipHeight / 2).round()); // Mittelpunkt der Unterlippe
     setLipCategory(calculateAverageColor(
         image,
         Offset(lipMiddlePoint.x.toDouble(), lipMiddlePoint.y.toDouble()),
-        (lipHeight / 2 - 1).round(),
+        (lipHeight / 2 - 1).round(), // Rechteck für die Analyse variabel je nach Lippenhöhe
         RoiColorTypes.lip));
   }
 
   static void getAverageEyebrowColor(img.Image image, Face face) {
+    // Auswahl von Punkten, die ungefähr mittig sein sollen auf Länge der Braue hin gesehen
     Point<int> eyebrowUpperLeftCorner =
-        face.contours[FaceContourType.leftEyebrowTop]!.points[2];
+        face.contours[FaceContourType.leftEyebrowTop]!.points[2];  
     Point<int> eyebrowLowerLeftCorner =
-        face.contours[FaceContourType.leftEyebrowBottom]!.points[2];
+        face.contours[FaceContourType.leftEyebrowBottom]!.points[2]; 
     Point<int> eyebrowUpperRightCorner =
         face.contours[FaceContourType.leftEyebrowTop]!.points[3];
     Point<int> eyebrowLowerRightCorner =
         face.contours[FaceContourType.leftEyebrowBottom]!.points[3];
 
+    // Mittelpunkt bei Treffpunkt der Diagonalen
     double middleXValue = eyebrowUpperLeftCorner.x +
         (((eyebrowUpperRightCorner.x - eyebrowUpperLeftCorner.x) / 2) +
             ((eyebrowLowerRightCorner.x - eyebrowLowerLeftCorner.x) / 2) / 4);
@@ -180,7 +190,7 @@ class FaceAnalysis {
 
   static void getAverageFaceColor(img.Image? image, Face face) {
     Point<int> cheekMiddlePoint =
-        face.landmarks[FaceLandmarkType.leftCheek]!.position;
+        face.landmarks[FaceLandmarkType.leftCheek]!.position; // Landmark auf Wange als Mittelpunkt
 
     // Berechne die durchschnittliche Farbe in der Nähe des Augenmittelpunkts
     setBlushCategory(calculateAverageColor(
@@ -196,7 +206,7 @@ class FaceAnalysis {
     double totalRed = 0, totalGreen = 0, totalBlue = 0;
     int count = 0;
 
-    // Beispiel: Sammle Pixelwerte in einem kleinen Bereich um das Auge
+    // Beispiel: Sammle Pixel-Farb-Werte in einem kleinen Bereich um den definierten Mittelpunkt
     for (int dx = -radius; dx <= radius; dx++) {
       for (int dy = -radius; dy <= radius; dy++) {
         final pixel = image.getPixelSafe(
@@ -311,87 +321,3 @@ class FaceAnalysis {
     }
   }
 }
-
-  
-// static Future<void> doFaceAnalysis() async {
-//   // Bild von Gesicht nehmen - wird als jpg-Datei im Cache gespeichert
-//   File screenshot = await deepArController.takeScreenshot();
-//   if (screenshot.existsSync()){
-//     // Aus dem Cache einlesen
-// final jpgBytes = await screenshot.readAsBytes();
-
-// // Bild dekodieren
-// final decodedImage = img.decodeImage(jpgBytes);
-//     if (decodedImage == null) {
-//       print("Bild konnte nicht dekodiert werden.");
-//       return null;
-//     }
-
-// // In NV21-Format umwandeln, damit der FaceDetector damit arbeiten kann
-// final nv21Bytes = convertToNV21(decodedImage);
-
-//  InputImage inputImage = InputImage.fromBytes(
-//         bytes: nv21Bytes,
-//         metadata: InputImageMetadata(
-//           size: Size(decodedImage.width.toDouble(), decodedImage.height.toDouble()),
-//           rotation: InputImageRotation
-//               .rotation0deg, // TODO Passe je nach Kameraposition an
-//           format: InputImageFormat.nv21,
-//           bytesPerRow: decodedImage.width *
-//               4, // 4 Bytes pro Pixel bei RGBA/BGRA
-//         ),
-//       );
-
-//       // Gesichtskonturen rausziehen
-//       if (inputImage.bytes != null) {
-//         print("erlofg");
-//         final detectedFaces = await faceDetector.processImage(inputImage);
-//         if (detectedFaces.isNotEmpty) {
-//           Face face = detectedFaces[0];
-//           face.contours;
-//         }
-//       }
-//   }
-  
-
-//   //.jpg
-// // TODO Bild löschen
-// }
-
-// static Uint8List convertToNV21(img.Image image) {
-//   final width = image.width;
-//   final height = image.height;
-//   final ySize = width * height;
-//   final uvSize = width * height ~/ 2;
-
-//   final nv21 = Uint8List(ySize + uvSize);
-
-//   int yIndex = 0;
-//   int uvIndex = ySize;
-
-//   for (int y = 0; y < height; y++) {
-//     for (int x = 0; x < width; x++) {
-//       final pixel = image.getPixel(x, y);
-
-//       // Extrahiere RGB-Werte
-//       final r = pixel.r;
-//       final g = pixel.g;
-//       final b = pixel.b;
-
-//       // Konvertiere in YUV
-//       final yValue = (0.299 * r + 0.587 * g + 0.114 * b).round();
-//       final uValue = ((b - yValue) * 0.565 + 128).round();
-//       final vValue = ((r - yValue) * 0.713 + 128).round();
-
-//       // Clamp-Werte auf [0, 255]
-//       nv21[yIndex++] = yValue.clamp(0, 255);
-
-//       if (y % 2 == 0 && x % 2 == 0 && uvIndex < nv21.length - 2) {
-//         nv21[uvIndex++] = vValue.clamp(0, 255);
-//         nv21[uvIndex++] = uValue.clamp(0, 255);
-//       }
-//     }
-//   }
-
-//   return nv21;
-// }

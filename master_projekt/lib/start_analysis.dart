@@ -40,8 +40,7 @@ class StartAnalysis extends StatefulWidget {
   State<StartAnalysis> createState() => _StartAnalysisState();
 }
 
-//bool isLoading = false; // Ladezustand Analyse
-bool faceAnalysed = false;
+bool faceAnalysed = false; // Ladezustand Analyse
 
 class _StartAnalysisState extends State<StartAnalysis> {
   bool isLoadingForSkip = false; // Ladezustand Skip Analyse
@@ -50,16 +49,6 @@ class _StartAnalysisState extends State<StartAnalysis> {
   Widget build(BuildContext context) {
     return PopScope(
         canPop: isGoingBackAllowedInNavigator,
-        // onPopInvokedWithResult: (bool didPop, Object? result) {
-        //   if (didPop) {
-        //     // Aktion, wenn das Pop-Ereignis erfolgreich war
-        //     final state =
-        //         context.findAncestorStateOfType<ScreenWithDeeparCameraState>();
-        //     state?.setState(() {});
-        //   } else {
-        //     print('Pop-Ereignis wurde blockiert.');
-        //   }
-        // },
         child: CameraWidget(
           title: 'Kamerabild 1',
           child: Scaffold(
@@ -246,13 +235,9 @@ class _StartAnalysisState extends State<StartAnalysis> {
     try {
       // Warte entweder auf die Mindestdauer oder den Abschluss der Operation, je nachdem, was länger dauert
       await Future.wait([
-        test(),
+        getDataAndDoAnalysis(),
         Future.delayed(Duration(seconds: minAnimationDuration)),
       ]);
-
-      final scannerWidgetState =
-          context.findAncestorStateOfType<ScannerWidgetState>();
-      scannerWidgetState?.setLoadingFalse();
 
       if (!faceAnalysed) {
         await showDialog(
@@ -267,6 +252,10 @@ class _StartAnalysisState extends State<StartAnalysis> {
           },
         );
 
+        setState(() {
+          isLoading = false;
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -276,6 +265,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
       } else {
         // Analyse war erfolgreich
         setState(() {
+          isLoading = false;
           showRecommendations = false;
         });
       }
@@ -287,7 +277,7 @@ class _StartAnalysisState extends State<StartAnalysis> {
     }
   }
 
-  Future<void> test() async {
+  Future<void> getDataAndDoAnalysis() async {
     roiData = await loadRoisData();
     // Gesichtsanalyse starten
     faceAnalysed = await FaceAnalysis.analyseColorsInFace(faceForAnalysis);
@@ -305,6 +295,8 @@ class _StartAnalysisState extends State<StartAnalysis> {
     });
 
     updateDataInDb();
+
+    activeFilter = null;
 
     // Toolbar und Tabs zurücksetzen
     selectedToolbarIcons = {0: false, 1: false, 2: true, 3: false, 4: false};

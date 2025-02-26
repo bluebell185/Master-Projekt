@@ -299,6 +299,7 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
     }
   }
 
+  // Bild von Look in Galerie speichern
   Future<void> saveCreatedLook() async {
     print('saveLook() aufgerufen – Screenshot wird erstellt.');
 

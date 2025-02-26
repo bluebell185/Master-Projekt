@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:master_projekt/main.dart';
 import 'package:master_projekt/screen_with_deepar_camera.dart';
 import 'package:master_projekt/ui/recomm_tiles.dart';
@@ -12,7 +11,11 @@ import 'package:master_projekt/ui/toolbar.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Feature One: 
-                                  - TO DO
+                                  - Verantwortlich für die Anzeige der Recommendations am unteren Bildschirmrand
+                                  - Recommendations sind über ein DraggableScrollableSheet nach oben erweiterbar
+                                      - Box_1: Anzeige der ROI-Tabs zum Auswählen, welche Recommendations angezeigt werden sollen, dann erst:
+                                      - Box_2: Anzeige Make-up-Empfehlungen für ROI und Typ
+                                      - Box_3: Anzeige spezieller Looks und Anwendung darauf basierender Filter
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 final String featureOneWidgetName = 'FeatureOne';
@@ -29,8 +32,6 @@ class FeatureOne extends StatefulWidget {
 
 final GlobalKey<AnalysisResultsState> analysisResultsKey =
     GlobalKey<AnalysisResultsState>();
-// final GlobalKey<ScreenWithDeeparCameraState> screenWithDeeparKey =
-//     GlobalKey<ScreenWithDeeparCameraState>();
 
 bool setRebuild = false;
 
@@ -67,7 +68,7 @@ class FeatureOneState extends State<FeatureOne> {
 
   void updateSelectedTab(String? tab) {
     setState(() {
-      //newSelectedTab = tab; // Update den Parent state
+      // Update den Parent state
       if (newSelectedTab == tab) {
         // Wenn der Tab bereits ausgewählt ist, deselektiere ihn
         newSelectedTab = null;
@@ -94,7 +95,7 @@ class FeatureOneState extends State<FeatureOne> {
 
   void updateSelectedTabFromButtons(String? tab) {
     setState(() {
-      //newSelectedTab = tab; // Update den Parent state
+      // Update den Parent state
       if (newSelectedTab == tab) {
         // Wenn der Tab bereits ausgewählt ist, deselektiere ihn
         newSelectedTab = null;
@@ -121,15 +122,6 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   Widget build(BuildContext context) {
-    // int previousFeature = currentFeature;
-    // Future.delayed(Duration(seconds: 5), () {
-    //   if (previousFeature != 1) {
-    //     final state =
-    //         context.findAncestorStateOfType<ScreenWithDeeparCameraState>();
-    //     state?.setState(() {});
-    //   }
-    // });
-
     currentFeature = 1;
 
     return PopScope(
@@ -211,7 +203,6 @@ class FeatureOneState extends State<FeatureOne> {
 
   @override
   void dispose() {
-    //draggableController.dispose();
     super.dispose();
   }
 

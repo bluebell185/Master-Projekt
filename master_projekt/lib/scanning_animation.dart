@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:master_projekt/start_analysis.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Scanning Animation: 
@@ -38,14 +37,9 @@ class ScannerWidgetState extends State<ScannerWidget>
     _startAnimationSequence();
   }
 
-  void setLoadingFalse() {
-    setState(() {
-      isLoading = false;
-    });
-  }
-
   Future<void> _startAnimationSequence() async {
     try {
+      // So lange abspielen, bis Analyse im Hintergrund abgeschlossen ist -> Von start_analysis gesteuert
       while (isLoading) {
         print("Starting forward animation");
         await _animationController.forward(from: 0.0);

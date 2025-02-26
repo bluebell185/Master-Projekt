@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Info Dialog: 
-                                  - TO DO
+                                  - Gibt ein Popup zurück, dessen Titel, Inhalt und Button-Text frei anpassbar sind
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class InfoDialog extends StatelessWidget {
@@ -11,11 +11,11 @@ class InfoDialog extends StatelessWidget {
   final String buttonText;
 
   const InfoDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     required this.buttonText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class InfoDialog extends StatelessWidget {
         content,
         textAlign: TextAlign.center,
       ),
-      actionsAlignment: MainAxisAlignment.center, // Aktionen zentrieren
+      actionsAlignment: MainAxisAlignment.center, // Inhalte zentrieren
       actions: <Widget>[
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -45,7 +45,7 @@ class InfoDialog extends StatelessWidget {
   }
 }
 
-/* Aufruf:
+/* Aufruf-Beispiel:
 void showInfoDialog(BuildContext context) {
     showDialog(
       context: context,

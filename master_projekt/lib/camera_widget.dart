@@ -12,7 +12,10 @@ import 'package:path_provider/path_provider.dart';
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------
                     Camera Widget: 
-                                  - TO DO
+                                  - Anzeige der Flutter-Camera im ersten Schritt der Analyse
+                                  - Untersucht ImageStream auf auswertbares Gesicht
+                                  - Speichert gute Aufnahme von Gesicht in Cache für spätere Analyse
+                                  - Dafür viel Bildumwandlungsarbeit nötig
 ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 String eyeColor = 'Augenfarbe noch nicht gefunden';
