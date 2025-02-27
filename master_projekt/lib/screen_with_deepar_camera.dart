@@ -209,7 +209,7 @@ class ScreenWithDeeparCameraState extends State<ScreenWithDeeparCamera>
         return camera;
       }
     }
-    // TODO Error-Screen weil nur Front-Kamera erlaubt ist
+    print("Nur Frontkamera erlaubt, aber keine gefunden");
     return camerasOfPhone[0];
   }
 

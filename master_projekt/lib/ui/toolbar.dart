@@ -50,7 +50,7 @@ class ToolbarIcon extends StatefulWidget {
   State<ToolbarIcon> createState() => ToolbarIconState();
 }
 
-bool test = false;
+bool stateValue = false;
 bool isActive = false;
 
 class ToolbarIconState extends State<ToolbarIcon> {
@@ -72,7 +72,7 @@ class ToolbarIconState extends State<ToolbarIcon> {
         _toggleActive();
         widget.onTap();
         setState(() {
-          test = !test; // TODO
+          stateValue = !stateValue; 
         });
       },
       child: SizedBox(
@@ -335,7 +335,6 @@ class AccountPopup extends StatelessWidget {
 
                   await Navigator.of(context).push(
                     MaterialPageRoute(
-                      // Derselbe SignIn-Screen wie auch in auth_widget.dart TODO rausziehen?
                       builder: (context) => SignInScreen(
                         providers: [EmailAuthProvider()],
                         headerBuilder: (context, constraints, shrinkOffset) {

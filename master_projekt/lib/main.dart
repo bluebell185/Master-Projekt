@@ -319,7 +319,7 @@ class HomeScreen extends StatelessWidget {
           return documentSnapshot;
         } else {}
       } catch (error) {
-        // TODO????
+        print("Konnte keine Nutzerdaten abfragen");
       }
     } else {}
     return null;

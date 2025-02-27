@@ -225,8 +225,6 @@ class AnalysisResultsState extends State<AnalysisResults> {
       textToDisplay,
       style: const TextStyle(fontSize: 14),
     );
-
-    // TODO was ist mit default: return Container(); überall?
   }
 
   // ------------------------------ Blush Shape Content ------------------------------>

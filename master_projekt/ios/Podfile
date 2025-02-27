@@ -1,10 +1,6 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '17.0'
 
-# TODO Falls es nicht auf Anhieb funktioniert evtl hier orientieren:
-# https://pub.dev/packages/permission_handler
-# https://github.com/Baseflow/flutter-permission-handler/blob/main/permission_handler/example/ios/Podfile
-
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 

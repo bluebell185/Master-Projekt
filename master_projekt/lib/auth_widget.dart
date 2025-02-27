@@ -188,7 +188,7 @@ class _AuthWidgetState extends State {
           return documentSnapshot;
         } else {}
       } catch (error) {
-        // TODO????
+        print('Konnte Nutzerdaten nicht finden');
       }
     } else {}
     return null;
