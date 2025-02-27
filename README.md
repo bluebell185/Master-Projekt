@@ -49,7 +49,7 @@
 1. **Repository klonen:**
    ```sh
    git clone https://github.com/bluebell185/Master-Projekt.git
-   cd aissistant
+   cd Master-Projekt
    ```
 2. **Abhängigkeiten installieren:**
    ```sh
