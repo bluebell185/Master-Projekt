@@ -393,7 +393,7 @@ class AnalysisResultsState extends State<AnalysisResults> {
           const SizedBox(height: 10),
           const BodyText(
             bodyText:
-                'Hier steht Text - um mehr zu den Analyse Results zu erfahren, soll User eine Kategorie auswählen:',
+                'based on your facial analysis, I have created personalized recommendations for you. select a category to learn more about your facial features and discover tailored makeup tips.',
             bodyTextColor: Colors.black,
           ),
           const SizedBox(height: 20),
@@ -498,7 +498,7 @@ class AnalysisResultsState extends State<AnalysisResults> {
           if (widget.selectedTab != 'blush' && widget.selectedTab != 'brows')
             const BodyText(
               bodyText:
-                  'Here are some recommended looks. Tap on the look you desire to see it applied on your face.',
+                  'here are some recommended looks. tap on the look you desire to see it applied on your face.',
             ),
 
           if (!showRecommendationList &&
@@ -519,12 +519,12 @@ class AnalysisResultsState extends State<AnalysisResults> {
               widget.selectedTab != 'brows')
             const BodyText(
               bodyText:
-                  'The recommendations are shown in the recommendations list on the top. \nChoose a look there!',
+                  'the recommendations are shown in the recommendations list on the top. \nchoose a look there to explore!',
             ),
           if (widget.selectedTab == 'blush' || widget.selectedTab == 'brows')
             const BodyText(
               bodyText:
-                  'Here are some recommendations.\n\nThere are no looks yet for you to apply.',
+                  'here are some recommendations.\n\nthere are no looks yet for you to apply.',
             ),
           const SizedBox(height: 10),
           // Navigation zu Box 2
