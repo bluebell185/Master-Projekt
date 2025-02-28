@@ -1,6 +1,6 @@
 <div align="center">
   <h1>aissistant</h1>
-  <h2>- Beauty Recommendation App -</h2>
+  <h2>- Make-up Recommendation Beauty App -</h2>
   <p> Masterprojekt </p>
 </div>
 
