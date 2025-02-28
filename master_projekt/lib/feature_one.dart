@@ -207,6 +207,9 @@ class FeatureOneState extends State<FeatureOne> {
   }
 
   toggleFilter(String filterPath) {
+    if (!filterPath.endsWith('.deepar')) {
+      filterPath = '$filterPath.deepar';
+    }
     analysisResultsKey.currentState?.toggleFilter(filterPath);
   }
 }

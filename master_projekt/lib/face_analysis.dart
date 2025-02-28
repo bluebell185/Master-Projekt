@@ -293,7 +293,7 @@ class FaceAnalysis {
           return "beige"; // Neutrale bis leicht gelbliche Haut
         } else if (hue >= 45 && hue < 56 && saturation > 0.4) {
           return "olive"; // Haut mit olivfarbenen Untertönen
-        } else if (hue >= 9 && hue < 30 && saturation > 0.6) {
+        } else if (hue >= 9 && hue < 30 && saturation > 0.4) {
           return "tanned"; // Dunklere Haut
         } else if (saturation > 0.4 && value < 0.5) {
           return "dark"; // Sehr dunkle Haut mit geringer Helligkeit

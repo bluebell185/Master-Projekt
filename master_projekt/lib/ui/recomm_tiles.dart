@@ -123,13 +123,13 @@ class ImageRecommendationsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final imagePath = images[index];
         final filterPath = filters[index];
-        final filterPathShortened = filterPath.substring(0, filterPath.indexOf(".deep"));
+        final filterPathShortened =
+            filterPath.substring(0, filterPath.indexOf(".deep"));
 
         return RecommendationTile(
           imageLink: imagePath,
           label: 'Look ${index + 1}',
-          isActive: activeFilter ==
-              filterPathShortened,
+          isActive: activeFilter == filterPathShortened,
           onTap: () => onTileTap(filterPath), // Filter-Logik auslösen
         );
       },
@@ -184,7 +184,13 @@ class _ImageRecommendationsListState extends State<ImageRecommendationsList> {
             mainAxisSize: MainAxisSize.min,
             children: List.generate(widget.images.length, (index) {
               final imagePath = widget.images[index];
-              final filterPath = widget.filters[index];
+              String filterPath = widget.filters[index];
+              if (filterPath.endsWith('.deepar') &&
+                  (activeFilter != null &&
+                      !activeFilter!.endsWith('.deepar'))) {
+                filterPath =
+                    filterPath.substring(0, filterPath.indexOf(".deep"));
+              }
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -193,8 +199,7 @@ class _ImageRecommendationsListState extends State<ImageRecommendationsList> {
                   child: RecommendationTile(
                     imageLink: imagePath,
                     label: 'Look ${index + 1}',
-                    isActive: activeFilter ==
-                        filterPath, // Prüfen, ob aktiv
+                    isActive: activeFilter == filterPath, // Prüfen, ob aktiv
                     onTap: () => handleTileTap(filterPath),
                   ),
                 ),

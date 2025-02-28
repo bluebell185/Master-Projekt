@@ -282,17 +282,18 @@ class StartLookGeneratorState extends State<StartLookGenerator> {
 
   // Mapping der Antworten zu fertigen Look-Filtern
   void mapLookToFilter(Map<int, String> selectedOptions) {
-    if (selectedOptions.values
-        .toSet()
-        .containsAll({'casual', 'sunny', 'natural'})) {
+    final selectedOptionsSet = selectedOptions.values.toSet();
+    if (selectedOptionsSet.contains('casual') ||
+        selectedOptionsSet.contains('sunny') ||
+        selectedOptionsSet.contains('natural')) {
       deepArController.switchEffect('assets/filters/look_natural.deepar');
-    } else if (selectedOptions.values
-        .toSet()
-        .containsAll({'party', 'rainy', 'bold'})) {
+    } else if (selectedOptionsSet.contains('party') ||
+        selectedOptionsSet.contains('rainy') ||
+        selectedOptionsSet.contains('bold')) {
       deepArController.switchEffect('assets/filters/look_bold.deepar');
-    } else if (selectedOptions.values
-        .toSet()
-        .containsAll({'wedding', 'snowy', 'soft'})) {
+    } else if (selectedOptionsSet.contains('wedding') ||
+        selectedOptionsSet.contains('snowy') ||
+        selectedOptionsSet.contains('soft')) {
       deepArController.switchEffect('assets/filters/look_romantic.deepar');
     } else {
       deepArController.switchEffect('assets/filters/look_default.deepar');

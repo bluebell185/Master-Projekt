@@ -72,7 +72,7 @@ class ToolbarIconState extends State<ToolbarIcon> {
         _toggleActive();
         widget.onTap();
         setState(() {
-          stateValue = !stateValue; 
+          stateValue = !stateValue;
         });
       },
       child: SizedBox(
@@ -538,7 +538,11 @@ class PasswordResetDialog extends StatelessWidget {
                   .sendPasswordResetEmail(email: user!.email!);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('password reset e-mail sent'),
+                  content: Text(
+                    'password reset e-mail sent',
+                    style: TextStyle(
+                        color: Colors.grey[800]),
+                  ),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.pink[50],
                 ),
