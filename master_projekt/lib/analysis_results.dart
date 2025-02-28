@@ -390,13 +390,13 @@ class AnalysisResultsState extends State<AnalysisResults> {
             headingText: 'your analysis results',
             headingColor: Colors.black,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 9),
           const BodyText(
             bodyText:
                 'based on your facial analysis, I have created personalized recommendations for you. select a category to learn more about your facial features and discover tailored makeup tips.',
             bodyTextColor: Colors.black,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           // Tab Buttons
           ScrollableTabs(
             labels: ['eyes', 'blush', 'lips', 'brows'], // Tab Labels

@@ -65,7 +65,7 @@ class FaceAnalysis {
 
     // Klassifikation
      setEyeShapeCategory(
-        "almond"); // im Zweifelsfall häufigste Augenform zurückgeben -> Quelle Lashadora (s. Ausarbeitung) TODO
+        "almond"); // im Zweifelsfall häufigste Augenform zurückgeben
 
     if (height / width > 0.5) setEyeShapeCategory("round");
 
